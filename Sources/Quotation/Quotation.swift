@@ -18,14 +18,16 @@ public struct BusinessClientQuotation: Renderable {
     let letterHeader: LetterHeader
     let assistance: BusinessClientAssistance
     let notes: Note
+    let replyForm: ReplyForm
     
-    public init(purpose: ContentItem, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance, notes: Note) {
+    public init(purpose: ContentItem, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance, notes: Note, replyForm: ReplyForm) {
         self.purpose = purpose
         self.payment = payment
         self.serviceScope = serviceScope
         self.letterHeader = letterHeader
         self.assistance = assistance
         self.notes = notes
+        self.replyForm = replyForm
     }
     
     public func render(indentedBy indentationKind: Plot.Indentation.Kind?) -> String {
@@ -34,14 +36,42 @@ public struct BusinessClientQuotation: Renderable {
                 Div{
                     letterHeader
                     Page.break
-                    List{
-                        ListItem(purpose)
-                        ListItem(serviceScope)
-                        ListItem(assistance)
-                        ListItem(payment)
-                        ListItem(notes)
-                    }.environmentValue(.ordered, key: .listStyle)
-                }.style("font-family: 標楷體-繁;")
+                    Table{
+                        TableRow{
+                            TableCell{
+                                Paragraph("一、")}
+                            .style("vertical-align: top;")
+                            TableCell(purpose)
+                        }
+                        TableRow{
+                            TableCell{
+                                Paragraph("二、")}
+                            .style("vertical-align: top;")
+                            TableCell(serviceScope)
+                        }
+                        TableRow{
+                            TableCell{
+                                Paragraph("三、")}
+                            .style("vertical-align: top;")
+                            TableCell(assistance)
+                        }
+                    }
+                    Page.break
+                    Table{
+                        TableRow{
+                            TableCell{
+                                Paragraph("四、")}
+                            .style("vertical-align: top;")
+                            TableCell(payment)
+                        }
+                        TableRow{
+                            TableCell()
+                            TableCell(notes)
+                        }
+                    }
+                    Page.break
+                    replyForm
+                }.style("font-family: 標楷體-繁;width: 100%;")
             }
         }
         .render(indentedBy: indentationKind)

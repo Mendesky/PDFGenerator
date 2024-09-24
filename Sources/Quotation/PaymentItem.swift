@@ -41,7 +41,7 @@ public struct PaymentItem: Component{
                 }
             }
             TableCell(price)
-            TableCell(billingPeriod.description)
+            TableCell(billingPeriod.description).style("width: 5rem;")
         }
     }
     

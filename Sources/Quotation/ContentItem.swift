@@ -17,14 +17,8 @@ public struct ContentItem: Component{
     
     public var body: any Component {
         ComponentGroup{
-            Table{
-                TableRow{
-                    TableCell(title)
-                }
-                TableRow{
-                    TableCell(content)
-                }
-            }
+            Paragraph(title)
+            Paragraph(content)
         }
     }
 }

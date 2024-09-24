@@ -23,7 +23,7 @@ public struct Note: Component {
             Table{
                 for (index,component) in components.enumerated(){
                     TableRow{
-                        TableCell("註\(toChineseNumber(index: index))：")
+                        TableCell("註\(toChineseNumber(index: index))：").style("width: 3rem;vertical-align: top;")
                         TableCell(component)
                     }
                 }

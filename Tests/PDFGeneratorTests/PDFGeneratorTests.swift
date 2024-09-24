@@ -24,7 +24,7 @@ import Foundation
     let blessings = "順頌 商祺"
     let letter = LetterHeader(to: to, from: from, content: content, date: testingDate!, blessings: blessings)
     
-    #expect(letter.render() == "<table><tr><td>TO:</td><td>\(to)</td></tr><tr><td>FROM:</td><td>\(from)</td></tr><tr><td colspan=\"2\"><hr/>\(content)</td></tr><tr><td colspan=\"2\">　　\(blessings)</td></tr><tr><td colspan=\"2\" dir=\"rtl\">\(from)<br/>\(testingDateString)</td></tr></table>")
+    #expect(letter.render() == "<table><tr><td style=\"font-family: Times New Roman;\">To</td><td>\(to)</td></tr><tr><td style=\"font-family: Times New Roman;\">From</td><td>\(from)</td></tr><tr><td colspan=\"2\"><hr/>\(content)</td></tr><tr><td colspan=\"2\">　　\(blessings)</td></tr><tr><td colspan=\"2\" dir=\"rtl\">\(from)<br/>\(testingDateString)</td></tr></table>")
 }
 
 
@@ -34,8 +34,7 @@ import Foundation
     
     let contentItem = ContentItem(title: title, content: content)
     
-    #expect(contentItem.render() == "<table><tr><td>\(title)</td></tr><tr><td>\(content)</td></tr></table>")
-    
+    #expect(contentItem.render() == "<p>\(title)</p><p>\(content)</p>")
 }
 
 
@@ -86,7 +85,7 @@ import Foundation
     
     let paymentItem = PaymentItem(names: names, price: price, billingPeriod: billingPeriod)
     
-    #expect(paymentItem.render() == "<td>\(names.joined(separator: "\(Node.br().render())"))</td><td>\(price)</td><td>\(billingPeriod)</td>")
+    #expect(paymentItem.render() == "<td>\(names.joined(separator: "\(Node.br().render())"))</td><td>\(price)</td><td style=\"width: 5rem;\">\(billingPeriod)</td>")
 }
 
 
@@ -139,7 +138,23 @@ import Foundation
     
     let note = Note(contents: contents)
     
-    #expect(note.render() == "<table><tr><td>註一：</td><td>\(contents[0])</td></tr><tr><td>註二：</td><td>\(contents[1])</td></tr><tr><td>註三：</td><td>\(contents[2])</td></tr></table>")
+    #expect(note.render() == "<table><tr><td style=\"width: 3rem;vertical-align: top;\">註一：</td><td>\(contents[0])</td></tr><tr><td style=\"width: 3rem;vertical-align: top;\">註二：</td><td>\(contents[1])</td></tr><tr><td style=\"width: 3rem;vertical-align: top;\">註三：</td><td>\(contents[2])</td></tr></table>")
     
 }
 
+
+
+@Test func createReplyForm(){
+    let receiver = "全家人健康事業股份有限公司"
+    let sender = "嘉威聯合會計師事務所"
+    let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
+    let additionalServices: [String] = [
+        "代辦年度CTP申報(每年3月；加收2,000元/家)"
+    ]
+    let quotationNo = "111112101"
+    
+    let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, additionalServices: additionalServices, quotationNo: quotationNo)
+    #expect(replyForm.render() == "<h2 style=\"text-align: center;\">同意函</h2><table style=\"width: 100%;\"><tr><td style=\"width: 70px;\">受文者：</td><td>\(sender)</td></tr><tr><td>主　旨：</td><td>\(subject)</td></tr><tr><td></td><td>附加服務請勾選：</td></tr><tr><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style=\"width: 100%;\"><tr><td style=\"width: 102px;\"></td><td>全家人健康事業股份有限公司</td><td style=\"width: 10rem;\"></td></tr><tr><td></td><td></td><td style=\"height: 6rem;vertical-align: top;\">（公　司　章）　　</td></tr><tr><td></td><td></td><td style=\"height: 6rem;vertical-align: top;\">（授權人簽名或蓋章）</td></tr></table>")
+    
+    
+}
