@@ -11,6 +11,7 @@ let weasyprint = Python.import("weasyprint")
 let CSS = weasyprint.CSS
 let HTML = weasyprint.HTML
 
+
 let OVERLAY_LAYOUT = "@page {size: A4 portrait; margin: 0;}"
 
 public class PDFGenerator {
@@ -30,6 +31,7 @@ public class PDFGenerator {
     ///   - baseUrl: `String?`
     ///     An absolute url to the page which serves as a reference to Weasyprint to fetch assets, required to get our media.
     public init(mainHtml: String, headerHtml: String? = nil, footerHtml: String? = nil, baseUrl: String? = nil){
+        
         self.mainHtml = mainHtml
         
         if let headerHtml{

@@ -24,7 +24,7 @@ import Foundation
     let blessings = "順頌 商祺"
     let letter = LetterHeader(to: to, from: from, content: content, date: testingDate!, blessings: blessings)
     
-    #expect(letter.render() == "<table><tr><td style=\"font-family: Times New Roman;\">To</td><td>\(to)</td></tr><tr><td style=\"font-family: Times New Roman;\">From</td><td>\(from)</td></tr><tr><td colspan=\"2\"><hr/>\(content)</td></tr><tr><td colspan=\"2\">　　\(blessings)</td></tr><tr><td colspan=\"2\" dir=\"rtl\">\(from)<br/>\(testingDateString)</td></tr></table>")
+    #expect(letter.render() == "<div style=\"width: 100%;padding: 25px 25px 40px 25px;\"><table><tr style=\"height: 3rem;\"><td style=\"font-family: Times New Roman;width: 5rem;\">To</td><td style=\"text-align: left;\">\(to)</td></tr><tr style=\"height: 3rem;\"><td style=\"font-family: Times New Roman;\">From</td><td style=\"text-align: left;\">\(from)</td></tr></table></div><table><tr><td colspan=\"2\"><hr/><p style=\"text-indent: 2em;\">\(content)</p></td></tr><tr><td style=\"text-indent: 2em;\" colspan=\"2\">\(blessings)</td></tr><tr><td colspan=\"2\" dir=\"rtl\">\(from)<br/>\(testingDateString)</td></tr></table>")
 }
 
 
@@ -34,7 +34,7 @@ import Foundation
     
     let contentItem = ContentItem(title: title, content: content)
     
-    #expect(contentItem.render() == "<p>\(title)</p><p>\(content)</p>")
+    #expect(contentItem.render() == "<p>\(title)</p><p style=\"text-indent: 2em;\">\(content)</p>")
 }
 
 
@@ -59,7 +59,7 @@ import Foundation
     
     let serviceItemScopeItem = ServiceScopeItem(title: title, content: content, terms: terms)
     
-    #expect(serviceItemScopeItem.render() == "<p>\(title)</p><p>\(content)</p><ol><li>\(termStrings[0])</li><li>\(termStrings[1])</li></ol>")
+    #expect(serviceItemScopeItem.render() == "<p>\(title)</p><p style=\"text-indent: 2em;\">\(content)</p><ol><li>\(termStrings[0])</li><li>\(termStrings[1])</li></ol>")
     
 }
 

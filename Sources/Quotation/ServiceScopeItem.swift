@@ -14,7 +14,7 @@ public struct ServiceScopeItem: Component {
     public var body: any Component{
         ComponentGroup{
             Paragraph(title)
-            Paragraph(content)
+            Paragraph(content).style("text-indent: 2em;")
             if let terms {
                 List{
                     for term in terms {

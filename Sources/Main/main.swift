@@ -70,10 +70,4 @@ let generator = PDFGenerator(mainHtml: quotation, headerHtml: BusinessClientQuot
 let pdfData = generator.generate(sideMargin: 2)
 //print(pdfData)
 
-
-
-if #available(macOS 13.0, *) {
-    try pdfData?.write(to: URL.init(filePath: "/Users/gradyzhuo/報價單2.pdf"))
-} else {
-    // Fallback on earlier versions
-}
+try pdfData?.write(to: URL(string: "file:///Users/gradyzhuo/test.pdf")!)

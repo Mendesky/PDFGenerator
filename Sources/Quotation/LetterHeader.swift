@@ -29,26 +29,29 @@ public struct LetterHeader: Component{
     
     public var body: Component {
         ComponentGroup{
+            Div{
+                Table{
+                    TableRow{
+                        TableCell("To").style("font-family: Times New Roman;width: 5rem;")
+                        TableCell(to).style("text-align: left;")
+                    }.style("height: 3rem;")
+                    TableRow{
+                        TableCell("From").style("font-family: Times New Roman;")
+                        TableCell(from).style("text-align: left;")
+                    }.style("height: 3rem;")
+                }
+            }.style("width: 100%;padding: 25px 25px 40px 25px;")
             Table{
-                TableRow{
-                    TableCell("To").style("font-family: Times New Roman;")
-                    TableCell(to)
-                }
-                TableRow{
-                    TableCell("From").style("font-family: Times New Roman;")
-                    TableCell(from)
-                }
                 TableRow{
                     TableCell{
                         Node.hr()
-                        Text(content)
+                        Paragraph(content).style("text-indent: 2em;")
                     }.attribute(named: "colspan", value: "2")
                 }
                 TableRow{
-                    TableCell{
-                        Text("　　")
-                        Text(blessings)
-                    }.attribute(named: "colspan", value: "2")
+                    TableCell(blessings)
+                        .style("text-indent: 2em;")
+                        .attribute(named: "colspan", value: "2")
                 }
                 
                 TableRow{
