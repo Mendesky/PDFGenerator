@@ -22,7 +22,10 @@ let package = Package(
             name: "Quotation",
             dependencies: [
                 .product(name: "Plot", package: "plot")
-            ]),
+            ], resources: [
+                .copy("Resources/quotation-footer.png"),
+                .copy("Resources/quotation-header.png")
+              ]),
         .testTarget(
             name: "PDFGeneratorTests",
             dependencies: ["Quotation"]
@@ -30,6 +33,7 @@ let package = Package(
         .target(
             name: "PDFGenerator",
             dependencies: [
+                .product(name: "Plot", package: "plot"),
                 .product(name: "PythonKit", package: "pythonkit")
             ]),
         .executableTarget(name: "Main",

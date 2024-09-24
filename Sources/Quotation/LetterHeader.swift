@@ -31,11 +31,11 @@ public struct LetterHeader: Component{
         ComponentGroup{
             Table{
                 TableRow{
-                    TableCell("TO:")
+                    TableCell("To").style("font-family: Times New Roman;")
                     TableCell(to)
                 }
                 TableRow{
-                    TableCell("FROM:")
+                    TableCell("From").style("font-family: Times New Roman;")
                     TableCell(from)
                 }
                 TableRow{
