@@ -68,7 +68,7 @@ let pdfData = generator.render()
 //print(pdfData)
 
 if #available(macOS 13.0, *) {
-    try pdfData?.write(to: URL.init(filePath: "/Users/gradyzhuo/zz.pdf"))
+    try pdfData?.write(to: URL.init(filePath: "報價單.pdf"))
 } else {
     // Fallback on earlier versions
 }
