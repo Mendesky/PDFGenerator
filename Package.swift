@@ -8,8 +8,8 @@ let package = Package(
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
-            name: "Quotation",
-            targets: ["Quotation"]),
+            name: "PDFGenerator",
+            targets: ["PDFGenerator", "QuotationHTML"]),
     ],
     dependencies: [
         .package(url: "https://github.com/SwiftPackageIndex/Plot.git", from: "0.14.0"),
@@ -19,7 +19,7 @@ let package = Package(
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Quotation",
+            name: "QuotationHTML",
             dependencies: [
                 .product(name: "Plot", package: "plot")
             ], resources: [
@@ -28,7 +28,7 @@ let package = Package(
               ]),
         .testTarget(
             name: "PDFGeneratorTests",
-            dependencies: ["Quotation"]
+            dependencies: ["QuotationHTML"]
         ),
         .target(
             name: "PDFGenerator",
@@ -38,7 +38,7 @@ let package = Package(
             ]),
         .executableTarget(name: "Main",
                           dependencies: [
-                            "Quotation",
+                            "QuotationHTML",
                             "PDFGenerator"
                           ])
     ]

@@ -5,7 +5,7 @@
 //  Created by Grady Zhuo on 2024/9/23.
 //
 import Foundation
-import Quotation
+import QuotationHTML
 import Plot
 import PDFGenerator
 
