@@ -29,7 +29,7 @@ public enum BillingPeriod: CustomStringConvertible{
 public struct PaymentItem: Component{
     let names: [String]
     let price: String
-    let billingPeriod: BillingPeriod
+    let billingPeriod: String
     
     public var body: any Component{
         ComponentGroup{
@@ -45,7 +45,7 @@ public struct PaymentItem: Component{
         }
     }
     
-    public init(names: [String], price: String, billingPeriod: BillingPeriod) {
+    public init(names: [String], price: String, billingPeriod: String) {
         self.names = names
         self.price = price
         self.billingPeriod = billingPeriod

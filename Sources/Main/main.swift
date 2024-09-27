@@ -35,8 +35,8 @@ let assistance = BusinessClientAssistance(title: "貴公司之協助辦理事項
 
 //print("\n")
 let payment = Payment(title: "酬金", items: [
-    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: .yearly),
-    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: .monthly13)
+    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
+    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
 ])
 
 //print(payment.render())
