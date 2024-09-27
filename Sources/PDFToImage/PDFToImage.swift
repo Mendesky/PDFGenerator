@@ -55,12 +55,12 @@ public final class PDFImageConverter {
         }
     }
     
-    public func convert(data pdfData: Data, mode: String = "RGB") throws -> [Data] {
+    public func convert(data pdfData: Data) throws -> [Data] {
         let pyBytes = PythonBytes(pdfData.map{ $0 })
         return try convert(pyBytes: pyBytes)
     }
     
-    public func convert(url: URL, mode: String = "RGB") throws -> [Data] {
+    public func convert(url: URL) throws -> [Data] {
         let pdfData = try Data.init(contentsOf: url)
         return try convert(data: pdfData)
     }
