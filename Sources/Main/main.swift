@@ -5,7 +5,7 @@
 //  Created by Grady Zhuo on 2024/9/23.
 //
 import Foundation
-import Quotation
+import QuotationHTML
 import Plot
 import PDFGenerator
 
@@ -35,14 +35,14 @@ let assistance = BusinessClientAssistance(title: "貴公司之協助辦理事項
 
 //print("\n")
 let payment = Payment(title: "酬金", items: [
-    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: .yearly),
-    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: .monthly13)
+    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
+    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
 ])
 
 //print(payment.render())
 
 let contents: [String] = [
-    "報價依照年度營收狀況及資產總額狀況評估，若有巨額變動時，將另與 貴公司民國112年以後依照附表一、專屬全家人健康事業(股) 會計帳務及稅務申報處理作業級距表討論報價金額。 簽證公費請於當年底時支付半數，另外半數請於交付報告時支付；財會委外會計帳務暨稅務處申報理作業費用一年以十四個月計算，並請於次月底前支付前一個月之公費。 合約執行期間不得低於二年，解除合約須提前三個月告知。",
+    "報價依照年度營收狀況及資產總額狀況評估，若有巨額變動時，將另與 貴公司民國112年以後依照附表一、專屬全家人健康事業(股) 會計帳務及稅務申報處理作業級距表討論報價金額。簽證公費請於當年底時支付半數，另外半數請於交付報告時支付；財會委外會計帳務暨稅務處申報理作業費用一年以十四個月計算，並請於次月底前支付前一個月之公費。合約執行期間不得低於二年，解除合約須提前三個月告知。",
     """
     出納事務處理作業內容包含：
     A.國內轉帳30 筆；每加⼀筆多50 元。
