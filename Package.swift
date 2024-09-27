@@ -9,7 +9,7 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "PDFGenerator",
-            targets: ["PDFGenerator", "QuotationHTML"]),
+            targets: ["PDFGenerator", "QuotationHTML", "PDFToImage"]),
     ],
     dependencies: [
         .package(url: "https://github.com/SwiftPackageIndex/Plot.git", from: "0.14.0"),
@@ -36,10 +36,16 @@ let package = Package(
                 .product(name: "Plot", package: "plot"),
                 .product(name: "PythonKit", package: "pythonkit")
             ]),
+        .target(
+            name: "PDFToImage",
+            dependencies: [
+                .product(name: "PythonKit", package: "pythonkit")
+            ]),
         .executableTarget(name: "Main",
                           dependencies: [
                             "QuotationHTML",
-                            "PDFGenerator"
+                            "PDFGenerator",
+                            "PDFToImage"
                           ])
     ]
 )
