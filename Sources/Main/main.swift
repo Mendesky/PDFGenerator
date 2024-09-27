@@ -71,3 +71,14 @@ let pdfData = generator.generate(sideMargin: 2)
 //print(pdfData)
 
 try pdfData?.write(to: URL(string: "file:///Users/gradyzhuo/test.pdf")!)
+
+import PDFToImage
+
+
+let converter = PDFImageConverter()
+let imageDatas = try converter.convert(data: pdfData!)
+//let imageData = try converter.convertToData(url: URL(string: "file:///Users/gradyzhuo/test.pdf")!)
+
+for (index,imgData) in imageDatas.enumerated(){
+    try imgData.write(to: URL(string: "file:///Users/gradyzhuo/test\(index).jpg")!)
+}
