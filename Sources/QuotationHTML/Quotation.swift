@@ -12,6 +12,7 @@ struct Page{
 
 
 public struct BusinessClientQuotation: Renderable {
+    let no: String
     let purpose: ContentItem
     let payment: Payment
     let serviceScope: ServiceScope
@@ -19,8 +20,10 @@ public struct BusinessClientQuotation: Renderable {
     let assistance: BusinessClientAssistance
     let notes: Note
     let replyForm: ReplyForm
+    let contractForm: ContractForm
     
-    public init(purpose: ContentItem, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance, notes: Note, replyForm: ReplyForm) {
+    public init(no: String, purpose: ContentItem, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance, notes: Note, replyForm: ReplyForm, contractForm: ContractForm) {
+        self.no = no
         self.purpose = purpose
         self.payment = payment
         self.serviceScope = serviceScope
@@ -28,6 +31,7 @@ public struct BusinessClientQuotation: Renderable {
         self.assistance = assistance
         self.notes = notes
         self.replyForm = replyForm
+        self.contractForm = contractForm
     }
     
     public func render(indentedBy indentationKind: Plot.Indentation.Kind?) -> String {
@@ -36,27 +40,18 @@ public struct BusinessClientQuotation: Renderable {
                 Div{
                     letterHeader
                     Page.break
+                    H3("專業服務公費報價單").style("text-align: center;")
+                    Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
+                    contractForm
                     Table{
-                        TableRow{
-                            TableCell{
-                                Paragraph("一、")}
-                            .style("vertical-align: top;")
-                            TableCell(purpose)
-                        }
-                        TableRow{
-                            TableCell{
-                                Paragraph("二、")}
-                            .style("vertical-align: top;")
-                            TableCell(serviceScope)
-                        }
-                        TableRow{
-                            TableCell{
-                                Paragraph("三、")}
-                            .style("vertical-align: top;")
-                            TableCell(assistance)
-                        }
+                        TableRow(TableCell("一、\(purpose.title)"))
+                        TableRow(TableCell(purpose))
+                        TableRow(TableCell("二、\(serviceScope.title)"))
+                        TableRow(TableCell(serviceScope))
+                        TableRow(TableCell("三、\(assistance.title)"))
+                        TableRow(TableCell(assistance))
                     }
-                    Page.break
+//                    Page.break
                     Table{
                         TableRow{
                             TableCell{
@@ -120,7 +115,7 @@ extension BusinessClientQuotation{
             bottom: 0;
             text-align: center;     
             width: 100%;
-            height: 100px;
+            height: 116px;
         }
         """)
         }

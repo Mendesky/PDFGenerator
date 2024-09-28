@@ -15,7 +15,14 @@ public struct Note: Component {
     }
     
     public init(contents: [String]) {
-        self.components = contents.map{ Text($0) }
+        self.components = contents.map{
+            let strings = $0.split(separator: "\n")
+            return Div{
+                for string in strings{
+                    Div(String(string))
+                }
+            }
+        }
     }
     
     public var body: any Component{

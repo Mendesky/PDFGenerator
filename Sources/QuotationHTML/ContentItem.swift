@@ -17,7 +17,6 @@ public struct ContentItem: Component{
     
     public var body: any Component {
         ComponentGroup{
-            Paragraph(title)
             Paragraph(content).style("text-indent: 2em;")
         }
     }

@@ -14,7 +14,6 @@ public struct BusinessClientAssistance: Component{
     
     public var body: any Component{
         ComponentGroup{
-            Paragraph(title)
             List{
                 for item in items{
                     ListItem(item)

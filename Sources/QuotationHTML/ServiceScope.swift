@@ -31,19 +31,11 @@ public struct ServiceScope: Component {
     
     public var body: any Component{
         ComponentGroup{
-            Paragraph(title)
-            Paragraph(content)
+            Paragraph(content).style("text-indent: 2em;")
             if let items{
                 List{
                     for item in items {
-                        ListItem(item)
-//                        TableRow{
-//                            TableCell{
-//                                Paragraph("(\(toChineseNumber(index: index)))")
-//                            }.style("vertical-align: top;")
-//                            TableCell(item)
-//                        }
-                        
+                        ListItem(item)                        
                     }
                 }.environmentValue(.ordered, key: .listStyle)
             }
