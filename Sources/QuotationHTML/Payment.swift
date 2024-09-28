@@ -29,7 +29,7 @@ public struct Payment: Component {
                     }
                 }
                 
-            }.style("border-collapse: collapse;")
+            }.style("border-collapse: collapse; font-size: 12px; width: 100%;")
         }
     }
     
