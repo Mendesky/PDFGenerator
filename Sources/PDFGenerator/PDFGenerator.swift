@@ -124,7 +124,7 @@ public class PDFGenerator {
     ///   An extra margin to apply between the main content and header and the footer.
     ///   The goal is to avoid having the content of `main_html` touching the header or the footer.
     /// - Returns: The rendered data of PDF.
-    public func generate(sideMargin: Int = 2, extraVerticalMargin:Int = 30) -> Data?{
+    public func generate(sideMargin: Float = 2, extraVerticalMargin:Float = 30) -> Data?{
         
         var headerBody: PythonObject?
         var headerHeight: Float = 0
@@ -142,7 +142,7 @@ public class PDFGenerator {
             footerHeight = footerResult.elementHeight
         }
         
-        let margins = "\(headerHeight + Float(extraVerticalMargin))px \(footerHeight + Float(extraVerticalMargin))px \(sideMargin)cm"
+        let margins = "\(headerHeight + extraVerticalMargin)px \(footerHeight + extraVerticalMargin)px \(sideMargin)cm"
         
         let contentPrintLayout = "@page {size: A4 portrait; margin: \(margins);}"
         
