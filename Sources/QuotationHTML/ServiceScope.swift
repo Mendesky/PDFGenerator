@@ -26,12 +26,12 @@ func toChineseNumber(index: Int)->String{
 
 public struct ServiceScope: Component {
     let title: String
-    let content: String
-    let items: [ServiceScopeItem]?
+    let heading: String
+    let items: [QuotingServiceTerm]?
     
     public var body: any Component{
         ComponentGroup{
-            Paragraph(content).style("text-indent: 2em;")
+            Paragraph(heading).style("text-indent: 2em;")
             if let items{
                 List{
                     for item in items {
@@ -43,9 +43,9 @@ public struct ServiceScope: Component {
         }
     }
     
-    public init(title: String, content: String, items: [ServiceScopeItem]?) {
+    public init(title: String, heading: String, items: [QuotingServiceTerm]?) {
         self.title = title
-        self.content = content
+        self.heading = heading
         self.items = items
     }
 }

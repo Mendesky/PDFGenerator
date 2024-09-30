@@ -18,8 +18,8 @@ let purpose = ContentItem(title: "目的", content: "貴公司委託本事務所
 //print(purpose.render())
 //
 //print("\n")
-let scope = ServiceScope(title: "服務範圍及內容", content: "本項專案作業之服務範圍將根據相關稅務法令、企業會計準則與會計師查核簽證準則之規定，由  貴公司委託本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務，俾能符合相關法令規定與提升整體會計帳務品質。具體服務事項如下：", items: [
-    ServiceScopeItem(title: "營利事業所得稅查核簽證", content: "營利事業所得稅查核簽證主要係包括執行營利事業所得稅結算申報程序及依照「所得稅法」規定進行會計師查核簽證作業。", termStrings: ["平時會計帳務作業", "資金流程作業。", "成本表編製作業。"])
+let scope = ServiceScope(title: "服務範圍及內容", heading: "本項專案作業之服務範圍將根據相關稅務法令、企業會計準則與會計師查核簽證準則之規定，由  貴公司委託本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務，俾能符合相關法令規定與提升整體會計帳務品質。具體服務事項如下：", items: [
+    QuotingServiceTerm(title: "營利事業所得稅查核簽證", term: "營利事業所得稅查核簽證主要係包括執行營利事業所得稅結算申報程序及依照「所得稅法」規定進行會計師查核簽證作業。", termStrings: ["平時會計帳務作業", "資金流程作業。", "成本表編製作業。"])
 ])
 //print(scope.render())
 
@@ -66,10 +66,10 @@ let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, 
 
 
 let contractSubject = "承 貴公司委任本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務，至深感荷。謹將服務內容及酬金等分別說明如後，敬請卓察賜覆為禱。"
-let description = "感謝 貴公司對本事務所的支持與愛護，本事務所本著積極服務顧客的熱忱，以及專業智慧的多元服務，特將本事務所受託辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務內容概述如後，期盼此項合作能協助 貴公司提升會計帳務品質，俾能符合相關稅務法令和企業會計準則之規定。茲將委任之目的、服務範圍、 貴公司協助事項、酬金、權利義務事項及同意函列示如下："
-let contractForm = ContractForm(receiver: receiver, sender: sender, subject: contractSubject, description: description)
+let content = "感謝 貴公司對本事務所的支持與愛護，本事務所本著積極服務顧客的熱忱，以及專業智慧的多元服務，特將本事務所受託辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務內容概述如後，期盼此項合作能協助 貴公司提升會計帳務品質，俾能符合相關稅務法令和企業會計準則之規定。茲將委任之目的、服務範圍、 貴公司協助事項、酬金、權利義務事項及同意函列示如下："
+let contractHeader = ContractHeader(receiver: receiver, sender: sender, subject: contractSubject, content: content)
 
-let quotation = BusinessClientQuotation(no: quotationNo, purpose: purpose, payment: payment, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractForm: contractForm)
+let quotation = BusinessClientQuotation(no: quotationNo, purpose: purpose, payment: payment, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader)
 print(quotation.render())
 let generator = PDFGenerator(mainHtml: quotation, headerHtml: BusinessClientQuotation.headerHTML, footerHtml: BusinessClientQuotation.footerHTML)
 let pdfData = generator.generate(sideMargin: 2)
