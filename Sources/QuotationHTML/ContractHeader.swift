@@ -6,17 +6,17 @@
 //
 import Plot
 
-public struct ContractForm: Component {
+public struct ContractHeader: Component {
     let receiver: String
     let sender: String
     let subject: String
-    let description: String
+    let content: String
     
-    public init(receiver: String, sender: String, subject: String, description: String) {
+    public init(receiver: String, sender: String, subject: String, content: String) {
         self.receiver = receiver
         self.sender = sender
         self.subject = subject
-        self.description = description
+        self.content = content
     }
     
     public var body: any Component{
@@ -36,7 +36,7 @@ public struct ContractForm: Component {
                 }
                 TableRow{
                     TableCell("說    明：").style("vertical-align: top;")
-                    TableCell(description)
+                    TableCell(content)
                 }
             }.style("font-size: 12px; margin: 2rem 2rem 3rem 2rem;")
         }

@@ -20,9 +20,9 @@ public struct BusinessClientQuotation: Renderable {
     let assistance: BusinessClientAssistance
     let notes: Note
     let replyForm: ReplyForm
-    let contractForm: ContractForm
+    let contractHeader: ContractHeader
     
-    public init(no: String, purpose: ContentItem, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance, notes: Note, replyForm: ReplyForm, contractForm: ContractForm) {
+    public init(no: String, purpose: ContentItem, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader) {
         self.no = no
         self.purpose = purpose
         self.payment = payment
@@ -31,7 +31,7 @@ public struct BusinessClientQuotation: Renderable {
         self.assistance = assistance
         self.notes = notes
         self.replyForm = replyForm
-        self.contractForm = contractForm
+        self.contractHeader = contractHeader
     }
     
     public func render(indentedBy indentationKind: Plot.Indentation.Kind?) -> String {
@@ -42,7 +42,7 @@ public struct BusinessClientQuotation: Renderable {
                     Page.break
                     H3("專業服務公費報價單").style("text-align: center;")
                     Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
-                    contractForm
+                    contractHeader
                     Table{
                         TableRow(TableCell("一、\(purpose.title)"))
                         TableRow(TableCell(purpose))
