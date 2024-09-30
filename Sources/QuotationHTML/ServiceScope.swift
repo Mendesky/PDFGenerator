@@ -27,7 +27,7 @@ func toChineseNumber(index: Int)->String{
 public struct ServiceScope: Component {
     let title: String
     let heading: String
-    let items: [QuotingService]?
+    let items: [QuotingServiceTerm]?
     
     public var body: any Component{
         ComponentGroup{
@@ -43,7 +43,7 @@ public struct ServiceScope: Component {
         }
     }
     
-    public init(title: String, heading: String, items: [QuotingService]?) {
+    public init(title: String, heading: String, items: [QuotingServiceTerm]?) {
         self.title = title
         self.heading = heading
         self.items = items
