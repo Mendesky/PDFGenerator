@@ -7,7 +7,7 @@
 
 import Plot
 
-public struct ServiceScopeItemTerm: Component {
+public struct ServiceItemTerm: Component {
     let term: String
     
     public var body: any Component{
