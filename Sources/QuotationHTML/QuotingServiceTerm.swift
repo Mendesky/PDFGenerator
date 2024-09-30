@@ -27,13 +27,13 @@ public struct QuotingServiceTerm: Component {
         }
     }
     
-    public init(title: String, term: String, serviceItemTerms: [ServiceItemTerm]?) {
+    public init(title: String, term: String?, serviceItemTerms: [ServiceItemTerm]?) {
         self.title = title
         self.term = term
         self.serviceItemTerms = serviceItemTerms
     }
     
-    public init(title: String, term: String, termStrings: [String]?) {
+    public init(title: String, term: String?, termStrings: [String]?) {
         self.init(title: title, term: term, serviceItemTerms: termStrings?.map{ ServiceItemTerm(term: $0)})
     }
 }
