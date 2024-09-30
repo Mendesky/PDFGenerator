@@ -8,13 +8,15 @@ import Plot
 
 public struct QuotingServiceTerm: Component {
     let title: String
-    let term: String
+    let term: String?
     let serviceItemTerms: [ServiceItemTerm]?
     
     public var body: any Component{
         ComponentGroup{
             Paragraph(title)
-            Paragraph(term).style("text-indent: 2em;")
+            if let term{
+                Paragraph(term).style("text-indent: 2em;")
+            }
             if let serviceItemTerms {
                 List{
                     for term in serviceItemTerms {
