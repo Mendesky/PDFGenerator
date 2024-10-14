@@ -13,16 +13,16 @@ struct Page{
 
 public struct BusinessClientQuotation: Renderable {
     let no: String
-    let purpose: ContentItem
+    let purpose: ContentItem?
     let payment: Payment
     let serviceScope: ServiceScope
     let letterHeader: LetterHeader
-    let assistance: BusinessClientAssistance
+    let assistance: BusinessClientAssistance?
     let notes: Note
     let replyForm: ReplyForm
-    let contractHeader: ContractHeader
+    let contractHeader: ContractHeader?
     
-    public init(no: String, purpose: ContentItem, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader) {
+    public init(no: String, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
         self.no = no
         self.purpose = purpose
         self.payment = payment
@@ -44,11 +44,15 @@ public struct BusinessClientQuotation: Renderable {
                     Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
                     contractHeader
                     Table{
-                        TableRow(TableCell("一、\(purpose.title)"))
+                        if let purpose {
+                            TableRow(TableCell("一、\(purpose.title)"))
+                        }
                         TableRow(TableCell(purpose))
                         TableRow(TableCell("二、\(serviceScope.title)"))
                         TableRow(TableCell(serviceScope))
-                        TableRow(TableCell("三、\(assistance.title)"))
+                        if let assistance {
+                            TableRow(TableCell("三、\(assistance.title)"))
+                        }
                         TableRow(TableCell(assistance))
                     }
 //                    Page.break
