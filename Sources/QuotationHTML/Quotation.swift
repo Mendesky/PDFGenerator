@@ -10,6 +10,12 @@ struct Page{
     }
 }
 
+protocol TitleContainableComponent: TitleContainable, Component{}
+
+extension ContentItem: TitleContainableComponent {}
+extension ServiceScope: TitleContainableComponent {}
+extension BusinessClientAssistance: TitleContainableComponent {}
+extension Payment: TitleContainableComponent {}
 
 public struct BusinessClientQuotation: Renderable {
     let no: String
@@ -21,7 +27,7 @@ public struct BusinessClientQuotation: Renderable {
     let notes: Note
     let replyForm: ReplyForm
     let contractHeader: ContractHeader?
-    
+
     public init(no: String, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
         self.no = no
         self.purpose = purpose
@@ -33,9 +39,15 @@ public struct BusinessClientQuotation: Renderable {
         self.replyForm = replyForm
         self.contractHeader = contractHeader
     }
+
+    func getTitleContainableItems() -> [TitleContainableComponent] {
+        let items:[(any TitleContainableComponent)?] = [purpose, serviceScope, assistance]
+        return items.compactMap{ $0 }
+    }
     
     public func render(indentedBy indentationKind: Plot.Indentation.Kind?) -> String {
-        HTML{
+        let components = getTitleContainableItems()
+        let html = HTML{
             ComponentGroup{
                 Div{
                     letterHeader
@@ -44,22 +56,18 @@ public struct BusinessClientQuotation: Renderable {
                     Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
                     contractHeader
                     Table{
-                        if let purpose {
-                            TableRow(TableCell("一、\(purpose.title)"))
+                        for (index, item) in components.enumerated() {
+                            let chineseNumber = toChineseNumber(index: index)
+                            TableRow(TableCell("\(chineseNumber)、\(item.title)"))
+                            TableRow(TableCell(item))
                         }
-                        TableRow(TableCell(purpose))
-                        TableRow(TableCell("二、\(serviceScope.title)"))
-                        TableRow(TableCell(serviceScope))
-                        if let assistance {
-                            TableRow(TableCell("三、\(assistance.title)"))
-                        }
-                        TableRow(TableCell(assistance))
                     }
 //                    Page.break
                     Table{
+                        let chineseNumber = toChineseNumber(index: components.count)
                         TableRow{
                             TableCell{
-                                Paragraph("四、")}
+                                Paragraph("\(chineseNumber)、")}
                             .style("vertical-align: top;")
                             TableCell(payment)
                         }
@@ -73,7 +81,7 @@ public struct BusinessClientQuotation: Renderable {
                 }.style("font-family: 標楷體-繁,標楷體;width: 100%;")
             }
         }
-        .render(indentedBy: indentationKind)
+        return html.render(indentedBy: indentationKind)
     }
     
 }

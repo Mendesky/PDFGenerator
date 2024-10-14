@@ -6,7 +6,7 @@
 //
 import Plot
 
-public struct QuotingServiceTerm: Component {
+public struct QuotingServiceTerm: Component, TitleContainable {
     let title: String
     let term: String?
     let serviceItemTerms: [ServiceItemTerm]?
