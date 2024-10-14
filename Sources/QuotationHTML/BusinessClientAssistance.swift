@@ -7,7 +7,7 @@
 
 import Plot
 
-public struct BusinessClientAssistance: Component{
+public struct BusinessClientAssistance: Component {
     
     let title: String
     let items: [ContentItem]
