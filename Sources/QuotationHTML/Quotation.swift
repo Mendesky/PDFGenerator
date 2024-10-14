@@ -78,7 +78,7 @@ public struct BusinessClientQuotation: Renderable {
                     }
                     Page.break
                     replyForm
-                }.style("font-family: 標楷體-繁,標楷體;width: 100%;")
+                }.style("font-family: 華康標楷體,標楷體-繁,標楷體;width: 100%;")
             }
         }
         return html.render(indentedBy: indentationKind)
