@@ -18,7 +18,7 @@ extension BusinessClientAssistance: TitleContainableComponent {}
 extension Payment: TitleContainableComponent {}
 
 public struct BusinessClientQuotation: Renderable {
-    let no: String
+    let no: String?
     let purpose: ContentItem?
     let payment: Payment
     let serviceScope: ServiceScope
@@ -28,7 +28,7 @@ public struct BusinessClientQuotation: Renderable {
     let replyForm: ReplyForm
     let contractHeader: ContractHeader?
 
-    public init(no: String, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
+    public init(no: String?, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
         self.no = no
         self.purpose = purpose
         self.payment = payment
@@ -53,7 +53,9 @@ public struct BusinessClientQuotation: Renderable {
                     letterHeader
                     Page.break
                     H3("專業服務公費報價單").style("text-align: center;")
-                    Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
+                    if let no {
+                        Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
+                    }
                     contractHeader
                     Table{
                         for (index, item) in components.enumerated() {
