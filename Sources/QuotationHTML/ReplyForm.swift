@@ -11,7 +11,7 @@ public struct ReplyForm: Component{
     let sender: String
     let subject: String
     let additionalServices: [String]
-    let quotationNo: String
+    let quotationNo: String?
     
     public var body: any Component{
         ComponentGroup{
@@ -37,7 +37,9 @@ public struct ReplyForm: Component{
                 }
                 TableRow{
                     TableCell("附　件：")
-                    TableCell("嘉威稅字第\(quotationNo)號公費報價單")
+                    if let quotationNo {
+                        TableCell("嘉威稅字第\(quotationNo)號公費報價單")
+                    }
                 }
             }.style("width: 100%;")
             Node.br()
