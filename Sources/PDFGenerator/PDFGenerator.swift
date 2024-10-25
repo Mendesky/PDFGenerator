@@ -7,14 +7,13 @@
 import PythonKit
 import Foundation
 
-let weasyprint = Python.import("weasyprint")
-let CSS = weasyprint.CSS
-let HTML = weasyprint.HTML
-
-
 let OVERLAY_LAYOUT = "@page {size: A4 portrait; margin: 0;}"
 
 public class PDFGenerator {
+    private let weasyprint = Python.import("weasyprint")
+    private var CSS: PythonObject{ weasyprint.CSS }
+    private var HTML: PythonObject{ weasyprint.HTML }
+    
     let mainHtml: String
     var headerHtml: PythonObject? = nil
     var footerHtml: PythonObject? = nil
