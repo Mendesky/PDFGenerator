@@ -11,15 +11,13 @@ let OVERLAY_LAYOUT = "@page {size: A4 portrait; margin: 0;}"
 
 public class PDFGenerator {
     private let weasyprint = Python.import("weasyprint")
-    private var CSS: PythonObject{ weasyprint.CSS }
-    private var HTML: PythonObject{ weasyprint.HTML }
-    
+
     let mainHtml: String
     var headerHtml: PythonObject? = nil
     var footerHtml: PythonObject? = nil
     let baseUrl: String?
     
-    /// <#Description#>
+    /// PDFGenerator
     /// - Parameters:
     ///   - mainHtml: `String`,
     ///   An HTML file (most of the time a template rendered into a string) which represents the core of the PDF to generate.
@@ -34,14 +32,14 @@ public class PDFGenerator {
         self.mainHtml = mainHtml
         
         if let headerHtml{
-            self.headerHtml = HTML(
+            self.headerHtml = weasyprint.HTML(
                 string: headerHtml,
                 base_url: baseUrl
             )
         }
         
         if let footerHtml{
-            self.footerHtml = HTML(
+            self.footerHtml = weasyprint.HTML(
                 string: footerHtml,
                 base_url: baseUrl
             )
@@ -61,7 +59,7 @@ public class PDFGenerator {
     /// element_height: float
     ///     The height of this element, which will be then translated in a html height
     private func computeOverlayElement(overlayHtml: PythonObject, element: String)->(elementBody: PythonObject?, elementHeight: Float)?{
-        let elementDoc = overlayHtml.render(stylesheets: [CSS(string: OVERLAY_LAYOUT)])
+        let elementDoc = overlayHtml.render(stylesheets: [weasyprint.CSS(string: OVERLAY_LAYOUT)])
         let elementPage = elementDoc.pages[0]
         
         guard var elementBody = Self.getElement(boxes: elementPage._page_box.all_children(), element: "body") else {
@@ -145,16 +143,15 @@ public class PDFGenerator {
         
         let contentPrintLayout = "@page {size: A4 portrait; margin: \(margins);}"
         
-        let html = HTML(
+        let html = weasyprint.HTML(
             string: mainHtml,
             base_url: baseUrl
         )
         
-        let mainDoc = html.render(stylesheets: [CSS(string: contentPrintLayout)])
+        let mainDoc = html.render(stylesheets: [weasyprint.CSS(string: contentPrintLayout)])
         
         
         applyOverlayOnMain(mainDoc: mainDoc, headerBody: headerBody, footerBody: footerBody)
-        
         
         guard let pyData: PythonBytes = PythonBytes(mainDoc.write_pdf()) else {
             return nil
@@ -163,4 +160,5 @@ public class PDFGenerator {
         let bytes = pyData.withUnsafeBytes{ $0.map{ $0 }}
         return Data(bytes)
     }
+
 }
