@@ -10,7 +10,7 @@ public struct ReplyForm: Component{
     let receiver: String
     let sender: String
     let subject: String
-    let additionalServices: [String]
+    let additionalServices: [AdditionalService]
     let quotationNo: String?
     
     public var body: any Component{
@@ -32,7 +32,11 @@ public struct ReplyForm: Component{
                 for additionalService in additionalServices{
                     TableRow{
                         TableCell("")
-                        TableCell("□\(additionalService)")
+                        if additionalService.isSeleted == false {
+                            TableCell("□\(additionalService.name)")
+                        } else {
+                            TableCell("☑\(additionalService.name)")
+                        }
                     }
                 }
                 TableRow{
@@ -64,7 +68,7 @@ public struct ReplyForm: Component{
         
     }
     
-    public init(receiver: String, sender: String, subject: String, additionalServices: [String], quotationNo: String?) {
+    public init(receiver: String, sender: String, subject: String, additionalServices: [AdditionalService], quotationNo: String?) {
         self.receiver = receiver
         self.sender = sender
         self.subject = subject
