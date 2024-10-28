@@ -1,7 +1,7 @@
 import Testing
 import Plot
 import Foundation
-@testable import Quotation
+@testable import QuotationHTML
 
 @Test func createLetterHTML() {
     // Write your test here and use APIs like `#expect(...)` to check expected conditions.
@@ -41,25 +41,25 @@ import Foundation
 
 
 
-@Test func createServiceScopeItemTermHtml(){
+@Test func createServiceItemTermHtml(){
     let term = "This is a Term string."
     
-    let serviceScopeItem = ServiceScopeItemTerm(term: term)
-    
-    #expect(serviceScopeItem.render() == "<li>\(term)</li>")
+    let serviceItemTerm = ServiceItemTerm(term: term)
+    print(serviceItemTerm.render())
+    #expect(serviceItemTerm.render() == "<li>\(term)</li>")
 }
 
 
-@Test func createServiceScopeItemHtml(){
+@Test func createQuotingServiceTermHtml(){
     let title = "Quotation Purpose"
     let content = "This is a description of the Purpose."
     let termStrings = ["Term1", "Term2"]
     
-    let terms = termStrings.map{ ServiceScopeItemTerm(term: $0) }
+    let terms = termStrings.map{ ServiceItemTerm(term: $0) }
     
-    let serviceItemScopeItem = ServiceScopeItem(title: title, content: content, terms: terms)
+    let quotingServiceTerm = QuotingServiceTerm(title: title, term: content, serviceItemTerms: terms)
     
-    #expect(serviceItemScopeItem.render() == "<p>\(title)</p><p style=\"text-indent: 2em;\">\(content)</p><ol><li>\(termStrings[0])</li><li>\(termStrings[1])</li></ol>")
+    #expect(quotingServiceTerm.render() == "<p>\(title)</p><p style=\"text-indent: 2em;\">\(content)</p><ol><li>\(termStrings[0])</li><li>\(termStrings[1])</li></ol>")
     
 }
 
@@ -67,13 +67,14 @@ import Foundation
 @Test func createServiceScopeHtml(){
     let title = "Quotation Service Scope"
     let content = "This is a description of the Service Scope."
-    let serviceScopeItems: [ServiceScopeItem] = [
-        ServiceScopeItem(title: "ItemTitle", content: "ItemContent", termStrings: nil)
+
+    let quotingServiceTerms: [QuotingServiceTerm] = [
+        QuotingServiceTerm(title: "ItemTitle", term: "ItemContent", serviceItemTerms: nil)
     ]
     
-    let serviceScope = ServiceScope(title: title, content: content, items: serviceScopeItems)
+    let serviceScope = ServiceScope(title: title, heading: content, items: quotingServiceTerms)
     
-    #expect(serviceScope.render() == "<p style=\"text-indent: 2em;\">\(content)</p><ol><li>\(serviceScopeItems[0].render())</li></ol>")
+    #expect(serviceScope.render() == "<p style=\"text-indent: 2em;\">\(content)</p><ol><li>\(quotingServiceTerms[0].render())</li></ol>")
 }
 
 
@@ -83,7 +84,7 @@ import Foundation
     let price: String = "5,000"
     let billingPeriod: BillingPeriod = .monthly13
     
-    let paymentItem = PaymentItem(names: names, price: price, billingPeriod: billingPeriod)
+    let paymentItem = PaymentItem(names: names, price: price, billingPeriod: billingPeriod.description)
     
     #expect(paymentItem.render() == "<td>\(names.joined(separator: "\(Node.br().render())"))</td><td>\(price)</td><td style=\"width: 2.5em;\">\(billingPeriod)</td>")
 }
@@ -93,10 +94,11 @@ import Foundation
 
 
 @Test func createPaymentHtml(){
+    let billingPeriod: BillingPeriod = .yearly
     let title = "酬金"
     let items: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: .yearly),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: .monthly13)
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: billingPeriod.description),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: billingPeriod.description)
     ]
     
     let paymentItem = Payment(title: title, items: items)
@@ -137,8 +139,7 @@ import Foundation
     ]
     
     let note = Note(contents: contents)
-    
-    #expect(note.render() == "<table><tr><td style=\"width: 3rem;vertical-align: top;\">註一：</td><td>\(contents[0])</td></tr><tr><td style=\"width: 3rem;vertical-align: top;\">註二：</td><td>\(contents[1])</td></tr><tr><td style=\"width: 3rem;vertical-align: top;\">註三：</td><td>\(contents[2])</td></tr></table>")
+    #expect(note.render() == "<table><tr><td style=\"width: 3rem;vertical-align: top;\">註一：</td><td><div><div>\(contents[0])</div></div></td></tr><tr><td style=\"width: 3rem;vertical-align: top;\">註二：</td><td><div><div>\(contents[1].components(separatedBy: "\n")[0])</div><div>\(contents[1].components(separatedBy: "\n")[1])</div><div>\(contents[1].components(separatedBy: "\n")[2])</div><div>\(contents[1].components(separatedBy: "\n")[3])</div></div></td></tr><tr><td style=\"width: 3rem;vertical-align: top;\">註三：</td><td><div><div>\(contents[2])</div></div></td></tr></table>")
     
 }
 
@@ -148,26 +149,25 @@ import Foundation
     let receiver = "全家人健康事業股份有限公司"
     let sender = "嘉威聯合會計師事務所"
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
-    let additionalServices: [String] = [
-        "代辦年度CTP申報(每年3月；加收2,000元/家)"
+    let additionalServices: [AdditionalService] = [
+        AdditionalService(name: "代辦年度CTP申報(每年3月；加收2,000元/家)", isSelected: false),
+        AdditionalService(name: "二代健保申報作業", isSelected: true) 
     ]
     let quotationNo = "111112101"
-    
+
     let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, additionalServices: additionalServices, quotationNo: quotationNo)
-    #expect(replyForm.render() == "<h2 style=\"text-align: center;\">同意函</h2><table style=\"width: 100%;\"><tr><td style=\"width: 70px;\">受文者：</td><td>\(sender)</td></tr><tr><td>主　旨：</td><td>\(subject)</td></tr><tr><td></td><td>附加服務請勾選：</td></tr><tr><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style=\"width: 100%;\"><tr><td style=\"width: 102px;\"></td><td>全家人健康事業股份有限公司</td><td style=\"width: 10rem;\"></td></tr><tr><td></td><td></td><td style=\"height: 6rem;vertical-align: top;\">（公　司　章）　　</td></tr><tr><td></td><td></td><td style=\"height: 6rem;vertical-align: top;\">（授權人簽名或蓋章）</td></tr></table>")
-    
-    
+    #expect(replyForm.render() == "<h2 style=\"text-align: center;\">同意函</h2><table style=\"width: 100%;\"><tr><td style=\"width: 70px;\">受文者：</td><td>\(sender)</td></tr><tr><td>主　旨：</td><td>\(subject)</td></tr><tr><td></td><td>附加服務請勾選：</td></tr><tr><td></td><td>□\(additionalServices[0].name)</td></tr><tr><td></td><td>☑\(additionalServices[1].name)</td></tr><tr><td>附　件：</td><td>嘉威稅字第\(quotationNo)號公費報價單</td></tr></table><br/><table style=\"width: 100%;\"><tr><td style=\"width: 102px;\"></td><td>\(receiver)</td><td style=\"width: 10rem;\"></td></tr><tr><td></td><td></td><td style=\"height: 6rem;vertical-align: top;\">（公　司　章）　　</td></tr><tr><td></td><td></td><td style=\"height: 6rem;vertical-align: top;\">（授權人簽名或蓋章）</td></tr></table>")
 }
 
 
 
-@Test func createContractForm(){
+@Test func createContractHeader(){
     let receiver = "全家人健康事業股份有限公司（以下簡稱 貴公司）"
     let sender = "嘉威聯合會計師事務所（以下簡稱 本事務所）"
     let subject = "承 貴公司委任本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務，至深感荷。謹將服務內容及酬金等分別說明如後，敬請卓察賜覆為禱。"
     let description = "感謝 貴公司對本事務所的支持與愛護，本事務所本著積極服務顧客的熱忱，以及專業智慧的多元服務，特將本事務所受託辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務內容概述如後，期盼此項合作能協助 貴公司提升會計帳務品質，俾能符合相關稅務法令和企業會計準則之規定。茲將委任之目的、服務範圍、 貴公司協助事項、酬金、權利義務事項及同意函列示如下："
     
-    let replyForm = ContractForm(receiver: receiver, sender: sender, subject: subject, description: description)
+    let replyForm = ContractHeader(receiver: receiver, sender: sender, subject: subject, content: description)
     
     #expect(replyForm.render() == "<table style=\"font-size: 12px; margin: 2rem 2rem 3rem 2rem;\"><tr><td style=\"vertical-align: top; width: 6em;\">受 文 者：</td><td>\(receiver)（以下簡稱 貴公司）</td></tr><tr><td style=\"vertical-align: top;\">發 文 者：</td><td>\(sender)（以下簡稱 本事務所）</td></tr><tr><td style=\"vertical-align: top;\">主    旨：</td><td>\(subject)</td></tr><tr><td style=\"vertical-align: top;\">說    明：</td><td>\(description)</td></tr></table>")
     
