@@ -32,7 +32,7 @@ public struct ReplyForm: Component{
                 for additionalService in additionalServices{
                     TableRow{
                         TableCell("")
-                        if additionalService.isSeleted == false {
+                        if additionalService.isSelected == false {
                             TableCell("□\(additionalService.name)")
                         } else {
                             TableCell("☑\(additionalService.name)")

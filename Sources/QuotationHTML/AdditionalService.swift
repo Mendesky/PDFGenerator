@@ -2,11 +2,11 @@ import Plot
 
 public struct AdditionalService: Component{
     let name: String
-    let isSeleted: Bool
+    let isSelected: Bool
     
-    public init(name: String, isSeleted: Bool) {
+    public init(name: String, isSelected: Bool) {
         self.name = name
-        self.isSeleted = isSeleted
+        self.isSelected = isSelected
     }
     
     public var body: any Component {
