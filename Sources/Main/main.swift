@@ -58,8 +58,8 @@ let receiver = "全家人健康事業股份有限公司"
 let sender = "嘉威聯合會計師事務所"
 let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
 let additionalServices: [AdditionalService] = [
-    AdditionalService(name: "代辦年度CTP申報(每年3月；加收2,000元/家)", isSeleted: false),
-    AdditionalService(name: "二代健保申報作業", isSeleted: true) 
+    AdditionalService(name: "代辦年度CTP申報(每年3月；加收2,000元/家)", isSelected: false),
+    AdditionalService(name: "二代健保申報作業", isSelected: true) 
 ]
 let quotationNo = "111112101"
 
