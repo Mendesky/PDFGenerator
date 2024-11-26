@@ -27,9 +27,8 @@ public struct BusinessClientQuotation: Renderable {
     let notes: Note
     let replyForm: ReplyForm
     let contractHeader: ContractHeader?
-    let organization: String
 
-    public init(no: String?, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?, organization: String) {
+    public init(no: String?, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
         self.no = no
         self.purpose = purpose
         self.payment = payment
@@ -39,7 +38,6 @@ public struct BusinessClientQuotation: Renderable {
         self.notes = notes
         self.replyForm = replyForm
         self.contractHeader = contractHeader
-        self.organization = organization
     }
 
     func getTitleContainableItems() -> [TitleContainableComponent] {
@@ -94,7 +92,7 @@ public struct BusinessClientQuotation: Renderable {
 extension BusinessClientQuotation{
     public var headerHTML: Component{
         let resource: String
-        switch organization {
+        switch replyForm.sender {
             case Organization.jw.rawValue:
                 resource = "jw-quotation-header"
             case Organization.jwTaipei.rawValue:
