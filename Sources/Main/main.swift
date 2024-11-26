@@ -34,10 +34,11 @@ let assistance = BusinessClientAssistance(title: "貴公司之協助辦理事項
 
 
 //print("\n")
-let payment = Payment(title: "酬金", items: [
+let paymentItems: [PaymentItem] = [
     .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
     .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
-])
+]
+let payment = Payment(title: "酬金", items: paymentItems)
 
 //print(payment.render())
 
@@ -63,7 +64,7 @@ let additionalServices: [AdditionalService] = [
 ]
 let quotationNo = "111112101"
 
-let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, additionalServices: additionalServices, quotationNo: quotationNo)
+let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, paymentItems: paymentItems, additionalServices: additionalServices, quotationNo: quotationNo)
 
 
 let contractSubject = "承 貴公司委任本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務，至深感荷。謹將服務內容及酬金等分別說明如後，敬請卓察賜覆為禱。"
