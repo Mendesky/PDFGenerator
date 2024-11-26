@@ -24,7 +24,7 @@ let package = Package(
                 .product(name: "Plot", package: "plot")
             ], resources: [
                 .copy("Resources/quotation-footer.png"),
-                .copy("Resources/quotation-header.png")
+                .copy("Resources/jw-quotation-header.png"),
               ]),
         .testTarget(
             name: "PDFGeneratorTests",
