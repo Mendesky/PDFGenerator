@@ -27,8 +27,9 @@ public struct BusinessClientQuotation: Renderable {
     let notes: Note
     let replyForm: ReplyForm
     let contractHeader: ContractHeader?
+    let organization: String
 
-    public init(no: String?, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
+    public init(no: String?, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?, organization: String) {
         self.no = no
         self.purpose = purpose
         self.payment = payment
@@ -38,6 +39,7 @@ public struct BusinessClientQuotation: Renderable {
         self.notes = notes
         self.replyForm = replyForm
         self.contractHeader = contractHeader
+        self.organization = organization
     }
 
     func getTitleContainableItems() -> [TitleContainableComponent] {
@@ -90,10 +92,31 @@ public struct BusinessClientQuotation: Renderable {
 
 
 extension BusinessClientQuotation{
-    public static var headerHTML: Component{
-        ComponentGroup{
+    public var headerHTML: Component{
+        let resource: String
+        switch organization {
+            case Organization.jw.rawValue:
+                resource = "jw-quotation-header"
+            case Organization.jwTaipei.rawValue:
+                resource = "jwTaipei-quotation-header"
+            case Organization.jwTaoyuan.rawValue:
+                resource = "jwTaoyuan-quotation-header"
+            case Organization.jwTaichung.rawValue:
+                resource = "jwTaichung-quotation-header"
+            case Organization.jwChanghua.rawValue:
+                resource = "jwChanghua-quotation-header"
+            case Organization.jwChiayi.rawValue:
+                resource = "jwChiayi-quotation-header"
+            case Organization.kd.rawValue:
+                resource = "kd-quotation-header"
+            case Organization.jwipo.rawValue:
+                resource = "jwipo-quotation-header"
+            default:
+                resource = "jw-quotation-header"
+        }
+        return ComponentGroup{
             Header{
-                Image(Bundle.module.url(forResource: "quotation-header", withExtension: "png")!)
+                Image(Bundle.module.url(forResource: resource, withExtension: "png")!)
             }
             
             Node<String>.element(named: "style", text: """
