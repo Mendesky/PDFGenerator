@@ -149,13 +149,17 @@ import Foundation
     let receiver = "全家人健康事業股份有限公司"
     let sender = "嘉威聯合會計師事務所"
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
+    let paymentItems: [PaymentItem] = [
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
+    ]
     let additionalServices: [AdditionalService] = [
         AdditionalService(name: "代辦年度CTP申報(每年3月；加收2,000元/家)", isSelected: false),
         AdditionalService(name: "二代健保申報作業", isSelected: true) 
     ]
     let quotationNo = "111112101"
 
-    let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, additionalServices: additionalServices, quotationNo: quotationNo)
+    let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, paymentItems: paymentItems, additionalServices: additionalServices, quotationNo: quotationNo)
     #expect(replyForm.render() == "<h2 style=\"text-align: center;\">同意函</h2><table style=\"width: 100%;\"><tr><td style=\"width: 70px;\">受文者：</td><td>\(sender)</td></tr><tr><td>主　旨：</td><td>\(subject)</td></tr><tr><td></td><td>附加服務請勾選：</td></tr><tr><td></td><td>□\(additionalServices[0].name)</td></tr><tr><td></td><td>☑\(additionalServices[1].name)</td></tr><tr><td>附　件：</td><td>嘉威稅字第\(quotationNo)號公費報價單</td></tr></table><br/><table style=\"width: 100%;\"><tr><td style=\"width: 102px;\"></td><td>\(receiver)</td><td style=\"width: 10rem;\"></td></tr><tr><td></td><td></td><td style=\"height: 6rem;vertical-align: top;\">（公　司　章）　　</td></tr><tr><td></td><td></td><td style=\"height: 6rem;vertical-align: top;\">（授權人簽名或蓋章）</td></tr></table>")
 }
 
