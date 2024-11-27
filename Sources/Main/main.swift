@@ -72,7 +72,7 @@ let content = "感謝 貴公司對本事務所的支持與愛護，本事務所�
 let contractHeader = ContractHeader(receiver: receiver, sender: sender, subject: contractSubject, content: content)
 
 let organization = Organization.jw.rawValue
-let quotation = BusinessClientQuotation(no: quotationNo, purpose: purpose, payment: payment, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, organization: organization)
+let quotation = BusinessClientQuotation(no: quotationNo, purpose: purpose, payment: payment, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader)
 print(quotation.render())
 let generator = PDFGenerator(mainHtml: quotation, headerHtml: quotation.headerHTML, footerHtml: BusinessClientQuotation.footerHTML)
 let pdfData = generator.generate(sideMargin: 2)
