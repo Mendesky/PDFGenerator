@@ -134,6 +134,30 @@ extension BusinessClientQuotation{
         """)
         }
     }
+
+    public static var headerHTML: Component{
+        ComponentGroup{
+            Header{
+                Image(Bundle.module.url(forResource: "jw-quotation-header", withExtension: "png")!)
+            }
+            
+            Node<String>.element(named: "style", text: """
+        img{
+            width: 80%;
+        }
+        header {
+            top: 50px;
+            position: fixed;
+            
+            /*left: 0;*/
+            text-align: center;
+            
+            height: 138px;
+            width: 100%;
+        }
+        """) 
+        }
+    }
     
     public static var footerHTML: Component{
         ComponentGroup{

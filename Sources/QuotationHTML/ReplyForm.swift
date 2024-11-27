@@ -88,7 +88,7 @@ public struct ReplyForm: Component{
         
     }
     
-    public init(receiver: String, sender: String, subject: String, paymentItems: [PaymentItem], additionalServices: [AdditionalService], quotationNo: String?) {
+    public init(receiver: String, sender: String, subject: String, paymentItems: [PaymentItem] = [], additionalServices: [AdditionalService], quotationNo: String?) {
         self.receiver = receiver
         self.sender = sender
         self.subject = subject
