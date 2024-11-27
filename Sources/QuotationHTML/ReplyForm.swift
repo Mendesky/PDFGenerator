@@ -13,6 +13,7 @@ public struct ReplyForm: Component{
     let paymentItems: [PaymentItem]
     let additionalServices: [AdditionalService]
     let quotationNo: String?
+    let displaySender: String
     
     public var body: any Component{
         ComponentGroup{
@@ -20,7 +21,7 @@ public struct ReplyForm: Component{
             Table{
                 TableRow{
                     TableCell("受文者：").style("width: 70px; white-space: nowrap; vertical-align: top")
-                    TableCell(Organization(rawValue: sender).getName())
+                    TableCell(displaySender)
                 }
                 TableRow{
                     TableCell("主　旨：").style("white-space: nowrap; vertical-align: top")
@@ -86,5 +87,6 @@ public struct ReplyForm: Component{
         self.paymentItems = paymentItems
         self.additionalServices = additionalServices
         self.quotationNo = quotationNo
+        self.displaySender = Organization(rawValue: sender).displayName
     }
 }

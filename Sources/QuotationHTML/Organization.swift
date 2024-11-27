@@ -76,7 +76,7 @@ public enum Organization: String, Codable, Sendable {
         }
     }
 
-    package func getName() -> String {
+    public var displayName: String {
         return switch self {
         case .jw:
             "嘉威聯合會計師事務所"
