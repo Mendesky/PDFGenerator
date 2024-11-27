@@ -37,7 +37,7 @@ public struct LetterHeader: Component{
                     }.style("height: 3rem;")
                     TableRow{
                         TableCell("From").style("font-family: Times New Roman;")
-                        TableCell(from).style("text-align: left;")
+                        TableCell(Organization(rawValue: from).getName()).style("text-align: left;")
                     }.style("height: 3rem;")
                 }
             }.style("width: 100%;padding: 25px 25px 40px 25px;")
