@@ -35,45 +35,11 @@ public enum Organization: String, Codable, Sendable {
     }
 
     public var headerResource: String {
-        return switch self {
-            case .jw:
-                "jw-quotation-header"
-            case .jwTaipei:
-                "jwTaipei-quotation-header"
-            case .jwTaoyuan:
-                "jwTaoyuan-quotation-header"
-            case .jwTaichung:
-                "jwTaichung-quotation-header"
-            case .jwChanghua:
-                "jwChanghua-quotation-header"
-            case .jwChiayi:
-                "jwChiayi-quotation-header"
-            case .kd:
-                "kd-quotation-header"
-            case .jwipo:
-                "jwipo-quotation-header"
-        }
+        return "jw-quotation-header-\(rawValue)"
     }
 
     public var footerResource: String {
-        return switch self {
-            case .jw:
-                "jw-quotation-footer"
-            case .jwTaipei:
-                "jwTaipei-quotation-footer"
-            case .jwTaoyuan:
-                "jwTaoyuan-quotation-footer"
-            case .jwTaichung:
-                "jwTaichung-quotation-footer"
-            case .jwChanghua:
-                "jwChanghua-quotation-footer"
-            case .jwChiayi:
-                "jwChiayi-quotation-footer"
-            case .kd:
-                "kd-quotation-footer"
-            case .jwipo:
-                "jwipo-quotation-footer"
-        }
+        return "jw-quotation-footer-\(rawValue)"
     }
 
     public var displayName: String {
