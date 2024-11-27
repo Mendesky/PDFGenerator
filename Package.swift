@@ -23,8 +23,10 @@ let package = Package(
             dependencies: [
                 .product(name: "Plot", package: "plot")
             ], resources: [
-                .copy("Resources/quotation-footer.png"),
-                .copy("Resources/jw-quotation-header.png"),
+                .copy("Resources/header/jw-quotation-header.png"),
+                .copy("Resources/header/jwTaipei-quotation-header.png"),
+                .copy("Resources/footer/jw-quotation-footer.png"),
+                .copy("Resources/footer/jwTaipei-quotation-footer.png")
               ]),
         .testTarget(
             name: "PDFGeneratorTests",

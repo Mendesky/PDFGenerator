@@ -93,7 +93,7 @@ extension BusinessClientQuotation{
     public var headerHTML: Component{
         ComponentGroup{
             Header{
-                Image(Bundle.module.url(forResource: Organization(rawValue: replyForm.sender).resource, withExtension: "png")!)
+                Image(Bundle.module.url(forResource: Organization(rawValue: replyForm.sender).headerResource, withExtension: "png")!)
             }
             
             Node<String>.element(named: "style", text: """
@@ -109,6 +109,27 @@ extension BusinessClientQuotation{
             
             height: 138px;
             width: 100%;
+        }
+        """)
+        }
+    }
+
+    public var footerHTML: Component{
+        ComponentGroup{
+            Footer{
+                Image(Bundle.module.url(forResource: Organization(rawValue: replyForm.sender).footerResource, withExtension: "png")!)
+            }
+            
+            Node<String>.element(named: "style", text: """
+        img{
+            width: 80%;
+        }
+        footer {
+            position: fixed;
+            bottom: 0;
+            text-align: center;     
+            width: 100%;
+            height: 116px;
         }
         """)
         }
@@ -141,7 +162,7 @@ extension BusinessClientQuotation{
     public static var footerHTML: Component{
         ComponentGroup{
             Footer{
-                Image(Bundle.module.url(forResource: "quotation-footer", withExtension: "png")!)
+                Image(Bundle.module.url(forResource: "jw-quotation-footer", withExtension: "png")!)
             }
             
             Node<String>.element(named: "style", text: """

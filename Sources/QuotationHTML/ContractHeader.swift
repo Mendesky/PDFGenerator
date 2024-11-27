@@ -28,7 +28,7 @@ public struct ContractHeader: Component {
                 }
                 TableRow{
                     TableCell("發 文 者：").style("vertical-align: top;")
-                    TableCell("\(sender)（以下簡稱 本事務所）")
+                    TableCell("\(Organization(rawValue: sender).getName())（以下簡稱 本事務所）")
                 }
                 TableRow{
                     TableCell("主    旨：").style("vertical-align: top;")
@@ -38,7 +38,7 @@ public struct ContractHeader: Component {
                     TableCell("說    明：").style("vertical-align: top;")
                     TableCell(content)
                 }
-            }.style("font-size: 12px; margin: 2rem 2rem 3rem 2rem;")
+            }.style("margin: 2rem 2rem 3rem 2rem;")
         }
     }
 }
