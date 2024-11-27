@@ -56,7 +56,7 @@ let notes = Note(contents: contents)
 
 
 let receiver = "全家人健康事業股份有限公司"
-let sender = "嘉威聯合會計師事務所"
+let sender = "88183980"
 let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
 let additionalServices: [AdditionalService] = [
     AdditionalService(name: "代辦年度CTP申報(每年3月；加收2,000元/家)", isSelected: false),
@@ -71,10 +71,9 @@ let contractSubject = "承 貴公司委任本事務所辦理有關營利事業�
 let content = "感謝 貴公司對本事務所的支持與愛護，本事務所本著積極服務顧客的熱忱，以及專業智慧的多元服務，特將本事務所受託辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務內容概述如後，期盼此項合作能協助 貴公司提升會計帳務品質，俾能符合相關稅務法令和企業會計準則之規定。茲將委任之目的、服務範圍、 貴公司協助事項、酬金、權利義務事項及同意函列示如下："
 let contractHeader = ContractHeader(receiver: receiver, sender: sender, subject: contractSubject, content: content)
 
-let organization = Organization.jw.rawValue
 let quotation = BusinessClientQuotation(no: quotationNo, purpose: purpose, payment: payment, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader)
 print(quotation.render())
-let generator = PDFGenerator(mainHtml: quotation, headerHtml: quotation.headerHTML, footerHtml: BusinessClientQuotation.footerHTML)
+let generator = PDFGenerator(mainHtml: quotation, headerHtml: quotation.headerHTML, footerHtml: quotation.footerHTML)
 let pdfData = generator.generate(sideMargin: 2)
 //print(pdfData)
 

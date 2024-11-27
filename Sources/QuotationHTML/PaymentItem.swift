@@ -51,3 +51,31 @@ public struct PaymentItem: Component{
         self.billingPeriod = billingPeriod
     }
 }
+
+public struct ReplyFormPayment: Component {
+
+    let paymentItems: [PaymentItem]
+
+    public var body: any Component {
+        ComponentGroup {
+            Table {
+                for (index, item) in paymentItems.enumerated() {
+                    TableRow {
+                        TableCell("(\(index+1))").style("vertical-align: middle;")
+                        TableCell {
+                            for name in item.names {
+                                Div(name)
+                            }
+                        }.style("vertical-align: middle;")
+                        TableCell(item.price)
+                        TableCell(item.billingPeriod.description)
+                    }
+                }
+            }.style("font-size: 14px;")
+        }
+    }
+    
+    public init(paymentItems: [PaymentItem]) {
+        self.paymentItems = paymentItems
+    }
+}

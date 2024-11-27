@@ -18,7 +18,7 @@ public struct Payment: Component {
                 TableRow{
                     TableCell()
                     TableCell("服務項目")
-                    TableCell("公費金額")
+                    TableCell("公費金額").style("white-space: nowrap")
                     TableCell()
                 }.style("border-bottom: 1pt solid black;")
                 
@@ -29,7 +29,7 @@ public struct Payment: Component {
                     }
                 }
                 
-            }.style("border-collapse: collapse; font-size: 12px; width: 100%;")
+            }.style("border-collapse: collapse; width: 100%;")
         }
     }
     

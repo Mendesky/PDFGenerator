@@ -139,7 +139,7 @@ public class PDFGenerator {
             footerHeight = footerResult.elementHeight
         }
         
-        let margins = "\(headerHeight + extraVerticalMargin)px \(footerHeight + extraVerticalMargin)px \(sideMargin)cm"
+        let margins = "\(headerHeight + extraVerticalMargin)px \(sideMargin)cm \(footerHeight + extraVerticalMargin)px \(sideMargin)cm"
         
         let contentPrintLayout = "@page {size: A4 portrait; margin: \(margins);}"
         
