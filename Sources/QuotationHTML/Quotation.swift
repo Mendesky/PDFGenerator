@@ -91,30 +91,9 @@ public struct BusinessClientQuotation: Renderable {
 
 extension BusinessClientQuotation{
     public var headerHTML: Component{
-        let resource: String
-        switch replyForm.sender {
-            case Organization.jw.rawValue:
-                resource = "jw-quotation-header"
-            case Organization.jwTaipei.rawValue:
-                resource = "jwTaipei-quotation-header"
-            case Organization.jwTaoyuan.rawValue:
-                resource = "jwTaoyuan-quotation-header"
-            case Organization.jwTaichung.rawValue:
-                resource = "jwTaichung-quotation-header"
-            case Organization.jwChanghua.rawValue:
-                resource = "jwChanghua-quotation-header"
-            case Organization.jwChiayi.rawValue:
-                resource = "jwChiayi-quotation-header"
-            case Organization.kd.rawValue:
-                resource = "kd-quotation-header"
-            case Organization.jwipo.rawValue:
-                resource = "jwipo-quotation-header"
-            default:
-                resource = "jw-quotation-header"
-        }
-        return ComponentGroup{
+        ComponentGroup{
             Header{
-                Image(Bundle.module.url(forResource: resource, withExtension: "png")!)
+                Image(Bundle.module.url(forResource: Organization(rawValue: replyForm.sender).resource, withExtension: "png")!)
             }
             
             Node<String>.element(named: "style", text: """
