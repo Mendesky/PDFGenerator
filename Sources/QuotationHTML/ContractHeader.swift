@@ -8,17 +8,15 @@ import Plot
 
 public struct ContractHeader: Component {
     let receiver: String
-    let sender: String
+    let sender: Organization
     let subject: String
     let content: String
-    let displaySender: String
     
     public init(receiver: String, sender: String, subject: String, content: String) {
         self.receiver = receiver
-        self.sender = sender
+        self.sender = Organization(rawValue: sender)
         self.subject = subject
         self.content = content
-        self.displaySender = Organization(rawValue: sender).displayName
     }
     
     public var body: any Component{
@@ -30,7 +28,7 @@ public struct ContractHeader: Component {
                 }
                 TableRow{
                     TableCell("發 文 者：").style("vertical-align: top;")
-                    TableCell("\(displaySender)（以下簡稱 本事務所）")
+                    TableCell("\(sender.displayName)（以下簡稱 本事務所）")
                 }
                 TableRow{
                     TableCell("主    旨：").style("vertical-align: top;")

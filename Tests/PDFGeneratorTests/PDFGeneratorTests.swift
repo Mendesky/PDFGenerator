@@ -6,7 +6,7 @@ import Foundation
 @Test func createLetterHTML() {
     // Write your test here and use APIs like `#expect(...)` to check expected conditions.
     let to = "Jane Doe"
-    let from = "John Doe"
+    let from = "88183980"
     let content = "This is a testing content."
     
     let taiwanYear = 113
@@ -23,8 +23,10 @@ import Foundation
     
     let blessings = "順頌 商祺"
     let letter = LetterHeader(to: to, from: from, content: content, date: testingDate!, blessings: blessings)
-    
-    #expect(letter.render() == "<div style=\"width: 100%;padding: 25px 25px 40px 25px;\"><table><tr style=\"height: 3rem;\"><td style=\"font-family: Times New Roman;width: 5rem;\">To</td><td style=\"text-align: left;\">\(to)</td></tr><tr style=\"height: 3rem;\"><td style=\"font-family: Times New Roman;\">From</td><td style=\"text-align: left;\">\(from)</td></tr></table></div><table><tr><td colspan=\"2\"><hr/><p style=\"text-indent: 2em;\">\(content)</p></td></tr><tr><td style=\"text-indent: 2em;\" colspan=\"2\">\(blessings)</td></tr><tr><td colspan=\"2\" dir=\"rtl\">\(from)<br/>\(testingDateString)</td></tr></table>")
+    print(letter.render())
+    #expect(letter.render() == """
+    <div style="width: 100%;padding: 25px 25px 40px 25px;"><table><tr style="height: 3rem;"><td style="font-family: Times New Roman;width: 5rem;">To</td><td style="text-align: left;">\(to)</td></tr><tr style="height: 3rem;"><td style="font-family: Times New Roman;">From</td><td style="text-align: left;">\(letter.from.displayName)</td></tr></table></div><table><tr><td colspan="2"><hr/><p style="text-indent: 2em;">\(content)</p></td></tr><tr><td style="text-indent: 2em;" colspan="2">\(blessings)</td></tr><tr><td colspan="2" dir="rtl">\(letter.from.displayName)<br/>\(testingDateString)</td></tr></table>
+    """)
 }
 
 
@@ -45,7 +47,6 @@ import Foundation
     let term = "This is a Term string."
     
     let serviceItemTerm = ServiceItemTerm(term: term)
-    print(serviceItemTerm.render())
     #expect(serviceItemTerm.render() == "<li>\(term)</li>")
 }
 
@@ -102,8 +103,9 @@ import Foundation
     ]
     
     let paymentItem = Payment(title: title, items: items)
-    
-    #expect(paymentItem.render() == "<p>\(title)</p><table style=\"border-collapse: collapse; font-size: 12px; width: 100%;\"><tr style=\"border-bottom: 1pt solid black;\"><td></td><td>服務項目</td><td>公費金額</td><td></td></tr><tr><td>(1)</td>\(items[0].render())</tr><tr><td>(2)</td>\(items[1].render())</tr></table>")
+    #expect(paymentItem.render() == """
+    <p>\(title)</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1pt solid black;"><td></td><td>服務項目</td><td style="white-space: nowrap">公費金額</td><td></td></tr><tr><td>(1)</td>\(items[0].render())</tr><tr><td>(2)</td>\(items[1].render())</tr></table>
+    """)
 }
 
 
@@ -147,7 +149,7 @@ import Foundation
 
 @Test func createReplyForm(){
     let receiver = "全家人健康事業股份有限公司"
-    let sender = "嘉威聯合會計師事務所"
+    let sender = "88183980"
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
     let paymentItems: [PaymentItem] = [
         .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
@@ -161,21 +163,20 @@ import Foundation
 
     let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, paymentItems: paymentItems, additionalServices: additionalServices, quotationNo: quotationNo)
     #expect(replyForm.render() == """
-    <h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>嘉威聯合會計師事務所</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td style="white-space: nowrap; vertical-align: top">酬　金：</td><td><table style="border-collapse: collapse; font-size: 12px; width: 100%;"><tr style="border-bottom: 1pt solid black;"><td></td><td>服務項目</td><td style="white-space: nowrap">公費金額</td><td></td></tr><tr><td>(1)</td><td>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</td><td>5,000</td><td style="width: 2.5em;">元/年</td></tr><tr><td>(2)</td><td>會計帳務處理作業（113 年 5 月開始）</td><td>6,000</td><td style="width: 2.5em;">元/月</td></tr></table></td></tr><tr><td style="white-space: nowrap; vertical-align: top">附加服務請勾選：</td><td><table style="border-collapse: collapse"><tr><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr><td></td><td>☑二代健保申報作業</td></tr></table></td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>全家人健康事業股份有限公司</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table>
+    <h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>\(replyForm.sender.displayName)</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 14px;"><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td>5,000</td><td>元/年</td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td>6,000</td><td>元/月</td></tr></table></td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top;">附加服務請勾選：</td></tr><tr style="font-size: 14px;"><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr style="font-size: 14px;"><td></td><td>☑二代健保申報作業</td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>\(receiver)</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table>
     """)
 }
 
 
 
 @Test func createContractHeader(){
-    let receiver = "全家人健康事業股份有限公司（以下簡稱 貴公司）"
-    let sender = "嘉威聯合會計師事務所（以下簡稱 本事務所）"
+    let receiver = "全家人健康事業股份有限公司"
+    let sender = "88183980"
     let subject = "承 貴公司委任本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務，至深感荷。謹將服務內容及酬金等分別說明如後，敬請卓察賜覆為禱。"
     let description = "感謝 貴公司對本事務所的支持與愛護，本事務所本著積極服務顧客的熱忱，以及專業智慧的多元服務，特將本事務所受託辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務內容概述如後，期盼此項合作能協助 貴公司提升會計帳務品質，俾能符合相關稅務法令和企業會計準則之規定。茲將委任之目的、服務範圍、 貴公司協助事項、酬金、權利義務事項及同意函列示如下："
     
-    let replyForm = ContractHeader(receiver: receiver, sender: sender, subject: subject, content: description)
-    
-    #expect(replyForm.render() == "<table style=\"font-size: 12px; margin: 2rem 2rem 3rem 2rem;\"><tr><td style=\"vertical-align: top; width: 6em;\">受 文 者：</td><td>\(receiver)（以下簡稱 貴公司）</td></tr><tr><td style=\"vertical-align: top;\">發 文 者：</td><td>\(sender)（以下簡稱 本事務所）</td></tr><tr><td style=\"vertical-align: top;\">主    旨：</td><td>\(subject)</td></tr><tr><td style=\"vertical-align: top;\">說    明：</td><td>\(description)</td></tr></table>")
-    
-    
+    let contractHeader = ContractHeader(receiver: receiver, sender: sender, subject: subject, content: description)
+    #expect(contractHeader.render() == """
+    <table style="margin: 2rem 2rem 3rem 2rem;"><tr><td style="vertical-align: top; width: 6em;">受 文 者：</td><td>\(receiver)（以下簡稱 貴公司）</td></tr><tr><td style="vertical-align: top;">發 文 者：</td><td>\(contractHeader.sender.displayName)（以下簡稱 本事務所）</td></tr><tr><td style="vertical-align: top;">主    旨：</td><td>\(subject)</td></tr><tr><td style="vertical-align: top;">說    明：</td><td>\(description)</td></tr></table>
+    """)
 }

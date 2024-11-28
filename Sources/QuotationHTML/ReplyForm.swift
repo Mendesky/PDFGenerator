@@ -8,12 +8,11 @@ import Plot
 
 public struct ReplyForm: Component{
     let receiver: String
-    let sender: String
+    let sender: Organization
     let subject: String
     let paymentItems: [PaymentItem]
     let additionalServices: [AdditionalService]
     let quotationNo: String?
-    let displaySender: String
     
     public var body: any Component{
         ComponentGroup{
@@ -21,7 +20,7 @@ public struct ReplyForm: Component{
             Table{
                 TableRow{
                     TableCell("受文者：").style("width: 70px; white-space: nowrap; vertical-align: top")
-                    TableCell(displaySender)
+                    TableCell(sender.displayName)
                 }
                 TableRow{
                     TableCell("主　旨：").style("white-space: nowrap; vertical-align: top")
@@ -82,11 +81,10 @@ public struct ReplyForm: Component{
     
     public init(receiver: String, sender: String, subject: String, paymentItems: [PaymentItem] = [], additionalServices: [AdditionalService], quotationNo: String?) {
         self.receiver = receiver
-        self.sender = sender
+        self.sender = Organization(rawValue: sender)
         self.subject = subject
         self.paymentItems = paymentItems
         self.additionalServices = additionalServices
         self.quotationNo = quotationNo
-        self.displaySender = Organization(rawValue: sender).displayName
     }
 }

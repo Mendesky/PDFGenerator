@@ -93,7 +93,7 @@ extension BusinessClientQuotation{
     public var headerHTML: Component{
         ComponentGroup{
             Header{
-                Image(Bundle.module.url(forResource: Organization(rawValue: replyForm.sender).headerResource, withExtension: "png")!)
+                Image(Bundle.module.url(forResource: replyForm.sender.headerResource, withExtension: "png")!)
             }
             
             Node<String>.element(named: "style", text: """
@@ -117,7 +117,7 @@ extension BusinessClientQuotation{
     public var footerHTML: Component{
         ComponentGroup{
             Footer{
-                Image(Bundle.module.url(forResource: Organization(rawValue: replyForm.sender).footerResource, withExtension: "png")!)
+                Image(Bundle.module.url(forResource: replyForm.sender.footerResource, withExtension: "png")!)
             }
             
             Node<String>.element(named: "style", text: """

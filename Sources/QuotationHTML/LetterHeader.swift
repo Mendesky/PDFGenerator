@@ -9,15 +9,14 @@ import Foundation
 
 public struct LetterHeader: Component{
     let to: String
-    let from: String
+    let from: Organization
     let content: String
     let dateString: String
     let blessings: String
-    let fromDisplayName: String
     
     public init(to: String, from: String, content: String, date: Date, blessings: String) {
         self.to = to
-        self.from = from
+        self.from = Organization(rawValue: from)
         self.content = content
         self.blessings = blessings
         
@@ -26,7 +25,6 @@ public struct LetterHeader: Component{
             $0 - 1911
         }
         self.dateString = "\(taiwanYear!).\(dateComponents.month!).\(dateComponents.day!)"
-        self.fromDisplayName = Organization(rawValue: from).displayName
     }
     
     public var body: Component {
@@ -39,7 +37,7 @@ public struct LetterHeader: Component{
                     }.style("height: 3rem;")
                     TableRow{
                         TableCell("From").style("font-family: Times New Roman;")
-                        TableCell(fromDisplayName).style("text-align: left;")
+                        TableCell(from.displayName).style("text-align: left;")
                     }.style("height: 3rem;")
                 }
             }.style("width: 100%;padding: 25px 25px 40px 25px;")
@@ -58,7 +56,7 @@ public struct LetterHeader: Component{
                 
                 TableRow{
                     TableCell{
-                        Text(fromDisplayName)
+                        Text(from.displayName)
                         Node.br()
                         Text(dateString)
                     }
