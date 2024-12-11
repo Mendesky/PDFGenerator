@@ -10,7 +10,7 @@ import Plot
 public struct BusinessClientAssistance: Component {
     
     let title: String
-    let items: [ContentItem]
+    let items: [BusinessClientAssistanceItem]
     
     public var body: any Component{
         ComponentGroup{
@@ -22,8 +22,13 @@ public struct BusinessClientAssistance: Component {
         }
     }
     
-    public init(title: String, items: [ContentItem]) {
+    public init(title: String, items: [BusinessClientAssistanceItem]) {
         self.title = title
         self.items = items
+    }
+
+    public init(title: String, items: [ContentItem]) {
+        self.title = title
+        self.items = items.map { BusinessClientAssistanceItem(title: $0.title, content: $0.content) }
     }
 }
