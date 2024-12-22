@@ -9,12 +9,11 @@ import Foundation
 
 let OVERLAY_LAYOUT = "@page {size: A4 portrait; margin: 0;}"
 
+@available(macOS 10.15, *)
 public class PDFGenerator {
-    private let weasyprint = Python.import("weasyprint")
-
     let mainHtml: String
-    var headerHtml: PythonObject? = nil
-    var footerHtml: PythonObject? = nil
+    var headerHtml: String? = nil
+    var footerHtml: String? = nil
     let baseUrl: String?
     
     /// PDFGenerator
@@ -28,23 +27,9 @@ public class PDFGenerator {
     ///   - baseUrl: `String?`
     ///     An absolute url to the page which serves as a reference to Weasyprint to fetch assets, required to get our media.
     public init(mainHtml: String, headerHtml: String? = nil, footerHtml: String? = nil, baseUrl: String? = nil){
-        
         self.mainHtml = mainHtml
-        
-        if let headerHtml{
-            self.headerHtml = weasyprint.HTML(
-                string: headerHtml,
-                base_url: baseUrl
-            )
-        }
-        
-        if let footerHtml{
-            self.footerHtml = weasyprint.HTML(
-                string: footerHtml,
-                base_url: baseUrl
-            )
-        }
-        
+        self.headerHtml = headerHtml
+        self.footerHtml = footerHtml
         self.baseUrl = baseUrl
     }
     
@@ -59,6 +44,7 @@ public class PDFGenerator {
     /// element_height: float
     ///     The height of this element, which will be then translated in a html height
     private func computeOverlayElement(overlayHtml: PythonObject, element: String)->(elementBody: PythonObject?, elementHeight: Float)?{
+        let weasyprint = Python.import("weasyprint")
         let elementDoc = overlayHtml.render(stylesheets: [weasyprint.CSS(string: OVERLAY_LAYOUT)])
         let elementPage = elementDoc.pages[0]
         
@@ -121,44 +107,61 @@ public class PDFGenerator {
     ///   An extra margin to apply between the main content and header and the footer.
     ///   The goal is to avoid having the content of `main_html` touching the header or the footer.
     /// - Returns: The rendered data of PDF.
-    public func generate(sideMargin: Float = 2, extraVerticalMargin:Float = 30) -> Data?{
+    public func generate(sideMargin: Float = 2, extraVerticalMargin:Float = 30) async -> Data?{
+
         
-        var headerBody: PythonObject?
-        var headerHeight: Float = 0
-        
-        var footerBody: PythonObject?
-        var footerHeight: Float = 0
-        
-        if let headerHtml, let headerResult = self.computeOverlayElement(overlayHtml: headerHtml, element: "header"){
-            headerBody = headerResult.elementBody
-            headerHeight = headerResult.elementHeight
+        return await MainActor.run {
+            
+            let weasyprint = Python.import("weasyprint")
+            let CSS = weasyprint.CSS
+            let HTML = weasyprint.HTML
+            
+            var headerBody: PythonObject?
+            var headerHeight: Float = 0
+            
+            var footerBody: PythonObject?
+            var footerHeight: Float = 0
+            
+            if let headerHtml, let headerResult = self.computeOverlayElement(overlayHtml: HTML(
+                string: headerHtml,
+                base_url: baseUrl
+            ), element: "header"){
+                headerBody = headerResult.elementBody
+                headerHeight = headerResult.elementHeight
+            }
+            
+            if let footerHtml, let footerResult = self.computeOverlayElement(overlayHtml: HTML(
+                string: footerHtml,
+                base_url: baseUrl
+            ), element: "footer"){
+                footerBody = footerResult.elementBody
+                footerHeight = footerResult.elementHeight
+            }
+            
+            let margins = "\(headerHeight + extraVerticalMargin)px \(sideMargin)cm \(footerHeight + extraVerticalMargin)px \(sideMargin)cm"
+            
+            let contentPrintLayout = "@page {size: A4 portrait; margin: \(margins);}"
+            
+            let html = HTML(
+                string: mainHtml,
+                base_url: baseUrl
+            )
+            
+            let stylesheet = CSS(string: contentPrintLayout)
+            
+            let mainDoc = html.render(stylesheets: [stylesheet])
+            
+            
+            applyOverlayOnMain(mainDoc: mainDoc, headerBody: headerBody, footerBody: footerBody)
+            
+            guard let pyData: PythonBytes = PythonBytes(mainDoc.write_pdf()) else {
+                return nil
+            }
+            
+            let bytes = pyData.withUnsafeBytes{ $0.map{ $0 }}
+            return Data(bytes)
         }
         
-        if let footerHtml, let footerResult = self.computeOverlayElement(overlayHtml: footerHtml, element: "footer"){
-            footerBody = footerResult.elementBody
-            footerHeight = footerResult.elementHeight
-        }
-        
-        let margins = "\(headerHeight + extraVerticalMargin)px \(sideMargin)cm \(footerHeight + extraVerticalMargin)px \(sideMargin)cm"
-        
-        let contentPrintLayout = "@page {size: A4 portrait; margin: \(margins);}"
-        
-        let html = weasyprint.HTML(
-            string: mainHtml,
-            base_url: baseUrl
-        )
-        
-        let mainDoc = html.render(stylesheets: [weasyprint.CSS(string: contentPrintLayout)])
-        
-        
-        applyOverlayOnMain(mainDoc: mainDoc, headerBody: headerBody, footerBody: footerBody)
-        
-        guard let pyData: PythonBytes = PythonBytes(mainDoc.write_pdf()) else {
-            return nil
-        }
-        
-        let bytes = pyData.withUnsafeBytes{ $0.map{ $0 }}
-        return Data(bytes)
     }
 
 }

@@ -7,6 +7,7 @@
 
 import Plot
 
+@available(macOS 10.15, *)
 extension PDFGenerator {
     public convenience init(mainHtml: Renderable, headerHtml: Renderable? = nil, footerHtml: Renderable? = nil, baseUrl: String? = nil, sideMargin: Int = 2, extraVerticalMargin:Int = 30){
         self.init(
