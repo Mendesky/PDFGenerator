@@ -149,7 +149,8 @@ public class PDFGenerator {
             
             let stylesheet = CSS(string: contentPrintLayout)
             
-            let mainDoc = html.render(stylesheets: [stylesheet])
+            let renderFunction = html.render
+            let mainDoc = renderFunction(stylesheets: [stylesheet])
             
             
             applyOverlayOnMain(mainDoc: mainDoc, headerBody: headerBody, footerBody: footerBody)
