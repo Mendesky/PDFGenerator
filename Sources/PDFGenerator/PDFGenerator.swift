@@ -60,9 +60,7 @@ public class PDFGenerator {
           ]
         process.environment = environment
         process.launchPath = "/usr/bin/python3"
-//        process.arguments = [
-//            "\(pythonFilePath) --main='\(mainHtmlPath)' --header='\(headerHtmlPath)' --footer='\(footerHtmlPath)' --side_margin=\(Int(sideMargin)) --extra_vertical_margin=\(Int(extraVerticalMargin))",
-//        ]
+        print("PDFGenerator process.launchPath:", process.launchPath)
         
         var arguments = [
             "\(pythonFilePath)",
