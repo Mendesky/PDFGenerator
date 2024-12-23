@@ -80,6 +80,8 @@ public final class PDFImageConverter {
         ]
         process.environment = environment
         process.launchPath = "/usr/bin/python3"
+        print("PDFImageConverter process.launchPath:", process.launchPath)
+        
         process.arguments = [
             pythonFilePath,
             "--id=\(uuid)"
