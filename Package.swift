@@ -45,11 +45,17 @@ let package = Package(
             dependencies: [
                 .product(name: "Plot", package: "plot"),
                 .product(name: "PythonKit", package: "pythonkit")
+            ],
+            resources: [
+                .copy("Python/pdf_generator.py")
             ]),
         .target(
             name: "PDFToImage",
             dependencies: [
                 .product(name: "PythonKit", package: "pythonkit")
+            ],
+            resources: [
+                .copy("Python/pdf_to_image.py")
             ]),
         .executableTarget(name: "Main",
                           dependencies: [
