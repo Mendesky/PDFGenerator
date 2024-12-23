@@ -64,21 +64,46 @@ public final class PDFImageConverter {
         }
     }
     
-    public func convert(data pdfData: Data) async throws -> [Data] {
-        return try await MainActor.run {
-            let pyBytes = PythonBytes(pdfData.map{ $0 })
-            let fitz = Python.import("fitz")
-            let document = fitz.open(stream: pyBytes)
-            return try document.map{ page in
-                let image = try convertPageToPILImage(page: page)
-                return converPILImageToData(image: image) ?? .init()
-            }
-        }
+    @available(macOS 13.0, *)
+    public func convert(data pdfData: Data) throws -> [Data] {
+        
+        let pythonFilePath = Bundle.module.path(forResource: "pdf_to_image", ofType: "py")!
+        
+        let process = Process()
+        let pipe = Pipe()
+        let uuid = UUID().uuidString
+        
+        try pdfData.write(to: URL.init(filePath: "/tmp/\(uuid).pdf"))
+        
+        let environment = [
+            "PATH": "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+        ]
+        process.environment = environment
+        process.launchPath = "/opt/homebrew/bin/python3"
+        process.arguments = [
+            pythonFilePath,
+            "--id=\(uuid)"
+        ]
+        
+        process.standardOutput = pipe
+        process.standardError = pipe
+        
+        
+        try process.run()
+        
+        let data = try pipe.fileHandleForReading.readToEnd() ?? Data()
+        print(String(data: data, encoding: .utf8))
+        
+        let pngPaths = try FileManager.default.contentsOfDirectory(atPath: "/tmp/\(uuid)")
+        let datas = try (0..<pngPaths.count).map{ try Data.init(contentsOf: .init(filePath: "/tmp/\(uuid)/\($0).png")) }
+        print(datas)
+        return datas
     }
     
+    @available(macOS 13.0, *)
     public func convert(url: URL) async throws -> [Data] {
         let pdfData = try Data.init(contentsOf: url)
-        return try await convert(data: pdfData)
+        return try convert(data: pdfData)
     }
 
 }

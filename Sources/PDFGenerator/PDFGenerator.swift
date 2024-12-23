@@ -7,8 +7,6 @@
 import PythonKit
 import Foundation
 
-let OVERLAY_LAYOUT = "@page {size: A4 portrait; margin: 0;}"
-
 @available(macOS 10.15, *)
 public class PDFGenerator {
     let mainHtml: String
@@ -34,71 +32,9 @@ public class PDFGenerator {
     }
     
     
-    /// Precomute the height of overlay element
-    /// - Parameters:
-    ///   - html: `HTML`, Either 'headerHtml' or 'footer Html'
-    ///   - element: `String`,  Either 'header' or 'footer'
-    /// - Returns:
-    /// element_body: BlockBox
-    ///     A Weasyprint pre-rendered representation of an html element
-    /// element_height: float
-    ///     The height of this element, which will be then translated in a html height
-    private func computeOverlayElement(overlayHtml: PythonObject, element: String)->(elementBody: PythonObject?, elementHeight: Float)?{
-        let weasyprint = Python.import("weasyprint")
-        let elementDoc = overlayHtml.render(stylesheets: [weasyprint.CSS(string: OVERLAY_LAYOUT)])
-        let elementPage = elementDoc.pages[0]
-        
-        guard var elementBody = Self.getElement(boxes: elementPage._page_box.all_children(), element: "body") else {
-            return nil
-        }
-        elementBody = elementBody.copy_with_children(elementBody.all_children())
-        
-        guard let elementHtml = Self.getElement(boxes: elementPage._page_box.all_children(), element: element) else {
-            return nil
-        }
-        
-        let elementHeight = if element == "header" { elementHtml.height }
-        else { elementPage.height - elementHtml.position_y }
-            
-        return (elementBody: elementBody, elementHeight: Float(elementHeight) ?? 0)
+    func render(html: PythonObject, stylesheets: PythonObject...)->PythonObject{
+        return html.render(stylesheets: stylesheets)
     }
-        
-    
-    /// Given a set of boxes representing the elements of a PDF page in a DOM-like way, find the box which is named `element`.
-    /// - Parameters:
-    ///   - boxes: [BlockBox]
-    ///   - element: [String]
-    /// - Returns: [Element]
-    static func getElement(boxes: PythonObject, element: String)->PythonObject?{
-        for box in boxes{
-            if let foundedBox = (boxes.first{ $0.element_tag == PythonObject(element)}){
-                return foundedBox
-            }
-            return getElement(boxes: box.all_children(), element: element)
-        }
-        return nil
-    }
-        
-    
-    /// Insert the header and the footer in the main document.
-    /// - Parameters:
-    ///   - mainDoc: `Document` The top level representation for a PDF page in Weasyprint.
-    ///   - headerBody: `BlockBox` A representation for an html element in Weasyprint.
-    ///   - footerBody: `BlockBox` A representation for an html element in Weasyprint.
-    private func applyOverlayOnMain(mainDoc: PythonObject, headerBody: PythonObject? = nil, footerBody: PythonObject? = nil){
-        for page in mainDoc.pages{
-            if let pageBody = Self.getElement(boxes: page._page_box.all_children(), element: "body"){
-                if let headerBody {
-                    pageBody.children += headerBody.all_children()
-                }
-                if let footerBody{
-                    pageBody.children += footerBody.all_children()
-                }
-            }
-        }
-                
-    }
-    
     /// Generate  the Data of PDF File
     /// - Parameters:
     ///   - sideMargin: `Int` interpreted in cm, by default 2cm.
@@ -107,62 +43,58 @@ public class PDFGenerator {
     ///   An extra margin to apply between the main content and header and the footer.
     ///   The goal is to avoid having the content of `main_html` touching the header or the footer.
     /// - Returns: The rendered data of PDF.
-    public func generate(sideMargin: Float = 2, extraVerticalMargin:Float = 30) async -> Data?{
-
+    @available(macOS 13.0, *)
+    public func generate(sideMargin: Float = 2, extraVerticalMargin:Float = 30) throws -> Data?{
         
-        return await MainActor.run {
-            
-            let weasyprint = Python.import("weasyprint")
-            let CSS = weasyprint.CSS
-            let HTML = weasyprint.HTML
-            
-            var headerBody: PythonObject?
-            var headerHeight: Float = 0
-            
-            var footerBody: PythonObject?
-            var footerHeight: Float = 0
-            
-            if let headerHtml, let headerResult = self.computeOverlayElement(overlayHtml: HTML(
-                string: headerHtml,
-                base_url: baseUrl
-            ), element: "header"){
-                headerBody = headerResult.elementBody
-                headerHeight = headerResult.elementHeight
-            }
-            
-            if let footerHtml, let footerResult = self.computeOverlayElement(overlayHtml: HTML(
-                string: footerHtml,
-                base_url: baseUrl
-            ), element: "footer"){
-                footerBody = footerResult.elementBody
-                footerHeight = footerResult.elementHeight
-            }
-            
-            let margins = "\(headerHeight + extraVerticalMargin)px \(sideMargin)cm \(footerHeight + extraVerticalMargin)px \(sideMargin)cm"
-            
-            let contentPrintLayout = "@page {size: A4 portrait; margin: \(margins);}"
-            
-            let html = HTML(
-                string: mainHtml,
-                base_url: baseUrl
-            )
-            
-            let stylesheet = CSS(string: contentPrintLayout)
-            
-            let renderFunction = html.render
-            let mainDoc = renderFunction(stylesheets: [stylesheet])
-            
-            
-            applyOverlayOnMain(mainDoc: mainDoc, headerBody: headerBody, footerBody: footerBody)
-            
-            guard let pyData: PythonBytes = PythonBytes(mainDoc.write_pdf()) else {
-                return nil
-            }
-            
-            let bytes = pyData.withUnsafeBytes{ $0.map{ $0 }}
-            return Data(bytes)
+        let bundles = Bundle.allBundles
+        
+
+        let pythonFilePath = Bundle.module.path(forResource: "pdf_generator", ofType: "py")!
+        
+        let process = Process()
+        let pipe = Pipe()
+        
+        let uuid = UUID().uuidString
+        let environment = [
+            "PATH": "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+          ]
+        process.environment = environment
+        process.launchPath = "/opt/homebrew/bin/python3"
+//        process.arguments = [
+//            "\(pythonFilePath) --main='\(mainHtmlPath)' --header='\(headerHtmlPath)' --footer='\(footerHtmlPath)' --side_margin=\(Int(sideMargin)) --extra_vertical_margin=\(Int(extraVerticalMargin))",
+//        ]
+        
+        var arguments = [
+            "\(pythonFilePath)",
+            "--id=\(uuid)",
+            "--main=\(mainHtml)",
+            "--side_margin=\(Int(sideMargin))",
+            "--extra_vertical_margin=\(Int(extraVerticalMargin))"
+        ]
+        if let headerHtml {
+            arguments.append("--header=\(headerHtml)")
         }
         
+        if let footerHtml {
+            arguments.append("--footer=\(footerHtml)")
+        }
+        process.arguments = arguments
+        process.standardOutput = pipe
+        process.standardError = pipe
+        
+//        print(command)
+        try process.run()
+        
+        let terminal = try pipe.fileHandleForReading.readToEnd()
+        print(String(data: terminal!, encoding: .utf8))
+        
+        print("/tmp/\(uuid).pdf")
+        return try Data(contentsOf: .init(filePath: "/tmp/\(uuid).pdf"))
+//        guard let pdfPath = String(data: data, encoding: .utf8) else{
+//            return nil
+//        }
+//        
+//        return try Data(contentsOf: URL(fileURLWithPath: pdfPath))
     }
 
 }
