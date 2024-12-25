@@ -74,7 +74,7 @@ let contractHeader = ContractHeader(receiver: receiver, sender: sender, subject:
 let quotation = BusinessClientQuotation(no: quotationNo, purpose: purpose, payment: payment, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader)
 print(quotation.render())
 let generator = PDFGenerator(mainHtml: quotation, headerHtml: quotation.headerHTML, footerHtml: quotation.footerHTML)
-let pdfData = generator.generate(sideMargin: 2)
+let pdfData = try generator.generate(sideMargin: 2)
 //print(pdfData)
 
 try pdfData?.write(to: URL(string: "file:///Users/gradyzhuo/test.pdf")!)
