@@ -5,7 +5,6 @@
 //  Created by Grady Zhuo on 2024/9/27.
 //
 
-import PythonKit
 import Foundation
 
 @available(macOS 10.15, *)
@@ -22,46 +21,6 @@ public final class PDFImageConverter {
         self.zoomX = zoomX
         self.zoomY = zoomY
         self.rotate = rotate
-    }
-    
-    private func converPILImageToData(image: PythonObject) ->Data?{
-        let io = Python.import("io")
-        let fitz = Python.import("fitz")
-        let PIL = Python.import("PIL")
-        
-        let imgBytesIO = io.BytesIO()
-        image.save(imgBytesIO, format: format)
-        
-        guard let pyBytes: PythonBytes = PythonBytes(imgBytesIO.getvalue()) else {
-            return nil
-        }
-        
-        let bytes = pyBytes.withUnsafeBytes{ $0.map{ $0 }}
-        return Data(bytes)
-    }
-    
-    private func convertPageToPILImage(page: PythonObject) throws -> PythonObject{
-        let PIL = Python.import("PIL")
-        let fitz = Python.import("fitz")
-        let Image = PIL.Image
-        let matrix = fitz.Matrix(zoomX, zoomY).prerotate(rotate)
-        let pixelMap  = page.get_pixmap(matrix: matrix, alpha: false)
-        return Image.frombytes(mode: mode,
-                                        size: [pixelMap.width, pixelMap.height],
-                                        data: pixelMap.samples
-        )
-    }
-    
-    
-    public func convert(pyBytes pdfBytes: PythonBytes) async throws -> [Data] {
-        return try await MainActor.run {
-            let fitz = Python.import("fitz")
-            let document = fitz.open(stream: pdfBytes)
-            return try document.map{ page in
-                let image = try convertPageToPILImage(page: page)
-                return converPILImageToData(image: image) ?? .init()
-            }
-        }
     }
     
     @available(macOS 13.0, *)

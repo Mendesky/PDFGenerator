@@ -4,7 +4,6 @@
 //
 //  Created by Grady Zhuo on 2024/9/24.
 //
-import PythonKit
 import Foundation
 
 @available(macOS 10.15, *)
@@ -31,10 +30,6 @@ public class PDFGenerator {
         self.baseUrl = baseUrl
     }
     
-    
-    func render(html: PythonObject, stylesheets: PythonObject...)->PythonObject{
-        return html.render(stylesheets: stylesheets)
-    }
     /// Generate  the Data of PDF File
     /// - Parameters:
     ///   - sideMargin: `Int` interpreted in cm, by default 2cm.
@@ -45,9 +40,6 @@ public class PDFGenerator {
     /// - Returns: The rendered data of PDF.
     @available(macOS 13.0, *)
     public func generate(sideMargin: Float = 2, extraVerticalMargin:Float = 30) throws -> Data?{
-        
-        let bundles = Bundle.allBundles
-        
 
         let pythonFilePath = Bundle.module.path(forResource: "pdf_generator", ofType: "py")!
         
@@ -60,7 +52,7 @@ public class PDFGenerator {
           ]
         process.environment = environment
         process.launchPath = "/usr/bin/python3"
-        print("PDFGenerator process.launchPath:", process.launchPath)
+        print("PDFGenerator run on:", process.launchPath ?? "")
         
         var arguments = [
             "\(pythonFilePath)",
@@ -80,19 +72,13 @@ public class PDFGenerator {
         process.standardOutput = pipe
         process.standardError = pipe
         
-//        print(command)
         try process.run()
         
         let terminal = try pipe.fileHandleForReading.readToEnd()
-        print(String(data: terminal!, encoding: .utf8))
+        print("Python3 output log:", String(data: terminal ?? .init(), encoding: .utf8))
         
         print("/tmp/\(uuid).pdf")
         return try Data(contentsOf: .init(filePath: "/tmp/\(uuid).pdf"))
-//        guard let pdfPath = String(data: data, encoding: .utf8) else{
-//            return nil
-//        }
-//        
-//        return try Data(contentsOf: URL(fileURLWithPath: pdfPath))
     }
 
 }
