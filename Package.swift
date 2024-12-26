@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SwiftPackageIndex/Plot.git", from: "0.14.0"),
-        .package(url: "https://github.com/pvieito/PythonKit.git", from: "0.5.0")
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.6.2")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -47,7 +47,7 @@ let package = Package(
             name: "PDFGenerator",
             dependencies: [
                 .product(name: "Plot", package: "plot"),
-                .product(name: "PythonKit", package: "pythonkit")
+                .product(name: "Logging", package: "swift-log")
             ],
             resources: [
                 .copy("Python/pdf_generator.py")
@@ -55,7 +55,7 @@ let package = Package(
         .target(
             name: "PDFToImage",
             dependencies: [
-                .product(name: "PythonKit", package: "pythonkit")
+                .product(name: "Logging", package: "swift-log")
             ],
             resources: [
                 .copy("Python/pdf_to_image.py")

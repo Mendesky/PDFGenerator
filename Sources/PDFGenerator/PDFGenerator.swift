@@ -5,6 +5,9 @@
 //  Created by Grady Zhuo on 2024/9/24.
 //
 import Foundation
+import Logging
+
+let logger = Logger(label: "PDFGenerator")
 
 @available(macOS 10.15, *)
 public class PDFGenerator {
@@ -51,8 +54,8 @@ public class PDFGenerator {
             "PATH": "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
           ]
         process.environment = environment
-        process.launchPath = "/usr/bin/python3"
-        print("PDFGenerator run on:", process.launchPath ?? "")
+        process.launchPath = "/opt/homebrew/bin/python3"
+        logger.info("PDFGenerator run on: \(process.launchPath ?? "")" )
         
         var arguments = [
             "\(pythonFilePath)",
@@ -74,11 +77,12 @@ public class PDFGenerator {
         
         try process.run()
         
-        let terminal = try pipe.fileHandleForReading.readToEnd()
-        print("Python3 output log:", String(data: terminal ?? .init(), encoding: .utf8))
+        let terminalLog = try pipe.fileHandleForReading.readToEnd() ?? .init()
+        logger.info("Python3 executing log: \(String(describing: String(data: terminalLog, encoding: .utf8)))")
         
-        print("/tmp/\(uuid).pdf")
-        return try Data(contentsOf: .init(filePath: "/tmp/\(uuid).pdf"))
+        let outputPath = "/tmp/\(uuid).pdf"
+        logger.info("PDF output: \(outputPath)")
+        return try Data(contentsOf: .init(filePath: outputPath))
     }
 
 }

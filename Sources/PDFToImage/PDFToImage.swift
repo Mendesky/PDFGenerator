@@ -6,6 +6,9 @@
 //
 
 import Foundation
+import Logging
+
+let logger = Logger(label: "PDFToImage")
 
 @available(macOS 10.15, *)
 public final class PDFImageConverter {
@@ -35,11 +38,11 @@ public final class PDFImageConverter {
         try pdfData.write(to: URL.init(filePath: "/tmp/\(uuid).pdf"))
         
         let environment = [
-            "PATH": "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
+            "PATH": ":/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
         ]
         process.environment = environment
-        process.launchPath = "/usr/bin/python3"
-        print("PDFImageConverter process.launchPath:", process.launchPath)
+        process.launchPath = "/opt/homebrew/bin/python3"
+        logger.info("PDFImageConverter run on: \(process.launchPath ?? "")" )
         
         process.arguments = [
             pythonFilePath,
@@ -52,13 +55,11 @@ public final class PDFImageConverter {
         
         try process.run()
         
-        let data = try pipe.fileHandleForReading.readToEnd() ?? Data()
-        print(String(data: data, encoding: .utf8))
+        let terminalLog = try pipe.fileHandleForReading.readToEnd() ?? .init()
+        logger.info("Python3 executing log: \(String(describing: String(data: terminalLog, encoding: .utf8)))")
         
         let pngPaths = try FileManager.default.contentsOfDirectory(atPath: "/tmp/\(uuid)")
-        let datas = try (0..<pngPaths.count).map{ try Data.init(contentsOf: .init(filePath: "/tmp/\(uuid)/\($0).png")) }
-        print(datas)
-        return datas
+        return try (0..<pngPaths.count).map{ try Data.init(contentsOf: .init(filePath: "/tmp/\(uuid)/\($0).png")) }
     }
     
     @available(macOS 13.0, *)
