@@ -1,5 +1,4 @@
 {
-  "originHash" : "a6611de5e6a2a51158009d0080d19e4159383a58da0c23c8e3e28c1d0f357a66",
   "pins" : [
     {
       "identity" : "plot",
@@ -11,14 +10,14 @@
       }
     },
     {
-      "identity" : "pythonkit",
+      "identity" : "swift-log",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pvieito/PythonKit.git",
+      "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "43647b36cacb99558e57ef98e97ef598f91d1164",
-        "version" : "0.5.0"
+        "revision" : "96a2f8a0fa41e9e09af4585e2724c4e825410b91",
+        "version" : "1.6.2"
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }
