@@ -74,6 +74,9 @@ public struct BusinessClientQuotation: Renderable {
                             TableCell(payment)
                         }
                         TableRow{
+                            TableCell("　").style("font-size: 1em;")
+                        }
+                        TableRow{
                             TableCell()
                             TableCell(notes)
                         }

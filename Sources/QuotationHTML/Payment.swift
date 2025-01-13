@@ -18,8 +18,7 @@ public struct Payment: Component {
                 TableRow{
                     TableCell()
                     TableCell("服務項目")
-                    TableCell("公費金額").style("white-space: nowrap")
-                    TableCell()
+                    TableCell("公費金額").style("text-align: right; padding-right: 1em;")
                 }.style("border-bottom: 1pt solid black;")
                 
                 for (index, item) in items.enumerated(){

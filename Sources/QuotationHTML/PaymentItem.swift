@@ -40,8 +40,7 @@ public struct PaymentItem: Component{
                     Text(name)
                 }
             }
-            TableCell(price).style("text-align: right;")
-            TableCell(billingPeriod.description).style("text-align: right; width: 2.5em;")
+            TableCell("\(price) \(billingPeriod.description)").style("text-align: right;")
         }
     }
     
