@@ -104,7 +104,7 @@ import Foundation
     
     let paymentItem = Payment(title: title, items: items)
     #expect(paymentItem.render() == """
-    <p>\(title)</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1pt solid black;"><td></td><td>服務項目</td><td style="white-space: nowrap">公費金額</td><td></td></tr><tr><td>(1)</td>\(items[0].render())</tr><tr><td>(2)</td>\(items[1].render())</tr></table>
+    <p>\(title)</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1pt solid black;"><td></td><td>服務項目</td><td colspan="2" style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</td></tr><tr><td>(1)</td>\(items[0].render())</tr><tr><td>(2)</td>\(items[1].render())</tr></table>
     """)
 }
 
