@@ -87,7 +87,7 @@ import Foundation
     
     let paymentItem = PaymentItem(names: names, price: price, billingPeriod: billingPeriod.description)
     
-    #expect(paymentItem.render() == "<td>\(names.joined(separator: "\(Node.br().render())"))</td><td>\(price)</td><td style=\"width: 2.5em;\">\(billingPeriod)</td>")
+    #expect(paymentItem.render() == "<td>\(names.joined(separator: "\(Node.br().render())"))</td><td style=\"text-align: right; white-space: nowrap;\">\(price)</td><td style=\"text-align: right; white-space: nowrap;\">\(billingPeriod)</td>")
 }
 
 
