@@ -4,6 +4,8 @@
 name: Swift-build-testing
 
 on:
+  push:
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
@@ -33,8 +35,6 @@ jobs:
             ssh-private-key: |
                   ${{ secrets.DDDKIT_ACCESS_TOKEN }}
                   ${{ secrets.PDFGENERATOR_ACCESS_TOKEN }}
-      - run: sh ./scripts/create_projection.sh
-      - run: ulimit -n 10000
       - name: Build and tests
         run: swift test -v --enable-code-coverage
       - uses: sersoft-gmbh/swift-coverage-action@v4
@@ -44,19 +44,3 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ join(fromJSON(steps.coverage-files.outputs.files), ',') }}
-    services:
-    # Label used to access the service container
-      eventstoredb:
-      # Docker Hub image
-        image: eventstore/eventstore
-        ports:
-          - "1113:1113"
-          - "2113:2113"
-        env:
-          EVENTSTORE_CLUSTER_SIZE: 1
-          EVENTSTORE_RUN_PROJECTIONS: All
-          EVENTSTORE_START_STANDARD_PROJECTIONS: true
-          EVENTSTORE_INT_TCP_PORT: 1113
-          EVENTSTORE_HTTP_PORT: 2113
-          EVENTSTORE_INSECURE: true
-          EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP: true
