@@ -67,8 +67,8 @@ public struct ReplyFormPayment: Component {
                                 Div(name)
                             }
                         }.style("vertical-align: middle;")
-                        TableCell(item.price)
-                        TableCell(item.billingPeriod.description)
+                        TableCell(item.price).style("text-align: right; white-space: nowrap;")
+                        TableCell(item.billingPeriod.description).style("text-align: right; white-space: nowrap;")
                     }
                 }
             }.style("font-size: 14px;")
