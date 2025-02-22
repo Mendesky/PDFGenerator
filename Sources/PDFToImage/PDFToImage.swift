@@ -41,7 +41,11 @@ public final class PDFImageConverter {
             "PATH": ":/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
         ]
         process.environment = environment
+#if os(Linux)
         process.launchPath = "/usr/bin/python3"
+#else
+        process.launchPath = "/opt/homebrew/bin/python3"
+#endif
         logger.info("PDFImageConverter run on: \(process.launchPath ?? "")" )
         
         process.arguments = [
