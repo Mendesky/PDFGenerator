@@ -6,7 +6,7 @@ import Foundation
 
 struct Page{
     static var `break`: Component{
-        Paragraph().style("page-break-before: always;")
+        Paragraph().style("break-before: page;")
     }
 }
 
@@ -57,14 +57,13 @@ public struct BusinessClientQuotation: Renderable {
                         Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
                     }
                     contractHeader
-                    Table{
-                        for (index, item) in components.enumerated() {
+                    for (index, item) in components.enumerated() {
+                        Table{
                             let chineseNumber = toChineseNumber(index: index)
                             TableRow(TableCell("\(chineseNumber)、\(item.title)"))
                             TableRow(TableCell(item))
-                        }
+                        }.style("break-inside: avoid-page;")
                     }
-//                    Page.break
                     Table{
                         let chineseNumber = toChineseNumber(index: components.count)
                         TableRow{
@@ -72,9 +71,6 @@ public struct BusinessClientQuotation: Renderable {
                                 Paragraph("\(chineseNumber)、")}
                             .style("vertical-align: top;")
                             TableCell(payment)
-                        }
-                        TableRow{
-                            TableCell("　").style("font-size: 1em;")
                         }
                         TableRow{
                             TableCell()

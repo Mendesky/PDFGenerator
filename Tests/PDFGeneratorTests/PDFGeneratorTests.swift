@@ -75,7 +75,9 @@ import Foundation
     
     let serviceScope = ServiceScope(title: title, heading: content, items: quotingServiceTerms)
     
-    #expect(serviceScope.render() == "<p style=\"text-indent: 2em;\">\(content)</p><ol><li>\(quotingServiceTerms[0].render())</li></ol>")
+    #expect(serviceScope.render() == """
+<p style="text-indent: 2em;">This is a description of the Service Scope.</p><ol><li style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2em;">ItemContent</p></li></ol>
+""")
 }
 
 
@@ -87,7 +89,9 @@ import Foundation
     
     let paymentItem = PaymentItem(names: names, price: price, billingPeriod: billingPeriod.description)
     
-    #expect(paymentItem.render() == "<td>\(names.joined(separator: "\(Node.br().render())"))</td><td style=\"text-align: right; white-space: nowrap;\">\(price)</td><td style=\"text-align: right; white-space: nowrap;\">\(billingPeriod)</td>")
+    #expect(paymentItem.render() == """
+<td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div><div>二代健保暨表單彙總處理</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/月</div></td>
+""")
 }
 
 
@@ -104,7 +108,7 @@ import Foundation
     
     let paymentItem = Payment(title: title, items: items)
     #expect(paymentItem.render() == """
-    <p>\(title)</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1pt solid black;"><td></td><td>服務項目</td><td colspan="2" style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</td></tr><tr><td>(1)</td>\(items[0].render())</tr><tr><td>(2)</td>\(items[1].render())</tr></table>
+    <p>酬金</p><table style="border-collapse: collapse; width: 100%; break-inside: avoid-page;"><tr style="border-bottom: 1px solid black;"><td></td><td>服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr><td style="padding-bottom: 0.5em;">(1)</td><td style="padding-bottom: 0.5em;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td style="padding-bottom: 0.5em;"><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr><td style="padding-bottom: 0.5em;">(2)</td><td style="padding-bottom: 0.5em;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td style="padding-bottom: 0.5em;"><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</div></td></tr></table>
     """)
 }
 
@@ -121,7 +125,7 @@ import Foundation
     
     let assistance = BusinessClientAssistance(title: title, items: items)
     
-    #expect(assistance.render() == "<ol><li>\(items[0].render())</li><li>\(items[1].render())</li><li>\(items[2].render())</li></ol>")
+    #expect(assistance.render() == "<ol><li style=\"break-inside: avoid-page;\">\(items[0].render())</li><li style=\"break-inside: avoid-page;\">\(items[1].render())</li><li style=\"break-inside: avoid-page;\">\(items[2].render())</li></ol>")
     
 }
 
@@ -141,7 +145,7 @@ import Foundation
     ]
     
     let note = Note(contents: contents)
-    #expect(note.render() == "<table><tr><td style=\"width: 3rem;vertical-align: top;\">註一：</td><td><div><div>\(contents[0])</div></div></td></tr><tr><td style=\"width: 3rem;vertical-align: top;\">註二：</td><td><div><div>\(contents[1].components(separatedBy: "\n")[0])</div><div>\(contents[1].components(separatedBy: "\n")[1])</div><div>\(contents[1].components(separatedBy: "\n")[2])</div><div>\(contents[1].components(separatedBy: "\n")[3])</div></div></td></tr><tr><td style=\"width: 3rem;vertical-align: top;\">註三：</td><td><div><div>\(contents[2])</div></div></td></tr></table>")
+    #expect(note.render() == "<table><tr style=\"break-inside: avoid-page;\"><td style=\"width: 3rem;vertical-align: top;\">註一：</td><td><div><div>\(contents[0])</div></div></td></tr><tr style=\"break-inside: avoid-page;\"><td style=\"width: 3rem;vertical-align: top;\">註二：</td><td><div><div>\(contents[1].components(separatedBy: "\n")[0])</div><div>\(contents[1].components(separatedBy: "\n")[1])</div><div>\(contents[1].components(separatedBy: "\n")[2])</div><div>\(contents[1].components(separatedBy: "\n")[3])</div></div></td></tr><tr style=\"break-inside: avoid-page;\"><td style=\"width: 3rem;vertical-align: top;\">註三：</td><td><div><div>\(contents[2])</div></div></td></tr></table>")
     
 }
 
@@ -163,8 +167,8 @@ import Foundation
 
     let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, paymentItems: paymentItems, additionalServices: additionalServices, quotationNo: quotationNo)
     #expect(replyForm.render() == """
-    <h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>\(replyForm.sender.displayName)</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 14px;"><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td style="text-align: right; white-space: nowrap;">5,000</td><td style="text-align: right; white-space: nowrap;">元/年</td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td style="text-align: right; white-space: nowrap;">6,000</td><td style="text-align: right; white-space: nowrap;">元/月</td></tr></table></td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top;">附加服務請勾選：</td></tr><tr style="font-size: 14px;"><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr style="font-size: 14px;"><td></td><td>☑二代健保申報作業</td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>\(receiver)</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table>
-    """)
+<h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>\(replyForm.sender.displayName)</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 14px; width: 100%; border-collapse: separate; border-spacing: 0.2em;"><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap;">5,000 元/年</div></td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td><div style="text-align: right; white-space: nowrap;">6,000 元/月</div></td></tr></table></td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top;">附加服務請勾選：</td></tr><tr style="font-size: 14px;"><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr style="font-size: 14px;"><td></td><td>☑二代健保申報作業</td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>\(receiver)</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table>
+""")
 }
 
 
