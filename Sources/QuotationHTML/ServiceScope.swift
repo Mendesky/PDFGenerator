@@ -25,13 +25,23 @@ func toChineseNumber(index: Int)->String{
 }
 
 public struct ServiceScope: Component {
+    let index: Int?
     let title: String
     let heading: String
     let items: [QuotingServiceTerm]?
     
     public var body: any Component{
         ComponentGroup{
-            Paragraph(heading).style("text-indent: 2em;")
+            Div{
+                if let index {
+                    let chineseNumber = toChineseNumber(index: index)
+                    TableRow(TableCell("\(chineseNumber)、\(title)"))
+                }else{
+                    TableRow(TableCell("\(title)"))
+                }
+                Paragraph(heading).style("text-indent: 2em;")
+            }.style("break-inside: avoid-page;")
+            
             if let items{
                 List{
                     for item in items {
@@ -39,13 +49,24 @@ public struct ServiceScope: Component {
                     }
                 }.environmentValue(.ordered, key: .listStyle)
             }
-            
         }
     }
     
     public init(title: String, heading: String, items: [QuotingServiceTerm]?) {
+        self.index = nil
         self.title = title
         self.heading = heading
         self.items = items
+    }
+    
+    private init(index: Int, title: String, heading: String, items: [QuotingServiceTerm]?) {
+        self.index = index
+        self.title = title
+        self.heading = heading
+        self.items = items
+    }
+    
+    func set(index: Int)->Self{
+        return .init(index: index, title: title, heading: heading, items: items)
     }
 }

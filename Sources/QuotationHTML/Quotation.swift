@@ -15,7 +15,6 @@ protocol TitleContainableComponent: TitleContainable, Component{}
 extension ContentItem: TitleContainableComponent {}
 extension ServiceScope: TitleContainableComponent {}
 extension BusinessClientAssistance: TitleContainableComponent {}
-extension Payment: TitleContainableComponent {}
 
 public struct BusinessClientQuotation: Renderable {
     let no: String?
@@ -58,11 +57,12 @@ public struct BusinessClientQuotation: Renderable {
                     }
                     contractHeader
                     for (index, item) in components.enumerated() {
-                        Table{
-                            let chineseNumber = toChineseNumber(index: index)
-                            TableRow(TableCell("\(chineseNumber)、\(item.title)"))
-                            TableRow(TableCell(item))
-                        }.style("break-inside: avoid-page;")
+//                        Table{
+//                            let chineseNumber = toChineseNumber(index: index)
+//                            TableRow(TableCell("\(chineseNumber)、\(item.title)"))
+//                            TableRow(TableCell(item))
+//                        }.style("break-inside: avoid-page;")
+                        item.set(index: index)
                     }
                     Table{
                         let chineseNumber = toChineseNumber(index: components.count)

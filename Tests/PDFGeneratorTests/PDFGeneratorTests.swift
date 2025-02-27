@@ -36,7 +36,9 @@ import Foundation
     
     let contentItem = ContentItem(title: title, content: content)
     
-    #expect(contentItem.render() == "<p style=\"text-indent: 2em;\">\(content)</p>")
+    #expect(contentItem.render() == """
+<table style="break-inside: avoid-page;"><tr><td>Quotation Purpose</td></tr><tr><td><p style="text-indent: 2em;">This is a description of the Purpose.</p></td></tr></table>
+""")
 }
 
 
@@ -76,7 +78,7 @@ import Foundation
     let serviceScope = ServiceScope(title: title, heading: content, items: quotingServiceTerms)
     
     #expect(serviceScope.render() == """
-<p style="text-indent: 2em;">This is a description of the Service Scope.</p><ol><li style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2em;">ItemContent</p></li></ol>
+<div style="break-inside: avoid-page;"><tr><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><ol><li style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2em;">ItemContent</p></li></ol>
 """)
 }
 
@@ -125,7 +127,9 @@ import Foundation
     
     let assistance = BusinessClientAssistance(title: title, items: items)
     
-    #expect(assistance.render() == "<ol><li style=\"break-inside: avoid-page;\">\(items[0].render())</li><li style=\"break-inside: avoid-page;\">\(items[1].render())</li><li style=\"break-inside: avoid-page;\">\(items[2].render())</li></ol>")
+    #expect(assistance.render() == """
+<div style="break-inside: avoid-page;"><tr><td>Assistance Title</td></tr><table><tr><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">1.</div></td><td><p>指派專責會計人員</p><p style="text-indent: 2em;">為期本專業服務能順利完成，爰建議  貴公司應指派熟悉公司會計作業流程之人員，以作為與本事務所溝通協調及對內對外之窗口。</p></td></tr></table></div><table><tr style="break-inside: avoid-page;"><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">2.</div></td><td><p>網路銀行申請</p><p style="text-indent: 2em;">為方便本事務所執行出納事務，故請 貴公司配合申請網路銀行，以利運作順暢。(請提供編輯與審核帳號各一組)</p></td></tr><tr style="break-inside: avoid-page;"><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">3.</div></td><td><p>配合及時提供相關資訊</p><p style="text-indent: 2em;">為順利達成上述服務，委任人應提供相關之會計資訊、文件及憑證等，供受任人審閱，並答覆有關問題之詢問。委任人會計人員應對財會委外工作儘量協助，此項協助包括憑證蒐集、對帳、提供有關文件資料、相關問題詢問等；至於其具體配合事項，將由受任人之服務人員於工作開始前，提供應備資料清單，商請委任人有關人員惠予配合。</p></td></tr></table>
+""")
     
 }
 
