@@ -31,17 +31,28 @@ public struct PaymentItem: Component{
     let price: String
     let billingPeriod: String
     
+    var lines: [String] {
+        get {
+            names.flatMap {
+                $0.split(separator: "\n").map{ "\($0)" }
+            }
+        }
+    }
+    
     public var body: any Component{
         ComponentGroup{
             TableCell{
-                Text(names[0])
-                for name in names[1..<names.endIndex]{
-                    Node.br()
-                    Text(name)
+                for line in lines{
+                    Div{
+                        Text(line)
+                    }
                 }
             }
-            TableCell("\(price)").style("text-align: right; white-space: nowrap;")
-            TableCell(billingPeriod.description).style("text-align: right; white-space: nowrap;")
+            TableCell{
+                Div{
+                    Text("\(price) \(billingPeriod.description)")
+                }.style("text-align: right; white-space: nowrap; padding-right: 0.5em;")
+            }
         }
     }
     
@@ -49,33 +60,5 @@ public struct PaymentItem: Component{
         self.names = names
         self.price = price
         self.billingPeriod = billingPeriod
-    }
-}
-
-public struct ReplyFormPayment: Component {
-
-    let paymentItems: [PaymentItem]
-
-    public var body: any Component {
-        ComponentGroup {
-            Table {
-                for (index, item) in paymentItems.enumerated() {
-                    TableRow {
-                        TableCell("(\(index+1))").style("vertical-align: middle;")
-                        TableCell {
-                            for name in item.names {
-                                Div(name)
-                            }
-                        }.style("vertical-align: middle;")
-                        TableCell(item.price).style("text-align: right; white-space: nowrap;")
-                        TableCell(item.billingPeriod.description).style("text-align: right; white-space: nowrap;")
-                    }
-                }
-            }.style("font-size: 14px;")
-        }
-    }
-    
-    public init(paymentItems: [PaymentItem]) {
-        self.paymentItems = paymentItems
     }
 }

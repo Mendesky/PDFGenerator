@@ -18,22 +18,53 @@ public struct Payment: Component {
                 TableRow{
                     TableCell()
                     TableCell("服務項目")
-                    TableCell("公費金額").attribute(named: "colspan", value: "2").style("white-space: nowrap; text-align: right; padding-right: 1em;")
-                }.style("border-bottom: 1pt solid black;")
+                    TableCell{
+                        Div("公費金額").style("white-space: nowrap; text-align: right; padding-right: 1em;")
+                    }
+                }.style("border-bottom: 1px solid black;")
                 
                 for (index, item) in items.enumerated(){
                     TableRow{
-                        TableCell("(\(index+1))")
-                        item
+                        TableCell("(\(index+1))").style("padding-bottom: 0.5em;")
+                        item.style("padding-bottom: 0.5em;")
                     }
                 }
                 
-            }.style("border-collapse: collapse; width: 100%;")
+            }.style("border-collapse: collapse; width: 100%; break-inside: avoid-page;")
         }
     }
     
     public init(title: String, items: [PaymentItem]) {
         self.title = title
         self.items = items
+    }
+}
+
+public struct ReplyFormPayment: Component {
+
+    let paymentItems: [PaymentItem]
+
+    public var body: any Component {
+        ComponentGroup {
+            Table {
+                for (index, item) in paymentItems.enumerated() {
+                    TableRow {
+                        TableCell("(\(index+1))").style("vertical-align: middle;")
+                        TableCell {
+                            for line in item.lines {
+                                Div(line)
+                            }
+                        }.style("vertical-align: middle;")
+                        TableCell{
+                            Div("\(item.price) \(item.billingPeriod.description)").style("text-align: right; white-space: nowrap;")
+                        }
+                    }
+                }
+            }.style("font-size: 14px; width: 100%; border-collapse: separate; border-spacing: 0.2em;")
+        }
+    }
+    
+    public init(paymentItems: [PaymentItem]) {
+        self.paymentItems = paymentItems
     }
 }

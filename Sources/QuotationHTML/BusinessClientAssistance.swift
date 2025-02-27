@@ -16,7 +16,7 @@ public struct BusinessClientAssistance: Component {
         ComponentGroup{
             List{
                 for item in items{
-                    ListItem(item)
+                    ListItem(item).style("break-inside: avoid-page;")
                 }
             }.environmentValue(.ordered, key: .listStyle)
         }
