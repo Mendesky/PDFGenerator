@@ -71,7 +71,7 @@ public struct BusinessClientQuotation: Renderable {
                                 Paragraph("\(chineseNumber)、")}
                             .style("vertical-align: top;")
                             TableCell(payment)
-                        }
+                        }.style("break-inside: avoid-page;")
                         TableRow{
                             TableCell()
                             TableCell(notes)
