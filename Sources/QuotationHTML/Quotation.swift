@@ -57,11 +57,6 @@ public struct BusinessClientQuotation: Renderable {
                     }
                     contractHeader
                     for (index, item) in components.enumerated() {
-//                        Table{
-//                            let chineseNumber = toChineseNumber(index: index)
-//                            TableRow(TableCell("\(chineseNumber)、\(item.title)"))
-//                            TableRow(TableCell(item))
-//                        }.style("break-inside: avoid-page;")
                         item.set(index: index)
                     }
                     Table{
