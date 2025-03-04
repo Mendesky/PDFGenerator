@@ -110,7 +110,7 @@ import Foundation
     
     let paymentItem = Payment(title: title, items: items)
     #expect(paymentItem.render() == """
-    <p>酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td></td><td>服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr><td style="padding-bottom: 0.5em;">(1)</td><td style="padding-bottom: 0.5em;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td style="padding-bottom: 0.5em;"><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr><td style="padding-bottom: 0.5em;">(2)</td><td style="padding-bottom: 0.5em;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td style="padding-bottom: 0.5em;"><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</div></td></tr></table>
+    <p>酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td></td><td>服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr><td style="padding-right: 0.5em; padding-bottom: 0.5em;">(1)</td><td style="padding-bottom: 0.5em; width: 100%;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td style="padding-bottom: 0.5em; width: 100%;"><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr><td style="padding-right: 0.5em; padding-bottom: 0.5em;">(2)</td><td style="padding-bottom: 0.5em; width: 100%;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td style="padding-bottom: 0.5em; width: 100%;"><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</div></td></tr></table>
     """)
 }
 

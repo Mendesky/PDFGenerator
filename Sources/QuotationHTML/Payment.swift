@@ -25,8 +25,8 @@ public struct Payment: Component {
                 
                 for (index, item) in items.enumerated(){
                     TableRow{
-                        TableCell("(\(index+1))").style("padding-bottom: 0.5em;")
-                        item.style("padding-bottom: 0.5em;")
+                        TableCell("(\(index+1))").style("padding-right: 0.5em; padding-bottom: 0.5em;")
+                        item.style("padding-bottom: 0.5em; width: 100%;")
                     }
                 }
                 
