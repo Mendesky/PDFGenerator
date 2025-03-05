@@ -49,12 +49,12 @@ public struct ReplyFormPayment: Component {
             Table {
                 for (index, item) in paymentItems.enumerated() {
                     TableRow {
-                        TableCell("(\(index+1))").style("vertical-align: middle;")
+                        TableCell("(\(index+1))").style("vertical-align: middle; padding-right: 0.5em;")
                         TableCell {
                             for line in item.lines {
                                 Div(line)
                             }
-                        }.style("vertical-align: middle;")
+                        }.style("vertical-align: middle; width: 100%;")
                         TableCell{
                             Div("\(item.price) \(item.billingPeriod.description)").style("text-align: right; white-space: nowrap;")
                         }
