@@ -49,7 +49,7 @@ public struct ReplyFormPayment: Component {
             Table {
                 for (index, item) in paymentItems.enumerated() {
                     TableRow {
-                        TableCell("(\(index+1))").style("vertical-align: middle; padding-right: 0.5em;")
+                        TableCell("(\(index+1))").style("vertical-align: middle;")
                         TableCell {
                             for line in item.lines {
                                 Div(line)
