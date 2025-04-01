@@ -75,6 +75,12 @@ public struct ReplyForm: Component{
                     TableCell("（授權人簽名或蓋章）").style("height: 6rem;vertical-align: top;")
                 }
             }.style("width: 100%;")
+            Div{
+                Paragraph("中　　華　　民　　國")
+                Paragraph("年")
+                Paragraph("月")
+                Paragraph("日")
+            }.style("display: flex; justify-content: space-between; width: 100%; margin: 0 auto; position: absolute; bottom: 0px;")
         }
         
     }
