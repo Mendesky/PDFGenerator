@@ -19,7 +19,7 @@ extension BusinessClientAssistance: TitleContainableComponent {}
 public struct BusinessClientQuotation: Renderable {
     let no: String?
     let purpose: ContentItem?
-    let payment: Payment
+    let payments: [Payment]
     let serviceScope: ServiceScope
     let letterHeader: LetterHeader
     let assistance: BusinessClientAssistance?
@@ -27,10 +27,10 @@ public struct BusinessClientQuotation: Renderable {
     let replyForm: ReplyForm
     let contractHeader: ContractHeader?
 
-    public init(no: String?, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
+    public init(no: String?, purpose: ContentItem?, payments: [Payment], serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
         self.no = no
         self.purpose = purpose
-        self.payment = payment
+        self.payments = payments
         self.serviceScope = serviceScope
         self.letterHeader = letterHeader
         self.assistance = assistance
@@ -65,7 +65,11 @@ public struct BusinessClientQuotation: Renderable {
                             TableCell{
                                 Paragraph("\(chineseNumber)、")}
                             .style("vertical-align: top;")
-                            TableCell(payment)
+                            TableCell{
+                                for payment in payments {
+                                    payment
+                                }
+                            }
                         }.style("break-inside: avoid-page;")
                         TableRow{
                             TableCell()

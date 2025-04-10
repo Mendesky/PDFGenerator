@@ -10,7 +10,7 @@ public struct ReplyForm: Component{
     let receiver: String
     let sender: Organization
     let subject: String
-    let paymentItems: [PaymentItem]
+    let payments: [ReplyFormPayment]
     let additionalServices: [AdditionalService]
     let quotationNo: String?
     
@@ -33,7 +33,10 @@ public struct ReplyForm: Component{
                 TableRow{
                     TableCell("")
                     TableCell{
-                        ReplyFormPayment(paymentItems: paymentItems)
+                        for payment in payments {
+                            payment
+                        }
+                        
                     }
                 }
                 TableRow{
@@ -85,11 +88,11 @@ public struct ReplyForm: Component{
         
     }
     
-    public init(receiver: String, sender: String, subject: String, paymentItems: [PaymentItem] = [], additionalServices: [AdditionalService], quotationNo: String?) {
+    public init(receiver: String, sender: String, subject: String, payments: [ReplyFormPayment] = [], additionalServices: [AdditionalService], quotationNo: String?) {
         self.receiver = receiver
         self.sender = Organization(rawValue: sender)
         self.subject = subject
-        self.paymentItems = paymentItems
+        self.payments = payments
         self.additionalServices = additionalServices
         self.quotationNo = quotationNo
     }

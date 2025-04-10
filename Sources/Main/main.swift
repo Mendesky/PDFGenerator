@@ -64,14 +64,16 @@ let additionalServices: [AdditionalService] = [
 ]
 let quotationNo = "111112101"
 
-let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, paymentItems: paymentItems, additionalServices: additionalServices, quotationNo: quotationNo)
+let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, payments: [
+    .init(title: "報價酬金", paymentItems: paymentItems)
+], additionalServices: additionalServices, quotationNo: quotationNo)
 
 
 let contractSubject = "承 貴公司委任本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務，至深感荷。謹將服務內容及酬金等分別說明如後，敬請卓察賜覆為禱。"
 let content = "感謝 貴公司對本事務所的支持與愛護，本事務所本著積極服務顧客的熱忱，以及專業智慧的多元服務，特將本事務所受託辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務內容概述如後，期盼此項合作能協助 貴公司提升會計帳務品質，俾能符合相關稅務法令和企業會計準則之規定。茲將委任之目的、服務範圍、 貴公司協助事項、酬金、權利義務事項及同意函列示如下："
 let contractHeader = ContractHeader(receiver: receiver, sender: sender, subject: contractSubject, content: content)
 
-let quotation = BusinessClientQuotation(no: quotationNo, purpose: purpose, payment: payment, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader)
+let quotation = BusinessClientQuotation(no: quotationNo, purpose: purpose, payments: [payment], serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader)
 print(quotation.render())
 let generator = PDFGenerator(mainHtml: quotation, headerHtml: quotation.headerHTML, footerHtml: quotation.footerHTML)
 let pdfData = try generator.generate(sideMargin: 2)

@@ -41,7 +41,7 @@ public struct Payment: Component {
 }
 
 public struct ReplyFormPayment: Component {
-
+    let title: String
     let paymentItems: [PaymentItem]
 
     public var body: any Component {
@@ -64,7 +64,8 @@ public struct ReplyFormPayment: Component {
         }
     }
     
-    public init(paymentItems: [PaymentItem]) {
+    public init(title: String, paymentItems: [PaymentItem]) {
+        self.title = title
         self.paymentItems = paymentItems
     }
 }
