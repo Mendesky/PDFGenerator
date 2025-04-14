@@ -36,19 +36,21 @@ public struct ReplyForm: Component{
                         ReplyFormPayment(paymentItems: paymentItems)
                     }
                 }
-                TableRow{
-                    TableCell("")
-                    TableCell("附加服務請勾選：").style("white-space: nowrap; vertical-align: top;")
-                }
-                for additionalService in additionalServices{
+                if additionalServices.count > 0 {
                     TableRow{
                         TableCell("")
-                        if additionalService.isSelected == false {
-                            TableCell("□\(additionalService.name)")
-                        } else {
-                            TableCell("☑\(additionalService.name)")
-                        }
-                    }.style("font-size: 14px;")
+                        TableCell("附加服務請勾選：").style("white-space: nowrap; vertical-align: top;")
+                    }
+                    for additionalService in additionalServices{
+                        TableRow{
+                            TableCell("")
+                            if additionalService.isSelected == false {
+                                TableCell("□\(additionalService.name)")
+                            } else {
+                                TableCell("☑\(additionalService.name)")
+                            }
+                        }.style("font-size: 14px;")
+                    }
                 }
                 TableRow{
                     TableCell("附　件：")
