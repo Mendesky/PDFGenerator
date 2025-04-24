@@ -35,9 +35,9 @@ public struct ServiceScope: Component {
             Div{
                 if let index {
                     let chineseNumber = toChineseNumber(index: index)
-                    TableRow(TableCell("\(chineseNumber)、\(title)"))
+                    TableRow(TableCell("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
                 }else{
-                    TableRow(TableCell("\(title)"))
+                    TableRow(TableCell("\(title)")).style("font-size: 1.1em;")
                 }
                 Paragraph(heading).style("text-indent: 2em;")
             }.style("break-inside: avoid-page;")

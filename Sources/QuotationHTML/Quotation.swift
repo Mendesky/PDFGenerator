@@ -48,34 +48,39 @@ public struct AuditQuotation: Renderable {
     public func render(indentedBy indentationKind: Plot.Indentation.Kind?) -> String {
         let components = getTitleContainableItems()
         let html = HTML{
+            letterHeader
+            Page.break
+            H3("專業服務公費報價單").style("text-align: center; font-size: 1.5rem;")
+            if let no {
+                Paragraph("嘉威稅字第\(no)號").style("font-size: 0.6875rem; text-align: right;")
+            }
+            
+            if let contractHeader {
+                contractHeader.style("font-size: 0.9rem;")
+            }
+            
+            for (index, item) in components.enumerated() {
+                item.set(index: index)
+            }
+            Table{
+                let chineseNumber = toChineseNumber(index: components.count)
+                TableRow{
+                    TableCell{
+                        Paragraph("\(chineseNumber)、")}
+                    .style("vertical-align: top;")
+                    TableCell(paymentBlock)
+                }.style("break-inside: avoid-page;")
+                TableRow{
+                    TableCell()
+                    TableCell(notes)
+                }
+            }
+            Page.break
+            replyForm
             Div{
-                letterHeader
-                Page.break
-                H3("專業服務公費報價單").style("text-align: center;")
-                if let no {
-                    Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
-                }
-                contractHeader
-                for (index, item) in components.enumerated() {
-                    item.set(index: index)
-                }
-                Table{
-                    let chineseNumber = toChineseNumber(index: components.count)
-                    TableRow{
-                        TableCell{
-                            Paragraph("\(chineseNumber)、")}
-                        .style("vertical-align: top;")
-                        TableCell(paymentBlock)
-                    }.style("break-inside: avoid-page;")
-                    TableRow{
-                        TableCell()
-                        TableCell(notes)
-                    }
-                }
-                Page.break
-                replyForm
-            }.style("font-family: 華康標楷體,標楷體-繁,標楷體; width: 100%; line-height: 1.75em;  " )
-        }
+                
+            }
+        }.node.style("font-family: 華康標楷體,標楷體-繁,標楷體; width: 100%; line-height: 1.5em; font-size: 16px;" )
         return html.render(indentedBy: indentationKind)
     }
     

@@ -10,7 +10,7 @@ public struct ReplyForm: Component{
     let receiver: String
     let sender: Organization
     let subject: String
-    let paymentItems: [PaymentItem]
+    let payments: [Payment]
     let additionalServices: [AdditionalService]
     let quotationNo: String?
     
@@ -33,7 +33,7 @@ public struct ReplyForm: Component{
                 TableRow{
                     TableCell("")
                     TableCell{
-                        ReplyFormPayment(paymentItems: paymentItems)
+                        ReplyFormPaymentBlock(payments: payments)
                     }
                 }
                 if additionalServices.count > 0 {
@@ -49,7 +49,7 @@ public struct ReplyForm: Component{
                             } else {
                                 TableCell("☑\(additionalService.name)")
                             }
-                        }.style("font-size: 14px;")
+                        }.style("font-size: 0.875rem;")
                     }
                 }
                 TableRow{
@@ -87,11 +87,11 @@ public struct ReplyForm: Component{
         
     }
     
-    public init(receiver: String, sender: String, subject: String, paymentItems: [PaymentItem] = [], additionalServices: [AdditionalService], quotationNo: String?) {
+    public init(receiver: String, sender: String, subject: String, payments: [Payment] = [], additionalServices: [AdditionalService], quotationNo: String?) {
         self.receiver = receiver
         self.sender = Organization(rawValue: sender)
         self.subject = subject
-        self.paymentItems = paymentItems
+        self.payments = payments
         self.additionalServices = additionalServices
         self.quotationNo = quotationNo
     }

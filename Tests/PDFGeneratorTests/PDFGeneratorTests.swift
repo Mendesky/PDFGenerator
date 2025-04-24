@@ -37,7 +37,7 @@ import Foundation
     let contentItem = ContentItem(title: title, content: content)
     
     #expect(contentItem.render() == """
-<table style="break-inside: avoid-page;"><tr><td>Quotation Purpose</td></tr><tr><td><p style="text-indent: 2em;">This is a description of the Purpose.</p></td></tr></table>
+<table style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Quotation Purpose</td></tr><tr><td><p style="text-indent: 2em;">This is a description of the Purpose.</p></td></tr></table>
 """)
 }
 
@@ -78,7 +78,7 @@ import Foundation
     let serviceScope = ServiceScope(title: title, heading: content, items: quotingServiceTerms)
     
     #expect(serviceScope.render() == """
-<div style="break-inside: avoid-page;"><tr><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><ol><li style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2em;">ItemContent</p></li></ol>
+<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><ol><li style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2em;">ItemContent</p></li></ol>
 """)
 }
 
@@ -114,7 +114,7 @@ import Foundation
     """)
 }
 
-@Test("test", arguments: [
+@Test("two payment", arguments: [
     ([
         Payment(name: "****作業(112 年度)", items: [
             .init(names: ["Hello"], price: "5,000", billingPeriod: BillingPeriod.yearly.description)
@@ -124,14 +124,14 @@ import Foundation
             .init(names: ["World"], price: "6,000", billingPeriod: BillingPeriod.yearly.description)
         ])
     ], """
-    <p>酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(112 年度)</b></td></tr><tr style="padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr style="padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(113 年起)</b></td></tr><tr style="padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr style="padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(2)</td><td><div>World</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</div></td></tr></table>
+    <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(112 年度)</b></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(113 年起)</b></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(2)</td><td><div>World</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</div></td></tr></table>
     """),
     ([
         Payment(name: "****作業(112 年度)", items: [
             .init(names: ["Hello"], price: "5,000", billingPeriod: BillingPeriod.yearly.description)
         ])
     ], """
-    <p>酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr></table>
+    <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr></table>
     """)
 ])
 func createPaymentBlocHtml(payments: [Payment], result: String){
@@ -155,7 +155,7 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     let assistance = BusinessClientAssistance(title: title, items: items)
     
     #expect(assistance.render() == """
-<div style="break-inside: avoid-page;"><tr><td>Assistance Title</td></tr><table><tr><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">1.</div></td><td><p>指派專責會計人員</p><p style="text-indent: 2em;">為期本專業服務能順利完成，爰建議  貴公司應指派熟悉公司會計作業流程之人員，以作為與本事務所溝通協調及對內對外之窗口。</p></td></tr></table></div><table><tr style="break-inside: avoid-page;"><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">2.</div></td><td><p>網路銀行申請</p><p style="text-indent: 2em;">為方便本事務所執行出納事務，故請 貴公司配合申請網路銀行，以利運作順暢。(請提供編輯與審核帳號各一組)</p></td></tr><tr style="break-inside: avoid-page;"><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">3.</div></td><td><p>配合及時提供相關資訊</p><p style="text-indent: 2em;">為順利達成上述服務，委任人應提供相關之會計資訊、文件及憑證等，供受任人審閱，並答覆有關問題之詢問。委任人會計人員應對財會委外工作儘量協助，此項協助包括憑證蒐集、對帳、提供有關文件資料、相關問題詢問等；至於其具體配合事項，將由受任人之服務人員於工作開始前，提供應備資料清單，商請委任人有關人員惠予配合。</p></td></tr></table>
+<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Assistance Title</td></tr><table><tr><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">1.</div></td><td><p>指派專責會計人員</p><p style="text-indent: 2em;">為期本專業服務能順利完成，爰建議  貴公司應指派熟悉公司會計作業流程之人員，以作為與本事務所溝通協調及對內對外之窗口。</p></td></tr></table></div><table><tr style="break-inside: avoid-page;"><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">2.</div></td><td><p>網路銀行申請</p><p style="text-indent: 2em;">為方便本事務所執行出納事務，故請 貴公司配合申請網路銀行，以利運作順暢。(請提供編輯與審核帳號各一組)</p></td></tr><tr style="break-inside: avoid-page;"><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">3.</div></td><td><p>配合及時提供相關資訊</p><p style="text-indent: 2em;">為順利達成上述服務，委任人應提供相關之會計資訊、文件及憑證等，供受任人審閱，並答覆有關問題之詢問。委任人會計人員應對財會委外工作儘量協助，此項協助包括憑證蒐集、對帳、提供有關文件資料、相關問題詢問等；至於其具體配合事項，將由受任人之服務人員於工作開始前，提供應備資料清單，商請委任人有關人員惠予配合。</p></td></tr></table>
 """)
     
 }
@@ -190,15 +190,18 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
         .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
         .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
     ]
+    let payments = [
+        Payment(name: "Hello", items: paymentItems)
+    ]
     let additionalServices: [AdditionalService] = [
         AdditionalService(name: "代辦年度CTP申報(每年3月；加收2,000元/家)", isSelected: false),
         AdditionalService(name: "二代健保申報作業", isSelected: true) 
     ]
     let quotationNo = "111112101"
 
-    let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, paymentItems: paymentItems, additionalServices: additionalServices, quotationNo: quotationNo)
+    let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, payments: payments, additionalServices: additionalServices, quotationNo: quotationNo)
     #expect(replyForm.render() == """
-<h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>嘉威聯合會計師事務所</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 14px; width: 100%; border-collapse: separate; border-spacing: 0.2em;"><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle; width: 100%;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap;">5,000 元/年</div></td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle; width: 100%;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td><div style="text-align: right; white-space: nowrap;">6,000 元/月</div></td></tr></table></td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top;">附加服務請勾選：</td></tr><tr style="font-size: 14px;"><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr style="font-size: 14px;"><td></td><td>☑二代健保申報作業</td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>全家人健康事業股份有限公司</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table><div style="display: flex; justify-content: space-between; width: 100%; margin: 0 auto; position: absolute; bottom: 0px;"><p>中　　華　　民　　國</p><p>年</p><p>月</p><p>日</p></div>
+<h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>嘉威聯合會計師事務所</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 0.875rem; width: 100%; border-collapse: separate; border-spacing: 0.2em;"><tr><td colspan="3" style="vertical-align: middle;"><b>Hello</b></td></tr><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle; width: 100%;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap;">5,000 元/年</div></td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle; width: 100%;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td><div style="text-align: right; white-space: nowrap;">6,000 元/月</div></td></tr></table></td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top;">附加服務請勾選：</td></tr><tr style="font-size: 0.875rem;"><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr style="font-size: 0.875rem;"><td></td><td>☑二代健保申報作業</td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>全家人健康事業股份有限公司</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table><div style="display: flex; justify-content: space-between; width: 100%; margin: 0 auto; position: absolute; bottom: 0px;"><p>中　　華　　民　　國</p><p>年</p><p>月</p><p>日</p></div>
 """)
 }
 
@@ -206,16 +209,22 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     let receiver = "全家人健康事業股份有限公司"
     let sender = "88183980"
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
+    
     let paymentItems: [PaymentItem] = [
         .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
         .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
     ]
+    
+    let payments = [
+        Payment(name: "Hello", items: paymentItems)
+    ]
+    
     let additionalServices: [AdditionalService] = []
     let quotationNo = "111112101"
 
-    let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, paymentItems: paymentItems, additionalServices: additionalServices, quotationNo: quotationNo)
+    let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, payments: payments, additionalServices: additionalServices, quotationNo: quotationNo)
     #expect(replyForm.render() == """
-<h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>嘉威聯合會計師事務所</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 14px; width: 100%; border-collapse: separate; border-spacing: 0.2em;"><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle; width: 100%;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap;">5,000 元/年</div></td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle; width: 100%;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td><div style="text-align: right; white-space: nowrap;">6,000 元/月</div></td></tr></table></td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>全家人健康事業股份有限公司</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table><div style="display: flex; justify-content: space-between; width: 100%; margin: 0 auto; position: absolute; bottom: 0px;"><p>中　　華　　民　　國</p><p>年</p><p>月</p><p>日</p></div>
+<h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>嘉威聯合會計師事務所</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 0.875rem; width: 100%; border-collapse: separate; border-spacing: 0.2em;"><tr><td colspan="3" style="vertical-align: middle;"><b>Hello</b></td></tr><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle; width: 100%;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap;">5,000 元/年</div></td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle; width: 100%;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td><div style="text-align: right; white-space: nowrap;">6,000 元/月</div></td></tr></table></td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>全家人健康事業股份有限公司</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table><div style="display: flex; justify-content: space-between; width: 100%; margin: 0 auto; position: absolute; bottom: 0px;"><p>中　　華　　民　　國</p><p>年</p><p>月</p><p>日</p></div>
 """)
 }
 
