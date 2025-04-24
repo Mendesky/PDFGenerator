@@ -174,7 +174,6 @@ def generate(id: str, main_html: str, header_html: Optional[str], footer_html: O
     file_url = f"/tmp/{id}.pdf"
     pdf_bytes = generator.render_pdf()
     
-    print("stylesheets:", stylesheets)
     with open(file_url, "wb+") as fp:
         fp.write(pdf_bytes)
         

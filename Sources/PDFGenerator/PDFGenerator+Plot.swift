@@ -4,7 +4,7 @@
 //
 //  Created by Grady Zhuo on 2024/9/24.
 //
-
+import Foundation
 import Plot
 
 @available(macOS 10.15, *)
