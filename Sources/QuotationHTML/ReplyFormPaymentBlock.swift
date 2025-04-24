@@ -38,7 +38,13 @@ public struct ReplyFormPaymentBlock: Component {
         }
     }
     
-    public init(payments: [Payment]) {
-        self.payments = payments
+    public init(payments: [Payment]) {        
+        self.payments = if payments.count == 1 {
+            payments.map{
+                $0.hideName()
+            }
+        }else{
+            payments
+        }
     }
 }
