@@ -28,9 +28,9 @@ public struct ContentItem: Component{
             Table{
                 if let index {
                     let chineseNumber = toChineseNumber(index: index)
-                    TableRow(TableCell("\(chineseNumber)、\(title)"))
+                    TableRow(TableCell("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
                 }else{
-                    TableRow(TableCell("\(title)"))
+                    TableRow(TableCell("\(title)")).style("font-size: 1.1em;")
                 }
                 TableRow(TableCell{
                     Paragraph(content).style("text-indent: 2em;")
