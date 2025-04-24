@@ -32,16 +32,29 @@ public class PDFGenerator {
         self.headerHtml = headerHtml
         self.footerHtml = footerHtml
         self.baseUrl = baseUrl
-        self.stylesheets = [
-            """
+        
+        let fontFace: String
+#if os(Linux)
+        fontFace = """
             @font-face {
               font-family: 'CustomBoldFont';                
-              src: url(file:///Users/gradyzhuo/Downloads/特粗楷體.TTC) format('truetype');
+              src: url(file:///usr/local/share/fonts/特粗楷體.TTC) format('truetype')
             }        
-            """,
+            """
+#else
+        let fontPath = FileManager.default.homeDirectoryForCurrentUser.appending(path: "Library/Fonts/特粗楷體.TTC")
+        fontFace = """
+            @font-face {
+              font-family: 'CustomBoldFont';                
+              src: url(\(fontPath.absoluteString)) format('truetype')
+            }        
+            """
+#endif
+        self.stylesheets = [
+            fontFace,
             """
             b { 
-              font-family: 'CustomBoldFont', serif;
+              font-family: 'CustomBoldFont', ser;
               font-weight: 900;
             }
             """
