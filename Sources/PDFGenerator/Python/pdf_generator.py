@@ -1,4 +1,5 @@
 from weasyprint import HTML, CSS
+from weasyprint.text.fonts import FontConfiguration
 import click
 from typing import *
 import uuid
@@ -24,7 +25,7 @@ class PdfGenerator:
     """
     OVERLAY_LAYOUT = '@page {size: A4 portrait; margin: 0;}'
 
-    def __init__(self, main_html, header_html=None, footer_html=None,
+    def __init__(self, main_html, header_html=None, footer_html=None, stylesheets: Optional[List[str]]=None,
                  base_url=None, side_margin=2, extra_vertical_margin=30):
         """
         Parameters
@@ -49,6 +50,7 @@ class PdfGenerator:
         self.main_html = main_html
         self.header_html = header_html
         self.footer_html = footer_html
+        self.stylesheets = stylesheets
         self.base_url = base_url
         self.side_margin = side_margin
         self.extra_vertical_margin = extra_vertical_margin
@@ -128,11 +130,16 @@ class PdfGenerator:
         )
         content_print_layout = '@page {size: A4 portrait; margin: %s;}' % margins
 
+        font_config = FontConfiguration()
+
+        stylesheets = [CSS(string=content_print_layout)]
+        stylesheets += list(map(lambda stylesheet: CSS(string=stylesheet, font_config=font_config), self.stylesheets))
+        
         html = HTML(
             string=self.main_html,
             base_url=self.base_url,
         )
-        main_doc = html.render(stylesheets=[CSS(string=content_print_layout)])
+        main_doc = html.render(stylesheets=stylesheets, font_config=font_config)
 
         if self.header_html or self.footer_html:
             self._apply_overlay_on_main(main_doc, header_body, footer_body)
@@ -161,11 +168,13 @@ class PdfGenerator:
 @click.option('--footer', 'footer_html', help='footer html', default=None, show_default=True)
 @click.option('--side_margin', 'side_margin', help='side margin', default=2, show_default=True)
 @click.option('--extra_vertical_margin', 'extra_vertical_margin', help='extra_vertical_margin', default=30, show_default=True)
-def generate(id: str, main_html: str, header_html: Optional[str], footer_html: Optional[str], side_margin: Optional[int], extra_vertical_margin: Optional[int] ):
-    generator = PdfGenerator(main_html=main_html, header_html=header_html, footer_html=footer_html, side_margin=side_margin, extra_vertical_margin=extra_vertical_margin)
+@click.option('--stylesheet', 'stylesheets', multiple=True)
+def generate(id: str, main_html: str, header_html: Optional[str], footer_html: Optional[str], side_margin: Optional[int], extra_vertical_margin: Optional[int], stylesheets: List[str]):
+    generator = PdfGenerator(main_html=main_html, header_html=header_html, footer_html=footer_html, stylesheets=stylesheets, side_margin=side_margin, extra_vertical_margin=extra_vertical_margin)
     file_url = f"/tmp/{id}.pdf"
     pdf_bytes = generator.render_pdf()
     
+    print("stylesheets:", stylesheets)
     with open(file_url, "wb+") as fp:
         fp.write(pdf_bytes)
         

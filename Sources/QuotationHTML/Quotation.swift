@@ -10,16 +10,17 @@ struct Page{
     }
 }
 
+
 protocol TitleContainableComponent: TitleContainable, Component{}
 
 extension ContentItem: TitleContainableComponent {}
 extension ServiceScope: TitleContainableComponent {}
 extension BusinessClientAssistance: TitleContainableComponent {}
 
-public struct BusinessClientQuotation: Renderable {
+public struct AuditQuotation: Renderable {
     let no: String?
     let purpose: ContentItem?
-    let payment: Payment
+    let paymentBlock: PaymentBlock
     let serviceScope: ServiceScope
     let letterHeader: LetterHeader
     let assistance: BusinessClientAssistance?
@@ -27,10 +28,10 @@ public struct BusinessClientQuotation: Renderable {
     let replyForm: ReplyForm
     let contractHeader: ContractHeader?
 
-    public init(no: String?, purpose: ContentItem?, payment: Payment, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
+    public init(no: String?, purpose: ContentItem?, paymentBlock: PaymentBlock, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
         self.no = no
         self.purpose = purpose
-        self.payment = payment
+        self.paymentBlock = paymentBlock
         self.serviceScope = serviceScope
         self.letterHeader = letterHeader
         self.assistance = assistance
@@ -47,35 +48,33 @@ public struct BusinessClientQuotation: Renderable {
     public func render(indentedBy indentationKind: Plot.Indentation.Kind?) -> String {
         let components = getTitleContainableItems()
         let html = HTML{
-            ComponentGroup{
-                Div{
-                    letterHeader
-                    Page.break
-                    H3("專業服務公費報價單").style("text-align: center;")
-                    if let no {
-                        Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
+            Div{
+                letterHeader
+                Page.break
+                H3("專業服務公費報價單").style("text-align: center;")
+                if let no {
+                    Paragraph("嘉威稅字第\(no)號").style("font-size: 11px;text-align: right;")
+                }
+                contractHeader
+                for (index, item) in components.enumerated() {
+                    item.set(index: index)
+                }
+                Table{
+                    let chineseNumber = toChineseNumber(index: components.count)
+                    TableRow{
+                        TableCell{
+                            Paragraph("\(chineseNumber)、")}
+                        .style("vertical-align: top;")
+                        TableCell(paymentBlock)
+                    }.style("break-inside: avoid-page;")
+                    TableRow{
+                        TableCell()
+                        TableCell(notes)
                     }
-                    contractHeader
-                    for (index, item) in components.enumerated() {
-                        item.set(index: index)
-                    }
-                    Table{
-                        let chineseNumber = toChineseNumber(index: components.count)
-                        TableRow{
-                            TableCell{
-                                Paragraph("\(chineseNumber)、")}
-                            .style("vertical-align: top;")
-                            TableCell(payment)
-                        }.style("break-inside: avoid-page;")
-                        TableRow{
-                            TableCell()
-                            TableCell(notes)
-                        }
-                    }
-                    Page.break
-                    replyForm
-                }.style("font-family: 華康標楷體,標楷體-繁,標楷體;width: 100%;")
-            }
+                }
+                Page.break
+                replyForm
+            }.style("font-family: 華康標楷體,標楷體-繁,標楷體; width: 100%; line-height: 1.75em;  " )
         }
         return html.render(indentedBy: indentationKind)
     }
@@ -83,7 +82,7 @@ public struct BusinessClientQuotation: Renderable {
 }
 
 
-extension BusinessClientQuotation{
+extension AuditQuotation{
     public var headerHTML: Component{
         ComponentGroup{
             Header{

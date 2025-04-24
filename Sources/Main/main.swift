@@ -38,9 +38,10 @@ let paymentItems: [PaymentItem] = [
     .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
     .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
 ]
-let payment = Payment(title: "酬金", items: paymentItems)
-
-//print(payment.render())
+let payment = PaymentBlock(title: "酬金", payments: [
+    Payment(name: "財務會計委外作業(112 年度)", items: paymentItems),
+    Payment(name: "財務會計委外作業(113 年起)", items: paymentItems)
+])
 
 let contents: [String] = [
     "報價依照年度營收狀況及資產總額狀況評估，若有巨額變動時，將另與 貴公司民國112年以後依照附表一、專屬全家人健康事業(股) 會計帳務及稅務申報處理作業級距表討論報價金額。簽證公費請於當年底時支付半數，另外半數請於交付報告時支付；財會委外會計帳務暨稅務處申報理作業費用一年以十四個月計算，並請於次月底前支付前一個月之公費。合約執行期間不得低於二年，解除合約須提前三個月告知。",
@@ -71,21 +72,29 @@ let contractSubject = "承 貴公司委任本事務所辦理有關營利事業�
 let content = "感謝 貴公司對本事務所的支持與愛護，本事務所本著積極服務顧客的熱忱，以及專業智慧的多元服務，特將本事務所受託辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務內容概述如後，期盼此項合作能協助 貴公司提升會計帳務品質，俾能符合相關稅務法令和企業會計準則之規定。茲將委任之目的、服務範圍、 貴公司協助事項、酬金、權利義務事項及同意函列示如下："
 let contractHeader = ContractHeader(receiver: receiver, sender: sender, subject: contractSubject, content: content)
 
-let quotation = BusinessClientQuotation(no: quotationNo, purpose: purpose, payment: payment, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader)
-print(quotation.render())
+let quotation = AuditQuotation(no: quotationNo, purpose: purpose, paymentBlock: payment, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader)
+let html = quotation.render()
+let htmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test.html")
+try html.write(to: htmlUrl, atomically: true, encoding: .utf8)
+
 let generator = PDFGenerator(mainHtml: quotation, headerHtml: quotation.headerHTML, footerHtml: quotation.footerHTML)
 let pdfData = try generator.generate(sideMargin: 2)
 //print(pdfData)
 
-try pdfData?.write(to: URL(string: "file:///Users/gradyzhuo/test.pdf")!)
-
-import PDFToImage
 
 
-let converter = PDFImageConverter()
-let imageDatas = try converter.convert(data: pdfData!)
-//let imageData = try converter.convertToData(url: URL(string: "file:///Users/gradyzhuo/test.pdf")!)
 
-for (index,imgData) in imageDatas.enumerated(){
-    try imgData.write(to: URL(string: "file:///Users/gradyzhuo/test\(index).jpg")!)
-}
+let pdfUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test.pdf")
+try pdfData?.write(to: pdfUrl)
+
+//import PDFToImage
+//
+//let converter = PDFImageConverter()
+//let imageDatas = try converter.convert(data: pdfData!)
+////let imageData = try converter.convertToData(url: URL(string: "file:///Users/gradyzhuo/test.pdf")!)
+//
+//let folderURL = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test", directoryHint: .isDirectory)
+//for (index,imgData) in imageDatas.enumerated(){
+//    let url = folderURL.appending(path: "\(index).jpg")
+//    try imgData.write(to: url)
+//}
