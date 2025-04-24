@@ -2,69 +2,40 @@
 //  Payment.swift
 //  PDFGenerator
 //
-//  Created by Grady Zhuo on 2024/9/23.
+//  Created by Grady Zhuo on 2025/4/23.
 //
-
 import Plot
 
 public struct Payment: Component {
-    let title: String
-    let items: [PaymentItem]
+    public let name: String
+    public let items: [PaymentItem]
+    public let needShowName: Bool
     
     public var body: any Component{
         ComponentGroup{
-            Paragraph(title)
-            Table{
+            if needShowName {
                 TableRow{
-                    TableCell()
-                    TableCell("服務項目")
                     TableCell{
-                        Div("公費金額").style("white-space: nowrap; text-align: right; padding-right: 1em;")
-                    }
-                }.style("border-bottom: 1px solid black;")
-                
-                for (index, item) in items.enumerated(){
-                    TableRow{
-                        TableCell("(\(index+1))").style("padding-right: 0.5em; padding-bottom: 0.5em;")
-                        item.style("padding-bottom: 0.5em; width: 100%;")
-                    }
+                        Text(name).bold().style("font-size: 1.1em;")
+                    }.attribute(named: "colspan", value: "3")
                 }
-                
-            }.style("border-collapse: collapse; width: 100%;")
+            }
+            for (index, item) in items.enumerated(){
+                TableRow{
+                    TableCell("(\(index+1))").style("padding-right: 0.5em;")
+                    item
+                }.style("padding-bottom: 0.5em; width: 100%; padding-top: 0.5em;")
+            }
         }
     }
     
-    public init(title: String, items: [PaymentItem]) {
-        self.title = title
+    public init(name: String, items: [PaymentItem], needShowName: Bool = true) {
+        self.name = name
         self.items = items
-    }
-}
-
-public struct ReplyFormPayment: Component {
-
-    let paymentItems: [PaymentItem]
-
-    public var body: any Component {
-        ComponentGroup {
-            Table {
-                for (index, item) in paymentItems.enumerated() {
-                    TableRow {
-                        TableCell("(\(index+1))").style("vertical-align: middle;")
-                        TableCell {
-                            for line in item.lines {
-                                Div(line)
-                            }
-                        }.style("vertical-align: middle; width: 100%;")
-                        TableCell{
-                            Div("\(item.price) \(item.billingPeriod.description)").style("text-align: right; white-space: nowrap;")
-                        }
-                    }
-                }
-            }.style("font-size: 14px; width: 100%; border-collapse: separate; border-spacing: 0.2em;")
-        }
+        self.needShowName = needShowName
     }
     
-    public init(paymentItems: [PaymentItem]) {
-        self.paymentItems = paymentItems
+    package func hideName() -> Self {
+        .init(name: name, items: items, needShowName: false)
     }
 }

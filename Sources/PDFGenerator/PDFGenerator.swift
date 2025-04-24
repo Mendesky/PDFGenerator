@@ -15,6 +15,7 @@ public class PDFGenerator {
     var headerHtml: String? = nil
     var footerHtml: String? = nil
     let baseUrl: String?
+    let stylesheets:[String]
     
     /// PDFGenerator
     /// - Parameters:
@@ -31,6 +32,20 @@ public class PDFGenerator {
         self.headerHtml = headerHtml
         self.footerHtml = footerHtml
         self.baseUrl = baseUrl
+        self.stylesheets = [
+            """
+            @font-face {
+              font-family: 'CustomBoldFont';                
+              src: url(file:///Users/gradyzhuo/Downloads/特粗楷體.TTC) format('truetype');
+            }        
+            """,
+            """
+            b { 
+              font-family: 'CustomBoldFont', serif;
+              font-weight: 900;
+            }
+            """
+        ]
     }
     
     /// Generate  the Data of PDF File
@@ -66,8 +81,9 @@ public class PDFGenerator {
             "--id=\(uuid)",
             "--main=\(mainHtml)",
             "--side_margin=\(Int(sideMargin))",
-            "--extra_vertical_margin=\(Int(extraVerticalMargin))"
+            "--extra_vertical_margin=\(Int(extraVerticalMargin))",
         ]
+        
         if let headerHtml {
             arguments.append("--header=\(headerHtml)")
         }
@@ -75,6 +91,11 @@ public class PDFGenerator {
         if let footerHtml {
             arguments.append("--footer=\(footerHtml)")
         }
+        
+        arguments.append(contentsOf: stylesheets.map{
+            "--stylesheet=\($0)"
+        })
+        
         process.arguments = arguments
         process.standardOutput = pipe
         process.standardError = pipe
