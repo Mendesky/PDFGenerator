@@ -35,12 +35,12 @@ let assistance = BusinessClientAssistance(title: "貴公司之協助辦理事項
 
 //print("\n")
 let paymentItems: [PaymentItem] = [
-    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
-    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
+    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
+    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "優惠免收")
 ]
 let payment = PaymentBlock(title: "酬金", payments: [
     Payment(name: "財務會計委外作業(112 年度)", items: paymentItems),
-//    Payment(name: "財務會計委外作業(113 年起)", items: paymentItems)
+    Payment(name: "財務會計委外作業(113 年起)", items: paymentItems)
 ])
 
 let contents: [String] = [
