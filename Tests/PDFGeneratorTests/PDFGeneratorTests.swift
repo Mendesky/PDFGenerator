@@ -86,10 +86,9 @@ import Foundation
 
 @Test func createPaymentItemHtml(){
     let names: [String] = ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證", "二代健保暨表單彙總處理"]
-    let price: String = "5,000"
-    let billingPeriod: BillingPeriod = .monthly13
+    let fee: String = "5,000 元/月"
     
-    let paymentItem = PaymentItem(names: names, price: price, billingPeriod: billingPeriod.description)
+    let paymentItem = PaymentItem(names: names, fee: fee)
     
     #expect(paymentItem.render() == """
 <td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div><div>二代健保暨表單彙總處理</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/月</div></td>
@@ -101,11 +100,10 @@ import Foundation
 
 
 @Test func createPaymentHtml(){
-    let billingPeriod: BillingPeriod = .yearly
     let title = "酬金"
     let items: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: billingPeriod.description),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: billingPeriod.description)
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/年")
     ]
     
     let payment = Payment(name: title, items: items)
@@ -117,25 +115,24 @@ import Foundation
 @Test("two payment", arguments: [
     ([
         Payment(name: "****作業(112 年度)", items: [
-            .init(names: ["Hello"], price: "5,000", billingPeriod: BillingPeriod.yearly.description)
+            .init(names: ["Hello"], fee: "5,000 元/月")
         ]),
         Payment(name: "****作業(113 年起)", items: [
-            .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
-            .init(names: ["World"], price: "6,000", billingPeriod: BillingPeriod.yearly.description)
+            .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
+            .init(names: ["World"], fee: "6,000 元/年")
         ])
     ], """
-    <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(112 年度)</b></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(113 年起)</b></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(2)</td><td><div>World</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</div></td></tr></table>
+    <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(112 年度)</b></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/月</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(113 年起)</b></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(2)</td><td><div>World</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</div></td></tr></table>
     """),
     ([
         Payment(name: "****作業(112 年度)", items: [
-            .init(names: ["Hello"], price: "5,000", billingPeriod: BillingPeriod.yearly.description)
+            .init(names: ["Hello"], fee: "5,000 元/年")
         ])
     ], """
     <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr></table>
     """)
 ])
 func createPaymentBlocHtml(payments: [Payment], result: String){
-    let billingPeriod: BillingPeriod = .yearly
     let paymentBlock = PaymentBlock(title: "酬金", payments: payments)
     
     #expect(paymentBlock.render() == result)
@@ -187,8 +184,8 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     let sender = "88183980"
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
     let paymentItems: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"],  fee: "5,000 元/年"),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/月")
     ]
     let payments = [
         Payment(name: "Hello", items: paymentItems)
@@ -201,7 +198,7 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
 
     let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, payments: payments, additionalServices: additionalServices, quotationNo: quotationNo)
     #expect(replyForm.render() == """
-<h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>嘉威聯合會計師事務所</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 0.875rem; width: 100%; border-collapse: separate; border-spacing: 0.2em;"><tr><td colspan="3" style="vertical-align: middle;"><b>Hello</b></td></tr><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle; width: 100%;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap;">5,000 元/年</div></td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle; width: 100%;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td><div style="text-align: right; white-space: nowrap;">6,000 元/月</div></td></tr></table></td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top;">附加服務請勾選：</td></tr><tr style="font-size: 0.875rem;"><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr style="font-size: 0.875rem;"><td></td><td>☑二代健保申報作業</td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>全家人健康事業股份有限公司</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table><div style="display: flex; justify-content: space-between; width: 100%; margin: 0 auto; position: absolute; bottom: 0px;"><p>中　　華　　民　　國</p><p>年</p><p>月</p><p>日</p></div>
+<h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>嘉威聯合會計師事務所</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 0.875rem; width: 100%; border-collapse: separate; border-spacing: 0.2em;"><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle; width: 100%;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap;">5,000 元/年</div></td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle; width: 100%;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td><div style="text-align: right; white-space: nowrap;">6,000 元/月</div></td></tr></table></td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top;">附加服務請勾選：</td></tr><tr style="font-size: 0.875rem;"><td></td><td>□代辦年度CTP申報(每年3月；加收2,000元/家)</td></tr><tr style="font-size: 0.875rem;"><td></td><td>☑二代健保申報作業</td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>全家人健康事業股份有限公司</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table><div style="display: flex; justify-content: space-between; width: 100%; margin: 0 auto; position: absolute; bottom: 0px;"><p>中　　華　　民　　國</p><p>年</p><p>月</p><p>日</p></div>
 """)
 }
 
@@ -211,8 +208,8 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
     
     let paymentItems: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], price: "5,000", billingPeriod: BillingPeriod.yearly.description),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], price: "6,000", billingPeriod: BillingPeriod.monthly13.description)
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/月")
     ]
     
     let payments = [
@@ -224,7 +221,7 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
 
     let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, payments: payments, additionalServices: additionalServices, quotationNo: quotationNo)
     #expect(replyForm.render() == """
-<h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>嘉威聯合會計師事務所</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 0.875rem; width: 100%; border-collapse: separate; border-spacing: 0.2em;"><tr><td colspan="3" style="vertical-align: middle;"><b>Hello</b></td></tr><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle; width: 100%;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap;">5,000 元/年</div></td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle; width: 100%;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td><div style="text-align: right; white-space: nowrap;">6,000 元/月</div></td></tr></table></td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>全家人健康事業股份有限公司</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table><div style="display: flex; justify-content: space-between; width: 100%; margin: 0 auto; position: absolute; bottom: 0px;"><p>中　　華　　民　　國</p><p>年</p><p>月</p><p>日</p></div>
+<h2 style="text-align: center;">同意函</h2><table style="width: 100%;"><tr><td style="width: 70px; white-space: nowrap; vertical-align: top">受文者：</td><td>嘉威聯合會計師事務所</td></tr><tr><td style="white-space: nowrap; vertical-align: top">主　旨：</td><td>本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。</td></tr><tr><td></td><td style="white-space: nowrap; vertical-align: top">酬　金：</td></tr><tr><td></td><td><table style="font-size: 0.875rem; width: 100%; border-collapse: separate; border-spacing: 0.2em;"><tr><td style="vertical-align: middle;">(1)</td><td style="vertical-align: middle; width: 100%;"><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap;">5,000 元/年</div></td></tr><tr><td style="vertical-align: middle;">(2)</td><td style="vertical-align: middle; width: 100%;"><div>會計帳務處理作業（113 年 5 月開始）</div></td><td><div style="text-align: right; white-space: nowrap;">6,000 元/月</div></td></tr></table></td></tr><tr><td>附　件：</td><td>嘉威稅字第111112101號公費報價單</td></tr></table><br/><table style="width: 100%;"><tr><td style="width: 102px;"></td><td>全家人健康事業股份有限公司</td><td style="width: 10rem;"></td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（公　司　章）　　</td></tr><tr><td></td><td></td><td style="height: 6rem;vertical-align: top;">（授權人簽名或蓋章）</td></tr></table><div style="display: flex; justify-content: space-between; width: 100%; margin: 0 auto; position: absolute; bottom: 0px;"><p>中　　華　　民　　國</p><p>年</p><p>月</p><p>日</p></div>
 """)
 }
 

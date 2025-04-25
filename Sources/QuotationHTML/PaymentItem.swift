@@ -7,29 +7,9 @@
 
 import Plot
 
-public enum BillingPeriod: CustomStringConvertible{
-    case once
-    case monthly12
-    case monthly13
-    case monthly14
-    case yearly
-    
-    public var description: String{
-        return switch self {
-        case .once:
-            "元/次"
-        case .yearly:
-            "元/年"
-        case .monthly12, .monthly13, .monthly14:
-            "元/月"
-        }
-    }
-}
-
 public struct PaymentItem: Component{
     let names: [String]
-    let price: String
-    let billingPeriod: String
+    let fee: String
     
     var lines: [String] {
         get {
@@ -50,15 +30,20 @@ public struct PaymentItem: Component{
             }
             TableCell{
                 Div{
-                    Text("\(price) \(billingPeriod.description)")
+                    Text(fee)
                 }.style("text-align: right; white-space: nowrap; padding-right: 0.5em;")
             }
         }
     }
     
+    @available(*, deprecated, message: "use init(names:fee:) instead.")
     public init(names: [String], price: String, billingPeriod: String) {
         self.names = names
-        self.price = price
-        self.billingPeriod = billingPeriod
+        self.fee = "\(price) \(billingPeriod.description)"
+    }
+    
+    public init(names: [String], fee: String) {
+        self.names = names
+        self.fee = fee
     }
 }
