@@ -13,6 +13,7 @@ public struct ReplyForm: Component{
     let payments: [Payment]
     let additionalServices: [AdditionalService]
     let quotationNo: String?
+    let showCompanyStamp: Bool
     
     public var body: any Component{
         ComponentGroup{
@@ -69,8 +70,13 @@ public struct ReplyForm: Component{
                 TableRow{
                     TableCell()
                     TableCell()
-                    TableCell("（公　司　章）　　").style("height: 6rem;vertical-align: top;")
+                    if showCompanyStamp {
+                        TableCell("（公　司　章）　　").style("height: 6rem;vertical-align: top;")
+                    }else{
+                        TableCell("　").style("height: 6rem;vertical-align: top;")
+                    }
                 }
+                
                 TableRow{
                     TableCell()
                     TableCell()
@@ -87,12 +93,13 @@ public struct ReplyForm: Component{
         
     }
     
-    public init(receiver: String, sender: String, subject: String, payments: [Payment] = [], additionalServices: [AdditionalService], quotationNo: String?) {
+    public init(receiver: String, sender: String, subject: String, payments: [Payment] = [], additionalServices: [AdditionalService], quotationNo: String?, showCompanyStamp: Bool = true) {
         self.receiver = receiver
         self.sender = Organization(rawValue: sender)
         self.subject = subject
         self.payments = payments
         self.additionalServices = additionalServices
         self.quotationNo = quotationNo
+        self.showCompanyStamp = showCompanyStamp
     }
 }
