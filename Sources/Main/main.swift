@@ -65,7 +65,7 @@ let additionalServices: [AdditionalService] = [
 ]
 let quotationNo = "111112101"
 
-let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, payments: payment.payments, additionalServices: additionalServices, quotationNo: quotationNo)
+let replyForm = ReplyForm(receiver: receiver, sender: sender, subject: subject, payments: payment.payments, additionalServices: additionalServices, quotationNo: quotationNo, showCompanyStamp: false)
 
 
 let contractSubject = "承 貴公司委任本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務，至深感荷。謹將服務內容及酬金等分別說明如後，敬請卓察賜覆為禱。"
