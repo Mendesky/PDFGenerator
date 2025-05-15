@@ -9,11 +9,12 @@ import Plot
 
 @available(macOS 10.15, *)
 extension PDFGenerator {
-    public convenience init(mainHtml: Renderable, headerHtml: Renderable? = nil, footerHtml: Renderable? = nil, baseUrl: String? = nil, sideMargin: Int = 2, extraVerticalMargin:Int = 30){
+    public convenience init(mainHtml: Renderable, headerHtml: Renderable? = nil, footerHtml: Renderable? = nil, baseUrl: String? = nil, stylesheets: [String] = []){
         self.init(
             mainHtml: mainHtml.render(),
             headerHtml: headerHtml?.render(),
             footerHtml: footerHtml?.render(),
+            stylesheets: stylesheets,
             baseUrl: baseUrl
         )
     }

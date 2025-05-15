@@ -27,7 +27,7 @@ public class PDFGenerator {
     ///   An optional footer html.
     ///   - baseUrl: `String?`
     ///     An absolute url to the page which serves as a reference to Weasyprint to fetch assets, required to get our media.
-    public init(mainHtml: String, headerHtml: String? = nil, footerHtml: String? = nil, baseUrl: String? = nil){
+    public init(mainHtml: String, headerHtml: String? = nil, footerHtml: String? = nil, stylesheets otherStylesheets:[String] = [], baseUrl: String? = nil){
         self.mainHtml = mainHtml
         self.headerHtml = headerHtml
         self.footerHtml = footerHtml
@@ -57,8 +57,28 @@ public class PDFGenerator {
               font-family: 'CustomBoldFont', ser;
               font-weight: 900;
             }
+            """,
             """
-        ]
+            .list-level-3 {
+              ol {
+                list-style: none;
+                /*  命名自訂標號變數  */
+                counter-reset: list-index;
+              }
+              ol li {
+              /*  使用自訂標號  */
+                counter-increment: list-index;
+              /* 段落首行縮排 */
+                text-indent: -1em;
+              }
+              /* 以偽元素自訂標號樣式 */
+              ol li::before {
+                content: "("counter(list-index) ")";
+                padding-right: 1em;
+              }
+            }
+            """
+        ] + otherStylesheets
     }
     
     /// Generate  the Data of PDF File

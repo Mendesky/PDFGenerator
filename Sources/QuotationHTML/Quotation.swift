@@ -66,8 +66,8 @@ public struct AuditQuotation: Renderable {
                 let chineseNumber = toChineseNumber(index: components.count)
                 TableRow{
                     TableCell{
-                        Paragraph("\(chineseNumber)、")}
-                    .style("vertical-align: top;")
+                        Paragraph("\(chineseNumber)、")
+                    }.style("vertical-align: top;")
                     TableCell(paymentBlock)
                 }.style("break-inside: avoid-page;")
                 TableRow{
