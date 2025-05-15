@@ -78,7 +78,7 @@ import Foundation
     let serviceScope = ServiceScope(title: title, heading: content, items: quotingServiceTerms)
     
     #expect(serviceScope.render() == """
-<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><ol><li style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2em;">ItemContent</p></li></ol>
+<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><ol><li class="list-level-3" style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2em;">ItemContent</p></li></ol>
 """)
 }
 
