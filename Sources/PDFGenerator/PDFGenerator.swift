@@ -74,7 +74,7 @@ public class PDFGenerator {
               /* 以偽元素自訂標號樣式 */
               ol li::before {
                 content: "("counter(list-index) ")";
-                padding-right: 1em;
+                padding-right: 0.5em;
               }
             }
             """
