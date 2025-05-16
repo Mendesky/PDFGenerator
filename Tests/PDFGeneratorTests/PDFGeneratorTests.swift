@@ -25,7 +25,7 @@ import Foundation
     let letter = LetterHeader(to: to, from: from, content: content, date: testingDate!, blessings: blessings)
     print(letter.render())
     #expect(letter.render() == """
-    <div style="width: 100%;padding: 25px 25px 40px 25px;"><table><tr style="height: 3rem;"><td style="font-family: Times New Roman;width: 5rem;">To</td><td style="text-align: left;">\(to)</td></tr><tr style="height: 3rem;"><td style="font-family: Times New Roman;">From</td><td style="text-align: left;">\(letter.from.displayName)</td></tr></table></div><table><tr><td colspan="2"><hr/><p style="text-indent: 2em;">\(content)</p></td></tr><tr><td style="text-indent: 2em;" colspan="2">\(blessings)</td></tr><tr><td colspan="2" dir="rtl">\(letter.from.displayName)<br/>\(testingDateString)</td></tr></table>
+    <div style="width: 100%;padding: 25px 25px 40px 25px;"><table><tr style="height: 3rem;"><td style="font-family: Times New Roman;width: 5rem; font-size: 1.1rem;">To</td><td style="text-align: left; font-size: 1.1rem;">Jane Doe</td></tr><tr style="height: 3rem;"><td style="font-family: Times New Roman; font-size: 1.1rem;">From</td><td style="text-align: left; font-size: 1.1rem;">嘉威聯合會計師事務所</td></tr></table></div><table><tr><td colspan="2"><hr/><p style="text-indent: 2em;">This is a testing content.</p></td></tr><tr><td style="text-indent: 2em;" colspan="2">順頌 商祺</td></tr><tr><td colspan="2" dir="rtl">嘉威聯合會計師事務所<br/>113.9.23</td></tr></table>
     """)
 }
 
@@ -62,7 +62,7 @@ import Foundation
     
     let quotingServiceTerm = QuotingServiceTerm(title: title, term: content, serviceItemTerms: terms)
     
-    #expect(quotingServiceTerm.render() == "<p>\(title)</p><p style=\"text-indent: 2em;\">\(content)</p><ol><li>\(termStrings[0])</li><li>\(termStrings[1])</li></ol>")
+    #expect(quotingServiceTerm.render() == "<p>Quotation Purpose</p><p style=\"text-indent: 2rem;\">This is a description of the Purpose.</p><ol><li>Term1</li><li>Term2</li></ol>")
     
 }
 
@@ -78,7 +78,7 @@ import Foundation
     let serviceScope = ServiceScope(title: title, heading: content, items: quotingServiceTerms)
     
     #expect(serviceScope.render() == """
-<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><ol><li class="list-level-3" style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2em;">ItemContent</p></li></ol>
+<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><ol><li class="list-level-3" style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2rem;">ItemContent</p></li></ol>
 """)
 }
 
@@ -122,14 +122,14 @@ import Foundation
             .init(names: ["World"], fee: "6,000 元/年")
         ])
     ], """
-    <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(112 年度)</b></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em; width: 1em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/月</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(113 年起)</b></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em; width: 1em;">(1)</td><td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em; width: 1em;">(2)</td><td><div>World</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</div></td></tr></table>
+    <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(112 年度)</b></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em; width: 1em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/月</div></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(113 年起)</b></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em; width: 1em;">(1)</td><td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em; width: 1em;">(2)</td><td><div>World</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</div></td></tr></table>
     """),
     ([
         Payment(name: "****作業(112 年度)", items: [
             .init(names: ["Hello"], fee: "5,000 元/年")
         ])
     ], """
-    <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em; width: 1em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr></table>
+    <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="padding-right: 0.5em; width: 1em;">(1)</td><td><div>Hello</div></td><td><div style="text-align: right; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</div></td></tr></table>
     """)
 ])
 func createPaymentBlocHtml(payments: [Payment], result: String){
@@ -173,7 +173,7 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     ]
     
     let note = Note(contents: contents)
-    #expect(note.render() == "<table><tr style=\"break-inside: avoid-page;\"><td style=\"width: 3rem;vertical-align: top;\">註一：</td><td><div><div>\(contents[0])</div></div></td></tr><tr style=\"break-inside: avoid-page;\"><td style=\"width: 3rem;vertical-align: top;\">註二：</td><td><div><div>\(contents[1].components(separatedBy: "\n")[0])</div><div>\(contents[1].components(separatedBy: "\n")[1])</div><div>\(contents[1].components(separatedBy: "\n")[2])</div><div>\(contents[1].components(separatedBy: "\n")[3])</div></div></td></tr><tr style=\"break-inside: avoid-page;\"><td style=\"width: 3rem;vertical-align: top;\">註三：</td><td><div><div>\(contents[2])</div></div></td></tr></table>")
+    #expect(note.render() == "<table><tr style=\"break-inside: avoid-page;\"><td style=\"width: 3rem; vertical-align: top; font-size: 0.89rem;\">註一：</td><td><div><div style=\"font-size: 0.89rem;\">報價依照年度營收狀況及資產總額狀況評估，若有巨額變動時，將另與 貴公司民國112年以後依照附表一、專屬全家人健康事業(股) 會計帳務及稅務申報處理作業級距表討論報價金額。簽證公費請於當年底時支付半數，另外半數請於交付報告時支付；財會委外會計帳務暨稅務處申報理作業費用一年以十四個月計算，並請於次月底前支付前一個月之公費。合約執行期間不得低於二年，解除合約須提前三個月告知。</div></div></td></tr><tr style=\"break-inside: avoid-page;\"><td style=\"width: 3rem; vertical-align: top; font-size: 0.89rem;\">註二：</td><td><div><div style=\"font-size: 0.89rem;\">出納事務處理作業內容包含：</div><div style=\"font-size: 0.89rem;\">A.國內轉帳30 筆；每加⼀筆多50 元。</div><div style=\"font-size: 0.89rem;\">B.國外轉帳10 筆；每加⼀筆多100 元。</div><div style=\"font-size: 0.89rem;\">C.⼀次薪資轉帳。</div></div></td></tr><tr style=\"break-inside: avoid-page;\"><td style=\"width: 3rem; vertical-align: top; font-size: 0.89rem;\">註三：</td><td><div><div style=\"font-size: 0.89rem;\">薪資人力支援處理作業500元/人/月；基本收費3,000/月。</div></div></td></tr></table>")
     
 }
 
@@ -259,6 +259,6 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     
     let contractHeader = ContractHeader(receiver: receiver, sender: sender, subject: subject, content: description)
     #expect(contractHeader.render() == """
-    <table style="margin: 2rem 2rem 3rem 2rem;"><tr><td style="vertical-align: top; width: 6em;">受 文 者：</td><td>\(receiver)（以下簡稱 貴公司）</td></tr><tr><td style="vertical-align: top;">發 文 者：</td><td>\(contractHeader.sender.displayName)（以下簡稱 本事務所）</td></tr><tr><td style="vertical-align: top;">主    旨：</td><td>\(subject)</td></tr><tr><td style="vertical-align: top;">說    明：</td><td>\(description)</td></tr></table>
+    <table style="margin: 2rem 2rem 3rem 2rem;"><tr><td style="vertical-align: top; width: 6em; font-size: 1rem;">受 文 者：</td><td style="font-size: 1rem;">全家人健康事業股份有限公司（以下簡稱 貴公司）</td></tr><tr><td style="vertical-align: top; font-size: 1rem;">發 文 者：</td><td style="font-size: 1rem;">嘉威聯合會計師事務所（以下簡稱 本事務所）</td></tr><tr><td style="vertical-align: top; font-size: 1rem;">主    旨：</td><td style="font-size: 1rem;">承 貴公司委任本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務，至深感荷。謹將服務內容及酬金等分別說明如後，敬請卓察賜覆為禱。</td></tr><tr><td style="vertical-align: top; font-size: 1rem;">說    明：</td><td style="font-size: 1rem;">感謝 貴公司對本事務所的支持與愛護，本事務所本著積極服務顧客的熱忱，以及專業智慧的多元服務，特將本事務所受託辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務內容概述如後，期盼此項合作能協助 貴公司提升會計帳務品質，俾能符合相關稅務法令和企業會計準則之規定。茲將委任之目的、服務範圍、 貴公司協助事項、酬金、權利義務事項及同意函列示如下：</td></tr></table>
     """)
 }
