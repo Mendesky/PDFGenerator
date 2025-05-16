@@ -90,7 +90,7 @@ public class PDFGenerator {
     ///   The goal is to avoid having the content of `main_html` touching the header or the footer.
     /// - Returns: The rendered data of PDF.
     @available(macOS 13.0, *)
-    public func generate(sideMargin: Float = 2, extraVerticalMargin:Float = 30) throws -> Data?{
+    public func generate(sideMargin: Float = 2, extraVerticalMargin:Float = 0) throws -> Data?{
 
         let pythonFilePath = Bundle.module.path(forResource: "pdf_generator", ofType: "py")!
         

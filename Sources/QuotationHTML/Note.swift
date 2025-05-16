@@ -19,7 +19,7 @@ public struct Note: Component {
             let strings = $0.split(separator: "\n")
             return Div{
                 for string in strings{
-                    Div(String(string))
+                    Div(String(string)).style("font-size: 0.89rem;")
                 }
             }
         }
@@ -30,7 +30,7 @@ public struct Note: Component {
             Table{
                 for (index,component) in components.enumerated(){
                     TableRow{
-                        TableCell("註\(toChineseNumber(index: index))：").style("width: 3rem;vertical-align: top;")
+                        TableCell("註\(toChineseNumber(index: index))：").style("width: 3rem; vertical-align: top; font-size: 0.89rem;")
                         TableCell(component)
                     }.style("break-inside: avoid-page;")
                 }

@@ -23,7 +23,7 @@ public struct PaymentBlock: Component {
                 }.style("border-bottom: 1px solid black;")
                 
                 for payment in payments {
-                    payment.style("font-size: 0.89rem; padding-bottom: 0.5em; width: 100%;")
+                    payment.style("font-size: 1rem; padding-bottom: 0.5em; width: 100%;")
                 }
                 
             }.style("border-collapse: collapse; width: 100%;")

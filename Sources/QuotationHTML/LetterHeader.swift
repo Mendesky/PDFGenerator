@@ -32,12 +32,12 @@ public struct LetterHeader: Component{
             Div{
                 Table{
                     TableRow{
-                        TableCell("To").style("font-family: Times New Roman;width: 5rem;")
-                        TableCell(to).style("text-align: left;")
+                        TableCell("To").style("font-family: Times New Roman;width: 5rem; font-size: 1.1rem;")
+                        TableCell(to).style("text-align: left; font-size: 1.1rem;")
                     }.style("height: 3rem;")
                     TableRow{
-                        TableCell("From").style("font-family: Times New Roman;")
-                        TableCell(from.displayName).style("text-align: left;")
+                        TableCell("From").style("font-family: Times New Roman; font-size: 1.1rem;")
+                        TableCell(from.displayName).style("text-align: left; font-size: 1.1rem;")
                     }.style("height: 3rem;")
                 }
             }.style("width: 100%;padding: 25px 25px 40px 25px;")

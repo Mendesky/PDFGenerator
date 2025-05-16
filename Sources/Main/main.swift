@@ -78,7 +78,7 @@ let htmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "t
 try html.write(to: htmlUrl, atomically: true, encoding: .utf8)
 
 let generator = PDFGenerator(mainHtml: quotation, headerHtml: quotation.headerHTML, footerHtml: quotation.footerHTML)
-let pdfData = try generator.generate(sideMargin: 2)
+let pdfData = try generator.generate()
 //print(pdfData)
 
 

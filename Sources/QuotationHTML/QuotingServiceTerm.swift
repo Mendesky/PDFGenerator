@@ -15,7 +15,7 @@ public struct QuotingServiceTerm: Component {
         ComponentGroup{
             Paragraph(title)
             if let term{
-                Paragraph(term).style("text-indent: 2em;")
+                Paragraph(term).style("text-indent: 2rem;")
             }
             if let serviceItemTerms {
                 List{
