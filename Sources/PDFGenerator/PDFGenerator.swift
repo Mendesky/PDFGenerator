@@ -59,24 +59,6 @@ public class PDFGenerator {
             }
             """,
             """
-            .list-level-3 {
-              ol {
-                list-style: none;
-                /*  命名自訂標號變數  */
-                counter-reset: list-index;
-              }
-              ol li {
-              /*  使用自訂標號  */
-                counter-increment: list-index;
-              /* 段落首行縮排 */
-                text-indent: -1em;
-              }
-              /* 以偽元素自訂標號樣式 */
-              ol li::before {
-                content: "("counter(list-index) ")";
-                padding-right: 0.5em;
-              }
-            }
             .list-level-3 ol {
               list-style: none;
               /*  命名自訂標號變數  */
