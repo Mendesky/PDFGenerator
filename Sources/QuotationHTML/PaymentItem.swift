@@ -32,7 +32,7 @@ public struct PaymentItem: Component{
                 Div{
                     Text(fee)
                 }.style("text-align: right; white-space: nowrap; padding-right: 0.5em;")
-            }
+            }.style("display: flex; align-items: top;")
         }
     }
     

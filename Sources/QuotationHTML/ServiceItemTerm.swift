@@ -12,7 +12,7 @@ public struct ServiceItemTerm: Component {
     
     public var body: any Component{
         ComponentGroup{
-            ListItem(term)
+            ListItem(term).style("text-indent: -1.5em;")
         }
     }
     
