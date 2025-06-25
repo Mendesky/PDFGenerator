@@ -19,7 +19,7 @@ let purpose = ContentItem(title: "目的", content: "貴公司委託本事務所
 //
 //print("\n")
 let scope = ServiceScope(title: "服務範圍及內容", heading: "本項專案作業之服務範圍將根據相關稅務法令、企業會計準則與會計師查核簽證準則之規定，由  貴公司委託本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務，俾能符合相關法令規定與提升整體會計帳務品質。具體服務事項如下：", items: [
-    QuotingServiceTerm(title: "營利事業所得稅查核簽證", term: "營利事業所得稅查核簽證主要係包括執行營利事業所得稅結算申報程序及依照「所得稅法」規定進行會計師查核簽證作業。", termStrings: ["平時會計帳務作業平時會計帳務作業平時會計帳務作業平時會計帳務作業平時會計帳務作業平時會計帳務作業平時會計帳務作業平時會計帳務作業", "資金流程作業。", "成本表編製作業。"])
+    QuotingServiceTerm(title: "營利事業所得稅查核簽證", term: "營利事業所得稅查核簽證主要係包括執行營利事業所得稅結算申報程序及依照「所得稅法」規定進行會計師查核簽證作業。", termStrings: ["平時稅務會計帳務作業，包括:憑證整理、\n傳票登打、\n相關帳簿與財務報表之編製。", "資金流程作業。", "成本表編製作業。"])
 ])
 //print(scope.render())
 
@@ -35,12 +35,15 @@ let assistance = BusinessClientAssistance(title: "貴公司之協助辦理事項
 
 //print("\n")
 let paymentItems: [PaymentItem] = [
-    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證", "民國 115 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
+    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證", "民國 115 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "1,4000 元/年"),
     .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "優惠免收")
+]
+let paymentItems2: [PaymentItem] = [
+    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "5000 元/月"),
 ]
 let payment = PaymentBlock(title: "酬金", payments: [
     Payment(name: "財務會計委外作業(112 年度)", items: paymentItems),
-    Payment(name: "財務會計委外作業(113 年起)", items: paymentItems)
+    Payment(name: "財務會計委外作業(113 年起)", items: paymentItems2)
 ])
 
 let contents: [String] = [
