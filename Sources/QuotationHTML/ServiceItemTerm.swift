@@ -12,7 +12,11 @@ public struct ServiceItemTerm: Component {
     
     public var body: any Component{
         ComponentGroup{
-            ListItem(term).style("text-indent: -1.5em;")
+            ListItem{
+                for line in term.split(separator: "\n"){
+                    Text(String(line)).addLineBreak()
+                }
+            }.style("text-indent: -1.5em;")
         }
     }
     
