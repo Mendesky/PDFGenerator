@@ -42,35 +42,6 @@ import Foundation
 }
 
 
-
-
-
-@Test func createServiceItemTermHtml(){
-    let term = "This is a Term string."
-    
-    let serviceItemTerm = ServiceItemTerm(term: term)
-    #expect(serviceItemTerm.render() == """
-    <li style="text-indent: -1.5em;">\(term)</li>
-    """)
-}
-
-
-@Test func createQuotingServiceTermHtml(){
-    let title = "Quotation Purpose"
-    let content = "This is a description of the Purpose."
-    let termStrings = ["Term1", "Term2"]
-    
-    let terms = termStrings.map{ ServiceItemTerm(term: $0) }
-    
-    let quotingServiceTerm = QuotingServiceTerm(title: title, term: content, serviceItemTerms: terms)
-    
-    #expect(quotingServiceTerm.render() == """
-<p>Quotation Purpose</p><p style="text-indent: 2rem;">This is a description of the Purpose.</p><ol><li style="text-indent: -1.5em;">Term1</li><li style="text-indent: -1.5em;">Term2</li></ol>
-""")
-    
-}
-
-
 @Test func createServiceScopeHtml(){
     let title = "Quotation Service Scope"
     let content = "This is a description of the Service Scope."
@@ -82,7 +53,7 @@ import Foundation
     let serviceScope = ServiceScope(title: title, heading: content, items: quotingServiceTerms)
     
     #expect(serviceScope.render() == """
-<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><ol><li class="list-level-3" style="break-inside: avoid-page;"><p>ItemTitle</p><p style="text-indent: 2rem;">ItemContent</p></li></ol>
+<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em; padding-bottom: 1em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: 2em;">ItemContent</div></div></div>
 """)
 }
 
@@ -156,7 +127,7 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     let assistance = BusinessClientAssistance(title: title, items: items)
     
     #expect(assistance.render() == """
-<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Assistance Title</td></tr><table><tr><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">1.</div></td><td><p>指派專責會計人員</p><p style="text-indent: 2em;">為期本專業服務能順利完成，爰建議  貴公司應指派熟悉公司會計作業流程之人員，以作為與本事務所溝通協調及對內對外之窗口。</p></td></tr></table></div><table><tr style="break-inside: avoid-page;"><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">2.</div></td><td><p>網路銀行申請</p><p style="text-indent: 2em;">為方便本事務所執行出納事務，故請 貴公司配合申請網路銀行，以利運作順暢。(請提供編輯與審核帳號各一組)</p></td></tr><tr style="break-inside: avoid-page;"><td style="vertical-align: top; padding-top: 1.05em;"><div style="text-indent: 1.25em;">3.</div></td><td><p>配合及時提供相關資訊</p><p style="text-indent: 2em;">為順利達成上述服務，委任人應提供相關之會計資訊、文件及憑證等，供受任人審閱，並答覆有關問題之詢問。委任人會計人員應對財會委外工作儘量協助，此項協助包括憑證蒐集、對帳、提供有關文件資料、相關問題詢問等；至於其具體配合事項，將由受任人之服務人員於工作開始前，提供應備資料清單，商請委任人有關人員惠予配合。</p></td></tr></table>
+<div><tr style="font-size: 1.1em;"><td>Assistance Title</td></tr><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em; padding-bottom: 1em;">（一）指派專責會計人員</div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: 2em;">為期本專業服務能順利完成，爰建議  貴公司應指派熟悉公司會計作業流程之人員，以作為與本事務所溝通協調及對內對外之窗口。</div></div></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em; padding-bottom: 1em;">（二）網路銀行申請</div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: 2em;">為方便本事務所執行出納事務，故請 貴公司配合申請網路銀行，以利運作順暢。(請提供編輯與審核帳號各一組)</div></div></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em; padding-bottom: 1em;">（三）配合及時提供相關資訊</div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: 2em;">為順利達成上述服務，委任人應提供相關之會計資訊、文件及憑證等，供受任人審閱，並答覆有關問題之詢問。委任人會計人員應對財會委外工作儘量協助，此項協助包括憑證蒐集、對帳、提供有關文件資料、相關問題詢問等；至於其具體配合事項，將由受任人之服務人員於工作開始前，提供應備資料清單，商請委任人有關人員惠予配合。</div></div></div></div>
 """)
     
 }
