@@ -22,31 +22,13 @@ public struct BusinessClientAssistance: Component {
                     TableRow(TableCell("\(title)")).style("font-size: 1.1em;")
                 }
                 
-                if let firstItem = items.first {
-                    Table{
-                        TableRow{
-                            TableCell{
-                                Div(Text("1.")).style("text-indent: 1.25em;")
-                            }.style("vertical-align: top; padding-top: 1.05em;")
-                            TableCell{
-                                firstItem
-                            }
-                        }
-                    }
-                }
-            }.style("break-inside: avoid-page;")
-            if items.count > 1 {
-                Table{
-                    for (index, item) in items[1..<items.endIndex].enumerated(){
-                        TableRow{
-                            TableCell{
-                                Div(Text("\(index+2).")).style("text-indent: 1.25em;")
-                            }.style("vertical-align: top; padding-top: 1.05em;")
-                            TableCell{
-                                item
-                            }
-                        }.style("break-inside: avoid-page;")
-                    }
+                for (offset, item) in items.enumerated() {
+                    Div{
+                        Div(Text("（\(toChineseNumber(index: offset))）\(item.title)")).style("display: flex; text-indent: 2em; padding-bottom: 1em;")
+                        Div{
+                            Div(item.content).style("display: flex; text-indent: 2em;")
+                        }.style("display: flex; flex-direction: column; padding-left: 5em;")
+                    }.style("display: flex; flex-direction: column;  break-inside: avoid-page; ")
                 }
             }
         }

@@ -43,11 +43,30 @@ public struct ServiceScope: Component {
             }.style("break-inside: avoid-page;")
             
             if let items{
-                List{
-                    for item in items {
-                        ListItem(item).class("list-level-3").style("break-inside: avoid-page;")
-                    }
-                }.environmentValue(.ordered, key: .listStyle)
+                
+                for (offset, item) in items.enumerated() {
+                    Div{
+                        Div(Text("（\(toChineseNumber(index: offset))）\(item.title)")).style("display: flex; text-indent: 2em; padding-bottom: 1em;")
+                        Div{
+                            if let term = item.term{
+                                Div(term).style("display: flex; text-indent: 2em;")
+                            }
+                        }.style("display: flex; flex-direction: column; padding-left: 5em;")
+                        if let serviceItemTerms = item.serviceItemTerms{
+                            Div{
+                                List{
+                                    for serviceItemTerm in serviceItemTerms {
+                                        ListItem{
+                                            for line in serviceItemTerm.term.split(separator: "\n"){
+                                                Text(String(line)).addLineBreak()
+                                            }
+                                        }
+                                    }
+                                }.environmentValue(.ordered, key: .listStyle)
+                            }.style("display: flex; padding-left: 3.8em;")
+                        }
+                    }.style("display: flex; flex-direction: column;  break-inside: avoid-page; ")
+                }
             }
         }
     }

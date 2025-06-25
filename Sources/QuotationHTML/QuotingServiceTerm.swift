@@ -6,26 +6,10 @@
 //
 import Plot
 
-public struct QuotingServiceTerm: Component {
+public struct QuotingServiceTerm {
     let title: String
     let term: String?
     let serviceItemTerms: [ServiceItemTerm]?
-    
-    public var body: any Component{
-        ComponentGroup{
-            Paragraph(title)
-            if let term{
-                Paragraph(term).style("text-indent: 2rem;")
-            }
-            if let serviceItemTerms {
-                List{
-                    for term in serviceItemTerms {
-                        term
-                    }
-                }.environmentValue(HTMLListStyle.ordered, key: .listStyle)
-            }
-        }
-    }
     
     public init(title: String, term: String?, serviceItemTerms: [ServiceItemTerm]?) {
         self.title = title
