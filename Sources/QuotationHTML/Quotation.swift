@@ -27,8 +27,9 @@ public struct AuditQuotation: Renderable {
     let notes: Note
     let replyForm: ReplyForm
     let contractHeader: ContractHeader?
+    let rightsAndObligations: ContractSection?
 
-    public init(no: String?, purpose: ContentItem?, paymentBlock: PaymentBlock, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?) {
+    public init(no: String?, purpose: ContentItem?, paymentBlock: PaymentBlock, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?, rightsAndObligations: ContractSection? = nil) {
         self.no = no
         self.purpose = purpose
         self.paymentBlock = paymentBlock
@@ -38,6 +39,7 @@ public struct AuditQuotation: Renderable {
         self.notes = notes
         self.replyForm = replyForm
         self.contractHeader = contractHeader
+        self.rightsAndObligations = rightsAndObligations
     }
 
     func getTitleContainableItems() -> [TitleContainableComponent] {
@@ -75,11 +77,11 @@ public struct AuditQuotation: Renderable {
                     TableCell(notes)
                 }
             }
+            if let rightsAndObligations{
+                rightsAndObligations.set(index: components.count + 1)
+            }
             Page.break
             replyForm
-            Div{
-                
-            }
         }.node.style("font-family: 華康標楷體,標楷體-繁,標楷體; width: 100%; line-height: 1.5em; font-size: 16px;" )
         return html.render(indentedBy: indentationKind)
     }
@@ -153,7 +155,7 @@ extension AuditQuotation{
             height: 138px;
             width: 100%;
         }
-        """) 
+        """)
         }
     }
     
