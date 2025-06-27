@@ -77,6 +77,7 @@ public struct AuditQuotation: Renderable {
                     TableCell(notes)
                 }
             }
+            Node.br()
             if let rightsAndObligations{
                 rightsAndObligations.set(index: components.count + 1)
             }
