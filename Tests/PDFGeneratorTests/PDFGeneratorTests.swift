@@ -237,3 +237,17 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     <table style="margin: 2rem 2rem 3rem 2rem;"><tr><td style="vertical-align: top; width: 6em; font-size: 1rem;">受 文 者：</td><td style="font-size: 1rem;">全家人健康事業股份有限公司（以下簡稱 貴公司）</td></tr><tr><td style="vertical-align: top; font-size: 1rem;">發 文 者：</td><td style="font-size: 1rem;">嘉威聯合會計師事務所（以下簡稱 本事務所）</td></tr><tr><td style="vertical-align: top; font-size: 1rem;">主    旨：</td><td style="font-size: 1rem;">承 貴公司委任本事務所辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務，至深感荷。謹將服務內容及酬金等分別說明如後，敬請卓察賜覆為禱。</td></tr><tr><td style="vertical-align: top; font-size: 1rem;">說    明：</td><td style="font-size: 1rem;">感謝 貴公司對本事務所的支持與愛護，本事務所本著積極服務顧客的熱忱，以及專業智慧的多元服務，特將本事務所受託辦理有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務內容概述如後，期盼此項合作能協助 貴公司提升會計帳務品質，俾能符合相關稅務法令和企業會計準則之規定。茲將委任之目的、服務範圍、 貴公司協助事項、酬金、權利義務事項及同意函列示如下：</td></tr></table>
     """)
 }
+
+@Test func createRightsAndObligations(){
+    let rightsAndObligations = ContractSection(title: "權利義務事項", heading: "本事務所將會依照現行法規的規範及符合專業慣例之基礎上提供上開服務：", provisions: [
+        .init(term: "本事務所將依現行有效之法規，提供上開各項服務；就服務事項完辦後相關法規之變更、修正或廢止所導致之變動，應另行修正報價單之內容。"),
+        .init(term: "本事務所將依據  貴公司所提供之資料及文件，利用會計專業知識蒐集、分類及彙總財務資訊，進而提供會計帳務處理作業服務項目，無須對資訊加以查核或核閱，所提供之財務資訊亦不提供任何程度之確信。"),
+        .init(term: "本事務所所提供會計帳務處理作業服務，僅限協助 貴公司完成相關專業服務使用。除本事務所有可歸責之情形外，如本事務所於本報價單意旨提供會計帳務處理作業服務事項，而遭致第三人向本事務所為法律上之主張而致生損害時， 貴公司同意負責補償。另未經本事務所書面同意，本事務所所提供之服務不得提供他人使用(其中不包含提供予股東開會使用)；且若有此種情形致他人權益受損，本事務所不負任何責任。"),
+        .init(term: "本事務所履行委任書所涉之服務事項，將本誠信履踐應有之注意義務，惟僅於經法院判決確定後，在本案已收受之服務公費範圍內負擔相關責任。"),
+        .init(term: "本公司對 貴公司所提供之各項資料或相關文件，當盡保密之責。"),
+        .init(term: "本委任書由 貴公司與本公司雙方各執一份。")
+    ])
+    #expect(rightsAndObligations.render() == """
+    <div style="break-inside: avoid-page; "><div style="dislpay: flex; font-size: 1.1em;">權利義務事項</div><p style="display: flex; text-indent: 2em;">本事務所將會依照現行法規的規範及符合專業慣例之基礎上提供上開服務：</p><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: -3em;">（一）本事務所將依現行有效之法規，提供上開各項服務；就服務事項完辦後相關法規之變更、修正或廢止所導致之變動，應另行修正報價單之內容。</div></div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: -3em;">（二）本事務所將依據  貴公司所提供之資料及文件，利用會計專業知識蒐集、分類及彙總財務資訊，進而提供會計帳務處理作業服務項目，無須對資訊加以查核或核閱，所提供之財務資訊亦不提供任何程度之確信。</div></div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: -3em;">（三）本事務所所提供會計帳務處理作業服務，僅限協助 貴公司完成相關專業服務使用。除本事務所有可歸責之情形外，如本事務所於本報價單意旨提供會計帳務處理作業服務事項，而遭致第三人向本事務所為法律上之主張而致生損害時， 貴公司同意負責補償。另未經本事務所書面同意，本事務所所提供之服務不得提供他人使用(其中不包含提供予股東開會使用)；且若有此種情形致他人權益受損，本事務所不負任何責任。</div></div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: -3em;">（四）本事務所履行委任書所涉之服務事項，將本誠信履踐應有之注意義務，惟僅於經法院判決確定後，在本案已收受之服務公費範圍內負擔相關責任。</div></div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: -3em;">（五）本公司對 貴公司所提供之各項資料或相關文件，當盡保密之責。</div></div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: -3em;">（六）本委任書由 貴公司與本公司雙方各執一份。</div></div></div>
+    """)
+}
