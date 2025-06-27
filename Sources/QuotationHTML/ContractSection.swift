@@ -24,7 +24,7 @@ public struct ContractSection: Component {
                     }
                 }.style("dislpay: flex; font-size: 1.1em;")
                 
-                Paragraph(heading).style("display: flex; text-indent: 2em;")
+                Paragraph(heading).style("display: flex; text-indent: 2em; padding-top: 1em;")
                 
                 for (offset, item) in provisions.enumerated() {
                     Div{
