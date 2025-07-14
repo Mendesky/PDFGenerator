@@ -22,10 +22,10 @@ import Foundation
     let testingDate = Calendar.current.date(from: testingDateComponents)
     
     let blessings = "順頌 商祺"
-    let letter = LetterHeader(to: to, from: from, content: content, date: testingDate!, blessings: blessings)
+    let letter = LetterHeader(to: to, from: from, quotingOrganization: .jw, content: content, date: testingDate!, blessings: blessings)
     print(letter.render())
     #expect(letter.render() == """
-    <div style="width: 100%;padding: 25px 25px 40px 25px;"><table><tr style="height: 3rem;"><td style="font-family: Times New Roman;width: 5rem; font-size: 1.1rem;">To</td><td style="text-align: left; font-size: 1.1rem;">Jane Doe</td></tr><tr style="height: 3rem;"><td style="font-family: Times New Roman; font-size: 1.1rem;">From</td><td style="text-align: left; font-size: 1.1rem;">嘉威聯合會計師事務所</td></tr></table></div><table><tr><td colspan="2"><hr/><p style="text-indent: 2em;">This is a testing content.</p></td></tr><tr><td style="text-indent: 2em;" colspan="2">順頌 商祺</td></tr><tr><td colspan="2" dir="rtl">嘉威聯合會計師事務所<br/>113.9.23</td></tr></table>
+    <div style="width: 100%;padding: 25px 25px 40px 25px;"><table><tr style="height: 3rem;"><td style="font-family: Times New Roman;width: 5rem; font-size: 1.1rem; vertical-align: top;">To</td><td style="text-align: left; font-size: 1.1rem;vertical-align: top;"><div>Jane Doe</div></td></tr><tr><td style="height: 1rem;" colspan="2"></td></tr><tr style="height: 3rem;"><td style="font-family: Times New Roman; font-size: 1.1rem; vertical-align: top;">From</td><td style="text-align: left; font-size: 1.1rem; vertical-align: top;"><div>88183980</div></td></tr></table></div><table><tr><td colspan="2"><hr/><p style="text-indent: 2em;">This is a testing content.</p></td></tr><tr><td style="text-indent: 2em;" colspan="2">順頌 商祺</td></tr><tr><td colspan="2" dir="rtl">嘉威聯合會計師事務所<br/>113.9.23</td></tr></table>
     """)
 }
 
