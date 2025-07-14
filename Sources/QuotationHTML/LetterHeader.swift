@@ -47,7 +47,7 @@ public struct LetterHeader: Component{
                             for line in toLines {
                                 Div(line)
                             }
-                        }.style("text-align: left; font-size: 1.1rem;")
+                        }.style("text-align: left; font-size: 1.1rem;vertical-align: top;")
                     }.style("height: 3rem;")
                     TableRow{
                         TableCell()
@@ -60,7 +60,7 @@ public struct LetterHeader: Component{
                             for line in fromLines {
                                 Div(line)
                             }
-                        }.style("text-align: left; font-size: 1.1rem;")
+                        }.style("text-align: left; font-size: 1.1rem; vertical-align: top;")
                     }.style("height: 3rem;")
                 }
             }.style("width: 100%;padding: 25px 25px 40px 25px;")
