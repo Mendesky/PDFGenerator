@@ -9,14 +9,23 @@ import Foundation
 
 public struct LetterHeader: Component{
     let to: String
-    let from: Organization
+    let from: String
+    let quotingOrganization: Organization
     let content: String
     let dateString: String
     let blessings: String
     
-    public init(to: String, from: String, content: String, date: Date, blessings: String) {
+    var toLines: [String] {
+        to.split(separator: "\n").map{ String($0) }
+    }
+    
+    var fromLines: [String] {
+        from.split(separator: "\n").map{ String($0) }
+    }
+    
+    public init(to: String, from: String, quotingOrganization: Organization, content: String, date: Date, blessings: String) {
         self.to = to
-        self.from = Organization(rawValue: from)
+        self.from = from
         self.content = content
         self.blessings = blessings
         
@@ -25,6 +34,7 @@ public struct LetterHeader: Component{
             $0 - 1911
         }
         self.dateString = "\(taiwanYear!).\(dateComponents.month!).\(dateComponents.day!)"
+        self.quotingOrganization = quotingOrganization
     }
     
     public var body: Component {
@@ -32,12 +42,25 @@ public struct LetterHeader: Component{
             Div{
                 Table{
                     TableRow{
-                        TableCell("To").style("font-family: Times New Roman;width: 5rem; font-size: 1.1rem;")
-                        TableCell(to).style("text-align: left; font-size: 1.1rem;")
+                        TableCell("To").style("font-family: Times New Roman;width: 5rem; font-size: 1.1rem; vertical-align: top;")
+                        TableCell{
+                            for line in toLines {
+                                Div(line)
+                            }
+                        }.style("text-align: left; font-size: 1.1rem;")
                     }.style("height: 3rem;")
                     TableRow{
-                        TableCell("From").style("font-family: Times New Roman; font-size: 1.1rem;")
-                        TableCell(from.displayName).style("text-align: left; font-size: 1.1rem;")
+                        TableCell()
+                            .style("height: 1rem;")
+                            .attribute(named: "colspan", value: "2")
+                    }
+                    TableRow{
+                        TableCell("From").style("font-family: Times New Roman; font-size: 1.1rem; vertical-align: top;")
+                        TableCell{
+                            for line in fromLines {
+                                Div(line)
+                            }
+                        }.style("text-align: left; font-size: 1.1rem;")
                     }.style("height: 3rem;")
                 }
             }.style("width: 100%;padding: 25px 25px 40px 25px;")
@@ -53,10 +76,9 @@ public struct LetterHeader: Component{
                         .style("text-indent: 2em;")
                         .attribute(named: "colspan", value: "2")
                 }
-                
                 TableRow{
                     TableCell{
-                        Text(from.displayName)
+                        Text(quotingOrganization.displayName)
                         Node.br()
                         Text(dateString)
                     }
