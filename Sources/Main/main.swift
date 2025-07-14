@@ -9,7 +9,7 @@ import QuotationHTML
 import Plot
 import PDFGenerator
 
-let lettetHeader = LetterHeader(to: "全家人健康事業股份有限公司", from: "嘉威聯合會計師事務所", content: "茲將附上全家人健康事業股份有限公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務公費報價單。 我們希望以最專業多元的服務與 貴公司長久配合，公費內容若經確認，煩請將最後一頁同意函簽章並回傳至敝事務所（FAX：2299-9901），謝謝您的合作。", date: Date(), blessings: "順頌 商祺")
+let lettetHeader = LetterHeader(to: "全家人健康事業股份有限公司\n卓俊諺 經理\n王大頭 總設計師", from: "嘉威聯合會計師事務所\n楊大昀 會計師", quotingOrganization: .jw, content: "茲將附上全家人健康事業股份有限公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證暨財會委外處理作業之專業服務公費報價單。 我們希望以最專業多元的服務與 貴公司長久配合，公費內容若經確認，煩請將最後一頁同意函簽章並回傳至敝事務所（FAX：2299-9901），謝謝您的合作。", date: Date(), blessings: "順頌 商祺")
 
 //print(lettetHeader.render())
 
