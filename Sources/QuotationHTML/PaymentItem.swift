@@ -29,10 +29,8 @@ public struct PaymentItem: Component{
                 }
             }
             TableCell{
-                Div{
-                    Text(fee)
-                }.style("text-align: right; white-space: nowrap; padding-right: 0.5em;")
-            }.style("display: flex; align-items: top;")
+                Text(fee)
+            }.style("text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;")
         }
     }
     

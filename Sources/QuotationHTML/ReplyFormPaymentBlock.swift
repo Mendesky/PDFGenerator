@@ -29,8 +29,8 @@ public struct ReplyFormPaymentBlock: Component {
                                 }
                             }.style("vertical-align: top; width: 100%;")
                             TableCell{
-                                Div("\(item.fee)").style("text-align: right; white-space: nowrap;")
-                            }
+                                Text("\(item.fee)")
+                            }.style("vertical-align: top; text-align: right; white-space: nowrap;")
                         }
                     }
                 }
