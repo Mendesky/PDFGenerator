@@ -26,18 +26,20 @@ let package = Package(
             dependencies: [
                 .product(name: "Plot", package: "plot")
             ], resources: [
-                .copy("Resources/header/jw-quotation-header-01020314.png"),
-                .copy("Resources/footer/jw-quotation-footer-01020314.png"),
-                .copy("Resources/header/jw-quotation-header-41171816.png"),
-                .copy("Resources/footer/jw-quotation-footer-41171816.png"),
-                .copy("Resources/header/jw-quotation-header-47575385.png"),
-                .copy("Resources/footer/jw-quotation-footer-47575385.png"),
-                .copy("Resources/header/jw-quotation-header-47779732.png"),
-                .copy("Resources/footer/jw-quotation-footer-47779732.png"),
-                .copy("Resources/header/jw-quotation-header-82576039.png"),
-                .copy("Resources/footer/jw-quotation-footer-82576039.png"),
-                .copy("Resources/header/jw-quotation-header-88183980.png"),
-                .copy("Resources/footer/jw-quotation-footer-88183980.png")
+                .copy("Resources/header/quotation-header-01020314.png"),
+                .copy("Resources/footer/quotation-footer-01020314.png"),
+                .copy("Resources/header/quotation-header-41171816.png"),
+                .copy("Resources/footer/quotation-footer-41171816.png"),
+                .copy("Resources/header/quotation-header-47575385.png"),
+                .copy("Resources/footer/quotation-footer-47575385.png"),
+                .copy("Resources/header/quotation-header-47779732.png"),
+                .copy("Resources/footer/quotation-footer-47779732.png"),
+                .copy("Resources/header/quotation-header-82576039.png"),
+                .copy("Resources/footer/quotation-footer-82576039.png"),
+                .copy("Resources/header/quotation-header-88183980.png"),
+                .copy("Resources/footer/quotation-footer-88183980.png"),
+                .copy("Resources/header/quotation-header-34873876.png"),
+                .copy("Resources/footer/quotation-footer-34873876.png")
               ]),
         .testTarget(
             name: "PDFGeneratorTests",
