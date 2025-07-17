@@ -35,11 +35,11 @@ public enum Organization: String, Codable, Sendable {
     }
 
     public var headerResource: String {
-        return "jw-quotation-header-\(rawValue)"
+        return "quotation-header-\(rawValue)"
     }
 
     public var footerResource: String {
-        return "jw-quotation-footer-\(rawValue)"
+        return "quotation-footer-\(rawValue)"
     }
 
     public var displayName: String {
