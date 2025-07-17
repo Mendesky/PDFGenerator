@@ -30,7 +30,7 @@ public struct Note: Component {
             Table{
                 for (index,component) in components.enumerated(){
                     TableRow{
-                        TableCell("註\(index.representToChineseString())：").style("width: 3rem; vertical-align: top; font-size: 0.89rem;")
+                        TableCell("註\((index+1).representToChineseString())：").style("width: 3rem; vertical-align: top; font-size: 0.89rem;")
                         TableCell(component)
                     }.style("break-inside: avoid-page;")
                 }
