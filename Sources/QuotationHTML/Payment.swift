@@ -22,7 +22,7 @@ public struct Payment: Component {
             }
             for (index, item) in items.enumerated(){
                 TableRow{
-                    TableCell("(\(index+1))").style("display: flex; align-items: top; padding-right: 0.5em; width: 1em;")
+                    TableCell("(\(index+1))").style("align-items: top; width: 1rem;")
                     item
                 }.style("padding-bottom: 0.5em; width: 100%; padding-top: 0.5em;")
             }
