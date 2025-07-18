@@ -35,7 +35,7 @@ let assistance = BusinessClientAssistance(title: "貴公司之協助辦理事項
 
 //print("\n")
 let paymentItems: [PaymentItem] = [
-//    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證", "民國 115 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "1,4000 元/年"),
+    .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證", "民國 115 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "1,4000 元/年"),
     .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "優惠免收")
 ]
 let paymentItems2: [PaymentItem] = [
