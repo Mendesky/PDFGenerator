@@ -102,4 +102,40 @@ public struct ReplyForm: Component{
         self.quotationNo = quotationNo
         self.showCompanyStamp = showCompanyStamp
     }
+    
+    public init(receiver: String, sender: Organization, subject: String, payments: [Payment.Model] = [], additionalServices: [AdditionalService], quotationNo: String?, showCompanyStamp: Bool = true) {
+        self.receiver = receiver
+        self.sender = sender
+        self.subject = subject
+        self.payments = .init(payments)
+        self.additionalServices = additionalServices
+        self.quotationNo = quotationNo
+        self.showCompanyStamp = showCompanyStamp
+    }
+    
+    public init(receiver: String, sender: Organization, quotationNo: String?, model: Model) {
+        self.receiver = receiver
+        self.sender = sender
+        self.subject = model.subject
+        self.payments = .init(model.payments)
+        self.additionalServices = .init(model.additionalServices)
+        self.quotationNo = quotationNo
+        self.showCompanyStamp = model.showCompanyStamp
+    }
+}
+
+extension ReplyForm{
+    public struct Model {
+        let subject: String
+        let payments: [Payment.Model]
+        let additionalServices: [AdditionalService.Model]
+        let showCompanyStamp: Bool
+        
+        public init(subject: String, payments: [Payment.Model], additionalServices: [AdditionalService.Model], showCompanyStamp: Bool) {
+            self.subject = subject
+            self.payments = payments
+            self.additionalServices = additionalServices
+            self.showCompanyStamp = showCompanyStamp
+        }
+    }
 }

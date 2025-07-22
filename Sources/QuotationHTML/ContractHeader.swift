@@ -19,6 +19,13 @@ public struct ContractHeader: Component {
         self.content = content
     }
     
+    init(receiver: String, sender: Organization, model: Model){
+        self.receiver = receiver
+        self.sender = sender
+        self.subject = model.subject
+        self.content = model.content
+    }
+    
     public var body: any Component{
         ComponentGroup{
             Table{
@@ -39,6 +46,19 @@ public struct ContractHeader: Component {
                     TableCell(content).style("font-size: 1rem;")
                 }
             }.style("margin: 2rem 2rem 3rem 2rem;")
+        }
+    }
+    
+}
+
+extension ContractHeader {
+    public struct Model {
+        let subject: String
+        let content: String
+        
+        public init(subject: String, content: String) {
+            self.subject = subject
+            self.content = content
         }
     }
 }

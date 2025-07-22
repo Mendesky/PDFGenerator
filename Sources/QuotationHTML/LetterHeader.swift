@@ -13,6 +13,7 @@ public struct LetterHeader: Component{
     let quotingOrganization: Organization
     let content: String
     let dateString: String
+    let date: Date
     let blessings: String
     
     var toLines: [String] {
@@ -27,15 +28,23 @@ public struct LetterHeader: Component{
         self.to = to
         self.from = from
         self.content = content
+        
         self.blessings = blessings
         
         let dateComponents = Calendar.current.dateComponents([.year, .month, .day], from: date)
         let taiwanYear = dateComponents.year.map{
             $0 - 1911
         }
+        self.date = date
         self.dateString = "\(taiwanYear!).\(dateComponents.month!).\(dateComponents.day!)"
         self.quotingOrganization = quotingOrganization
     }
+
+    
+    internal init(quotingOrganization: Organization, model: Model) {
+        self.init(to: model.to, from: model.from, quotingOrganization: quotingOrganization, content: model.content, date: model.date, blessings: model.blessings)
+    }
+
     
     public var body: Component {
         ComponentGroup{
@@ -86,6 +95,24 @@ public struct LetterHeader: Component{
                         .directionality(.rightToLeft)
                 }
             }
+        }
+    }
+}
+
+extension LetterHeader{
+    public struct Model {
+        let to: String
+        let from: String
+        let content: String
+        let date: Date
+        let blessings: String
+        
+        public init(to: String, from: String, content: String, date: Date, blessings: String) {
+            self.to = to
+            self.from = from
+            self.content = content
+            self.date = date
+            self.blessings = blessings
         }
     }
 }

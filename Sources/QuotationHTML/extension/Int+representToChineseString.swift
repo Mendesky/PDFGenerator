@@ -8,15 +8,17 @@
 
 extension Int {
 
-    func representToChineseString() -> String {
+    func representToChineseString(offset: Int = 0) -> String {
         // 中文數字映射
         let digits = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"]
         let units = ["", "十", "百"]
         
+        
+        let number = self + offset
         // 將數字分解為陣列（百位、十位、個位）
-        let hundred = Int(self / 100)
-        let ten = Int((self % 100) / 10)
-        let one = Int(self % 10)
+        let hundred = Int(number / 100)
+        let ten = Int((number % 100) / 10)
+        let one = Int(number % 10)
         
         var result = ""
         

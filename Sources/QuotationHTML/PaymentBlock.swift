@@ -40,6 +40,10 @@ public struct PaymentBlock: Component {
             payments
         }
     }
+    
+    public init(title: String = "酬金", payments models: [Payment.Model]) {
+        self.init(title: title, payments: .init(models))
+    }
 }
 
 

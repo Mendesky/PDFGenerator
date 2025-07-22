@@ -6,28 +6,8 @@
 //
 import Plot
 
-
-
-func toChineseNumber(index: Int)->String{
-    switch index + 1{
-    case 1: return "一"
-    case 2: return "二"
-    case 3: return "三"
-    case 4: return "四"
-    case 5: return "五"
-    case 6: return "六"
-    case 7: return "七"
-    case 8: return "八"
-    case 9: return "九"
-    case 10: return "十"
-    default:
-        return ""
-    }
-    
-}
-
 public struct ServiceScope: Component {
-    let index: Int?
+    let index: Int
     let title: String
     let heading: String
     let items: [QuotingServiceTerm]?
@@ -35,12 +15,8 @@ public struct ServiceScope: Component {
     public var body: any Component{
         ComponentGroup{
             Div{
-                if let index {
-                    let chineseNumber = toChineseNumber(index: index)
-                    TableRow(TableCell("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
-                }else{
-                    TableRow(TableCell("\(title)")).style("font-size: 1.1em;")
-                }
+                let chineseNumber = index.representToChineseString(offset: 1)
+                TableRow(TableCell("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
                 Paragraph(heading).style("text-indent: 2em;")
             }.style("break-inside: avoid-page;")
             
@@ -48,7 +24,7 @@ public struct ServiceScope: Component {
                 
                 for (offset, item) in items.enumerated() {
                     Div{
-                        Div(Text("（\(toChineseNumber(index: offset))）\(item.title)")).style("display: flex; text-indent: 2em; padding-bottom: 1em;")
+                        Div(Text("（\(offset.representToChineseString(offset: 1))）\(item.title)")).style("display: flex; text-indent: 2em; padding-bottom: 1em;")
                         Div{
                             if let term = item.term{
                                 Div(term).style("display: flex; text-indent: 2em;")
@@ -74,7 +50,7 @@ public struct ServiceScope: Component {
     }
     
     public init(title: String, heading: String, items: [QuotingServiceTerm]?) {
-        self.index = nil
+        self.index = -1
         self.title = title
         self.heading = heading
         self.items = items
@@ -87,7 +63,41 @@ public struct ServiceScope: Component {
         self.items = items
     }
     
-    func set(index: Int)->Self{
-        return .init(index: index, title: title, heading: heading, items: items)
+    internal init(index: Int, title: String, heading: String, items: [QuotingServiceTerm.Model]?) {
+        self.index = index
+        self.title = title
+        self.heading = heading
+        self.items = items.map{
+            .init($0)
+        }
+    }
+    
+    private init(index: Int, model: Model) {
+        self.index = index
+        self.title = model.title
+        self.heading = model.heading
+        self.items = model.items.map{
+            $0.map{
+                .init(model: $0)
+            }
+        }
+    }
+    
+}
+
+
+extension ServiceScope {
+    public struct Model {
+        let title: String
+        let heading: String
+        let items: [QuotingServiceTerm.Model]?
+        
+        public init(title: String, heading: String, items: [QuotingServiceTerm.Model]?) {
+            self.title = title
+            self.heading = heading
+            self.items = items
+        }
+        
+        
     }
 }

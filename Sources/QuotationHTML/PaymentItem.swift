@@ -45,3 +45,15 @@ public struct PaymentItem: Component{
         self.fee = fee
     }
 }
+
+extension PaymentItem {
+    public struct Model {
+        let names: [String]
+        let fee: String
+        
+        public init(names: [String], fee: String) {
+            self.names = names
+            self.fee = fee
+        }
+    }
+}
