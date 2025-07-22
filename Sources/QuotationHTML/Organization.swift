@@ -33,6 +33,15 @@ public enum Organization: String, Codable, Sendable {
             self = .jw
         }
     }
+    
+    public var quotationNoPrefix: String{
+        switch self {
+        case .jw, .jwChanghua, .jwChiayi, .jwTaichung, .jwTaipei, .jwTaoyuan, .jwipo:
+            "嘉威稅字"
+        case .kd:
+            "康達稅字"
+        }
+    }
 
     public var headerResource: String {
         return "quotation-header-\(rawValue)"

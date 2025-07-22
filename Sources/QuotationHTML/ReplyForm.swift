@@ -56,7 +56,7 @@ public struct ReplyForm: Component{
                 TableRow{
                     TableCell("附　件：")
                     if let quotationNo {
-                        TableCell("嘉威稅字第\(quotationNo)號公費報價單")
+                        TableCell("\(sender.quotationNoPrefix)第\(quotationNo)號公費報價單")
                     }
                 }
             }.style("width: 100%;")
