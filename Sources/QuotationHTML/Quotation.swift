@@ -117,7 +117,7 @@ public struct AuditQuotation: Renderable {
             Page.break
             H3("專業服務公費報價單").style("text-align: center; font-size: 1.5rem;")
             if let no {
-                Paragraph("\(letterHeader.quotingOrganization.quotationNoPrefix)第\(no)號").style("font-size: 0.6875rem; text-align: right;")
+                Paragraph("\(sender.quotationNoPrefix)第\(no)號").style("font-size: 0.6875rem; text-align: right;")
             }
             
             if let contractHeader {
