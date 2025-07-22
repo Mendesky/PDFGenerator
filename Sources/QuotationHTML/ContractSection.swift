@@ -17,7 +17,7 @@ public struct ContractSection: Component {
             Div{
                 Div{
                     if let index {
-                        let chineseNumber = toChineseNumber(index: index)
+                        let chineseNumber = index.representToChineseString(offset: 1)
                         Text("\(chineseNumber)、\(title)")
                     }else{
                         Text("\(title)")
@@ -28,7 +28,7 @@ public struct ContractSection: Component {
                 
                 for (offset, item) in provisions.enumerated() {
                     Div{
-                        Div(Text("（\(toChineseNumber(index: offset))）\(item.term)")).style("display: flex; text-indent: -3em;")
+                        Div(Text("（\(offset.representToChineseString(offset: 1))）\(item.term)")).style("display: flex; text-indent: -3em;")
                     }.style("display: flex; flex-direction: column; padding-left: 5em;")
                 }
             }.style("break-inside: avoid-page; ")
@@ -42,7 +42,7 @@ public struct ContractSection: Component {
         self.provisions = provisions
     }
     
-    private init(index: Int, title: String, heading: String, provisions: [ContractProvision]) {
+    internal init(index: Int, title: String, heading: String, provisions: [ContractProvision]) {
         self.index = index
         self.title = title
         self.heading = heading
@@ -53,3 +53,5 @@ public struct ContractSection: Component {
         return .init(index: index, title: title, heading: heading, provisions: provisions)
     }
 }
+
+
