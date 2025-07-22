@@ -45,15 +45,16 @@ import Foundation
 @Test func createServiceScopeHtml(){
     let title = "Quotation Service Scope"
     let content = "This is a description of the Service Scope."
-
-    let quotingServiceTerms: [QuotingServiceTerm] = [
-        QuotingServiceTerm(title: "ItemTitle", term: "ItemContent", serviceItemTerms: nil)
+    
+    let model = QuotingServiceTerm.Model(title: "ItemTitle", term: "ItemContent", serviceItemTerms: nil)
+    let quotingServiceTerms: [QuotingServiceTerm.Model] = [
+        model
     ]
     
-    let serviceScope = ServiceScope(title: title, heading: content, items: quotingServiceTerms)
+    let serviceScope = ServiceScope(index: 0, model: .init(title: title, heading: content, items: quotingServiceTerms))
     
     #expect(serviceScope.render() == """
-<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em; padding-bottom: 1em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: 2em;">ItemContent</div></div></div>
+<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>一、Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em; padding-bottom: 1em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: 2em;">ItemContent</div></div></div>
 """)
 }
 
