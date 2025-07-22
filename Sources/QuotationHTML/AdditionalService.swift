@@ -15,3 +15,15 @@ public struct AdditionalService: Component{
         }
     }
 }
+
+extension AdditionalService {
+    public struct Model {
+        let name: String
+        let isSelected: Bool
+        
+        public init(name: String, isSelected: Bool) {
+            self.name = name
+            self.isSelected = isSelected
+        }
+    }
+}

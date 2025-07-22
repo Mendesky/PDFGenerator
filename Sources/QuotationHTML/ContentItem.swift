@@ -17,7 +17,7 @@ public struct ContentItem: Component{
         self.content = content
     }
     
-    private init(index: Int, title: String, content: String) {
+    internal init(index: Int, title: String, content: String) {
         self.index = index
         self.title = title
         self.content = content
@@ -27,7 +27,7 @@ public struct ContentItem: Component{
         ComponentGroup{
             Table{
                 if let index {
-                    let chineseNumber = toChineseNumber(index: index)
+                    let chineseNumber = index.representToChineseString(offset: 1)
                     TableRow(TableCell("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
                 }else{
                     TableRow(TableCell("\(title)")).style("font-size: 1.1em;")
@@ -46,3 +46,6 @@ public struct ContentItem: Component{
         return .init(index: index, title: title, content: content)
     }
 }
+
+
+

@@ -39,3 +39,17 @@ public struct Payment: Component {
         .init(name: name, items: items, needShowName: false)
     }
 }
+
+extension Payment {
+    public struct Model {
+        public let name: String
+        public let items: [PaymentItem.Model]
+        public let needShowName: Bool
+        
+        public init(name: String, items: [PaymentItem.Model], needShowName: Bool) {
+            self.name = name
+            self.items = items
+            self.needShowName = needShowName
+        }
+    }
+}
