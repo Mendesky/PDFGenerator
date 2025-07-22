@@ -72,7 +72,7 @@ public struct ServiceScope: Component {
         }
     }
     
-    private init(index: Int, model: Model) {
+    internal init(index: Int, model: Model) {
         self.index = index
         self.title = model.title
         self.heading = model.heading
