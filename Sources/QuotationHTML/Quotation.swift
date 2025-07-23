@@ -50,7 +50,7 @@ public struct AuditQuotation: Renderable {
         self.letterHeader = .init(to: letterHeader.to, from: letterHeader.from, content: letterHeader.content, date: letterHeader.date, blessings: letterHeader.blessings)
         self.assistance = assistance.map{
             .init(title: $0.title, items: $0.items.map{
-                .init(title: $0.content, content: $0.content)
+                .init(title: $0.title, content: $0.content)
             })
         }
         self.notes = notes.contents.map{
