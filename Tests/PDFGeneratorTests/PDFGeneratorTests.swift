@@ -54,7 +54,7 @@ import Foundation
     let serviceScope = ServiceScope(index: 0, model: .init(title: title, heading: content, items: quotingServiceTerms))
     
     #expect(serviceScope.render() == """
-<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>一、Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em; padding-bottom: 1em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column; padding-left: 5em;"><div style="display: flex; text-indent: 2em;">ItemContent</div></div></div>
+<div style="break-inside: avoid-page;"><tr style="font-size: 1.1em;"><td>一、Quotation Service Scope</td></tr><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em; padding-bottom: 1em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column; padding-left: 2em;"><div style="display: flex; text-indent: 3em;">ItemContent</div></div></div>
 """)
 }
 
@@ -150,7 +150,7 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     
     let note = Note(contents: contents)
     #expect(note.render() == """
-    <table><tr style="break-inside: avoid-page;"><td style="width: 5rem; vertical-align: top; font-size: 0.89rem;">註一：</td><td><div><div style="font-size: 0.89rem;">報價依照年度營收狀況及資產總額狀況評估，若有巨額變動時，將另與 貴公司民國112年以後依照附表一、專屬全家人健康事業(股) 會計帳務及稅務申報處理作業級距表討論報價金額。簽證公費請於當年底時支付半數，另外半數請於交付報告時支付；財會委外會計帳務暨稅務處申報理作業費用一年以十四個月計算，並請於次月底前支付前一個月之公費。合約執行期間不得低於二年，解除合約須提前三個月告知。</div></div></td></tr><tr style="break-inside: avoid-page;"><td style="width: 5rem; vertical-align: top; font-size: 0.89rem;">註二：</td><td><div><div style="font-size: 0.89rem;">出納事務處理作業內容包含：</div><div style="font-size: 0.89rem;">A.國內轉帳30 筆；每加⼀筆多50 元。</div><div style="font-size: 0.89rem;">B.國外轉帳10 筆；每加⼀筆多100 元。</div><div style="font-size: 0.89rem;">C.⼀次薪資轉帳。</div></div></td></tr><tr style="break-inside: avoid-page;"><td style="width: 5rem; vertical-align: top; font-size: 0.89rem;">註三：</td><td><div><div style="font-size: 0.89rem;">薪資人力支援處理作業500元/人/月；基本收費3,000/月。</div></div></td></tr></table>
+    <table><tr style="break-inside: avoid-page;"><td style="width: 3.8rem; vertical-align: top; font-size: 0.89rem;">註一：</td><td><div><div style="font-size: 0.89rem;">報價依照年度營收狀況及資產總額狀況評估，若有巨額變動時，將另與 貴公司民國112年以後依照附表一、專屬全家人健康事業(股) 會計帳務及稅務申報處理作業級距表討論報價金額。簽證公費請於當年底時支付半數，另外半數請於交付報告時支付；財會委外會計帳務暨稅務處申報理作業費用一年以十四個月計算，並請於次月底前支付前一個月之公費。合約執行期間不得低於二年，解除合約須提前三個月告知。</div></div></td></tr><tr style="break-inside: avoid-page;"><td style="width: 3.8rem; vertical-align: top; font-size: 0.89rem;">註二：</td><td><div><div style="font-size: 0.89rem;">出納事務處理作業內容包含：</div><div style="font-size: 0.89rem;">A.國內轉帳30 筆；每加⼀筆多50 元。</div><div style="font-size: 0.89rem;">B.國外轉帳10 筆；每加⼀筆多100 元。</div><div style="font-size: 0.89rem;">C.⼀次薪資轉帳。</div></div></td></tr><tr style="break-inside: avoid-page;"><td style="width: 3.8rem; vertical-align: top; font-size: 0.89rem;">註三：</td><td><div><div style="font-size: 0.89rem;">薪資人力支援處理作業500元/人/月；基本收費3,000/月。</div></div></td></tr></table>
     """)
     
 }

@@ -24,7 +24,7 @@ public struct Note: Component {
             Table{
                 for (index, content) in contents.enumerated(){
                     TableRow{
-                        TableCell("註\((index+1).representToChineseString())：").style("width: 5rem; vertical-align: top; font-size: 0.89rem;")
+                        TableCell("註\((index+1).representToChineseString())：").style("width: 3.8rem; vertical-align: top; font-size: 0.89rem;")
                         TableCell{
                             Div{
                                 for string in content.split(separator: "\n"){
