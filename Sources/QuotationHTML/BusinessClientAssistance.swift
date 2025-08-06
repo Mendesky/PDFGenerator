@@ -20,11 +20,11 @@ public struct BusinessClientAssistance: Component {
                 
                 for (offset, item) in items.enumerated() {
                     Div{
-                        Div(Text("（\(offset.representToChineseString(offset: 1))）\(item.title)")).style("display: flex; text-indent: 2em; padding-bottom: 1em;")
+                        Div(Text("（\(offset.representToChineseString(offset: 1))）\(item.title)")).style("display: flex; text-indent: 2em; padding-top: 1em;")
                         Div{
                             Div(item.content).style("display: flex; text-indent: 2em;")
                         }.style("display: flex; flex-direction: column; padding-left: 5em;")
-                    }.style("display: flex; flex-direction: column;  break-inside: avoid-page; ")
+                    }.style("break-inside: avoid-page; ")
                 }
             }
         }

@@ -24,7 +24,7 @@ public struct ServiceScope: Component {
                 
                 for (offset, item) in items.enumerated() {
                     Div{
-                        Div(Text("（\(offset.representToChineseString(offset: 1))）\(item.title)")).style("display: flex; text-indent: 2em; padding-bottom: 1em;")
+                        Div(Text("（\(offset.representToChineseString(offset: 1))）\(item.title)")).style("display: flex; text-indent: 2em;")
                         Div{
                             if let term = item.term{
                                 Div(term).style("display: flex; text-indent: 3em;")
