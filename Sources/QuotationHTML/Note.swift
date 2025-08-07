@@ -24,11 +24,11 @@ public struct Note: Component {
             Table{
                 for (index, content) in contents.enumerated(){
                     TableRow{
-                        TableCell("註\((index+1).representToChineseString())：").style("width: 3.8rem; vertical-align: top; font-size: 0.8rem;")
+                        TableCell("註\((index+1).representToChineseString())：").style("width: 3.8rem; vertical-align: top; font-size: 0.83rem;")
                         TableCell{
                             Div{
                                 for string in content.split(separator: "\n"){
-                                    Div(String(string)).style("font-size: 0.8rem;")
+                                    Div(String(string)).style("font-size: 0.83rem;")
                                 }
                             }
                         }
