@@ -18,6 +18,18 @@ public final class PDFImageConverter {
     private let zoomY: Int
     private let rotate: Int 
 
+    
+    private var pythonPath: String {
+        guard let pythonPath = ProcessInfo.processInfo.environment["PYTHON_PATH"] else {
+#if os(Linux)
+            return "/usr/bin/python3"
+#else
+            return "/opt/homebrew/bin/python3"
+#endif
+        }
+        return pythonPath
+    }
+    
     public init(rotate: Int = 0, zoomX: Int = 4, zoomY: Int = 4, mode: String = "RGB", format: String = "PNG") {
         self.format = format
         self.mode = mode
@@ -41,11 +53,8 @@ public final class PDFImageConverter {
             "PATH": ":/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
         ]
         process.environment = environment
-#if os(Linux)
-        process.launchPath = "/usr/bin/python3"
-#else
-        process.launchPath = "/opt/homebrew/bin/python3"
-#endif
+        process.launchPath = pythonPath
+        
         logger.info("PDFImageConverter run on: \(process.launchPath ?? "")" )
         
         process.arguments = [
