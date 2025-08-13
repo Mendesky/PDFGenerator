@@ -17,6 +17,17 @@ public class PDFGenerator {
     let baseUrl: String?
     let stylesheets:[String]
     
+    private var pythonPath: String {
+        guard let pythonPath = ProcessInfo.processInfo.environment["PYTHON_PATH"] else {
+#if os(Linux)
+            return "/usr/bin/python3"
+#else
+            return "/opt/homebrew/bin/python3"
+#endif
+        }
+        return pythonPath
+    }
+    
     /// PDFGenerator
     /// - Parameters:
     ///   - mainHtml: `String`,
@@ -102,11 +113,8 @@ public class PDFGenerator {
             "PATH": "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin",
           ]
         process.environment = environment
-#if os(Linux)
-        process.launchPath = "/usr/bin/python3"
-#else
-        process.launchPath = "/opt/homebrew/bin/python3"
-#endif
+        process.launchPath = pythonPath
+        
         logger.info("PDFGenerator run on: \(process.launchPath ?? "")" )
         
         var arguments = [
