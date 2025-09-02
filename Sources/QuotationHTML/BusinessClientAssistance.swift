@@ -15,8 +15,19 @@ public struct BusinessClientAssistance: Component {
     public var body: any Component{
         ComponentGroup{
             Div{
-                let chineseNumber = index.representToChineseString(offset: 1)
-                TableRow(TableCell("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
+                Div{
+                    let chineseNumber = index.representToChineseString(offset: 1)
+                    TableRow(TableCell("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
+                    if let firstItem = items.dropFirst().first {
+                        Div{
+                            Div(Text("（\(0.representToChineseString(offset: 1))）\(firstItem.title)")).style("display: flex; text-indent: 2em; padding-top: 1em;")
+                            Div{
+                                Div(firstItem.content).style("display: flex; text-indent: 2em;")
+                            }.style("display: flex; flex-direction: column; padding-left: 5em;")
+                        }.style("break-inside: avoid-page; ")
+                    }
+                }.style("break-inside: avoid-page; ")
+                
                 
                 for (offset, item) in items.enumerated() {
                     Div{
