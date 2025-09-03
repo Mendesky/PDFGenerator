@@ -141,7 +141,6 @@ public struct AuditQuotation: Renderable {
                     TableCell(Note(models: notes))
                 }
             }
-            Node.br()
             if let rightsAndObligations{
                 ContractSection.init(index: (components.count+1), title: rightsAndObligations.title, heading: rightsAndObligations.heading, provisions: rightsAndObligations.terms.map{
                     .init(term: $0)
