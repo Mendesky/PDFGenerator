@@ -21,11 +21,7 @@ public final class PDFImageConverter {
     
     private var pythonPath: String {
         guard let pythonPath = ProcessInfo.processInfo.environment["PYTHON_PATH"] else {
-#if os(Linux)
             return "/usr/bin/python3"
-#else
-            return "/opt/homebrew/bin/python3"
-#endif
         }
         return pythonPath
     }
