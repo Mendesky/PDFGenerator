@@ -27,7 +27,7 @@ public struct ServiceScope: Component {
                         Div(Text("（\(offset.representToChineseString(offset: 1))）\(item.title)")).style("display: flex; text-indent: 2em;")
                         Div{
                             if let term = item.term{
-                                Div(term).style("display: flex; text-indent: 3em;")
+                                Div(term).style("display: flex; padding-left: 3em; text-indent: 2em;")
                             }
                         }.style("display: flex; flex-direction: column; padding-left: 2em;")
                         if let serviceItemTerms = item.serviceItemTerms{
