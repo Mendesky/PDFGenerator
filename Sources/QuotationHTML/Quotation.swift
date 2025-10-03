@@ -23,59 +23,9 @@ public struct AuditQuotation: Renderable {
     let replyForm: ReplyForm.Model
     let contractHeader: ContractHeader.Model?
     let rightsAndObligations: RightsAndObligation.Model?
+    let fontSize: Float
     
-    @available(*, deprecated, message: "This initialize method scope will be converted to private in the future nearly.")
-    public init(no: String?, purpose: ContentItem?, paymentBlock: PaymentBlock, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?, rightsAndObligations: ContractSection? = nil) {
-        self.no = no
-        self.receiver = replyForm.receiver
-        self.sender = replyForm.sender
-        self.purpose = purpose.map{
-            .init(title: $0.title, content: $0.content)
-        }
-        self.payments = paymentBlock.payments.map{
-            .init(name: $0.name, items: $0.items.map{
-                .init(names: $0.names, fee: $0.fee)
-            }, needShowName: $0.needShowName)
-        }
-        self.serviceScope = .init(title: serviceScope.title, heading: serviceScope.heading, items: serviceScope.items.map{
-            $0.map{
-                .init(title: $0.title, term: $0.term, serviceItemTerms: $0.serviceItemTerms.map{
-                    $0.map{
-                        .init(content: $0.term)
-                    }
-                })
-            }
-        })
-        
-        self.letterHeader = .init(to: letterHeader.to, from: letterHeader.from, content: letterHeader.content, date: letterHeader.date, blessings: letterHeader.blessings)
-        self.assistance = assistance.map{
-            .init(title: $0.title, items: $0.items.map{
-                .init(title: $0.title, content: $0.content)
-            })
-        }
-        self.notes = notes.contents.map{
-            .init(content: $0)
-        }
-        
-        self.replyForm = .init(subject: replyForm.subject, payments: replyForm.payments.map{
-            .init(name: $0.name, items: $0.items.map{
-                .init(names: $0.names, fee: $0.fee)
-            }, needShowName: $0.needShowName)
-        }, additionalServices: replyForm.additionalServices.map{
-            .init(name: $0.name, isSelected: $0.isSelected)
-        }, showCompanyStamp: replyForm.showCompanyStamp)
-        
-        self.contractHeader = contractHeader.map{
-            .init(subject: $0.subject, content: $0.content)
-        }
-        self.rightsAndObligations = rightsAndObligations.map{
-            .init(title: $0.title, heading: $0.heading, terms: $0.provisions.map{
-                $0.term
-            })
-        }
-    }
-    
-    public init(no: String?, receiver: String, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil) {
+    public init(no: String?, receiver: String, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil, fontSize: Float? = nil) {
         self.no = no
         self.receiver = receiver
         self.sender = sender
@@ -88,6 +38,7 @@ public struct AuditQuotation: Renderable {
         self.replyForm = replyForm
         self.contractHeader =  contractHeader
         self.rightsAndObligations = rightsAndObligations
+        self.fontSize = fontSize ?? 16
     }
 
     func build() -> (index: Int, components: [any Component]) {
@@ -148,7 +99,7 @@ public struct AuditQuotation: Renderable {
             }
             Page.break
             ReplyForm(receiver: receiver, sender: sender, quotationNo: no, model: replyForm)
-        }.node.style("font-family: 華康標楷體,標楷體-繁,標楷體; width: 100%; line-height: 1.5em; font-size: 16px;" )
+        }.node.style("font-family: 華康標楷體,標楷體-繁,標楷體; width: 100%; line-height: 1.5em; font-size: \(fontSize)px;" )
         return html.render(indentedBy: indentationKind)
     }
     
@@ -203,5 +154,61 @@ extension AuditQuotation{
         }
         """)
         }
+    }
+}
+
+
+extension AuditQuotation {
+    @available(*, deprecated, message: "This initialize method scope will be converted to private in the future nearly.")
+    internal init(no: String?, purpose: ContentItem?, paymentBlock: PaymentBlock, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?, rightsAndObligations: ContractSection? = nil, fontSize: Float?) {
+
+        let receiver = replyForm.receiver
+        let sender = replyForm.sender
+        let purpose: Purpose.Model? = purpose.map{
+            .init(title: $0.title, content: $0.content)
+        }
+        let payments: [Payment.Model] = paymentBlock.payments.map{
+            .init(name: $0.name, items: $0.items.map{
+                .init(names: $0.names, fee: $0.fee)
+            }, needShowName: $0.needShowName)
+        }
+        let serviceScope: ServiceScope.Model = .init(title: serviceScope.title, heading: serviceScope.heading, items: serviceScope.items.map{
+            $0.map{
+                .init(title: $0.title, term: $0.term, serviceItemTerms: $0.serviceItemTerms.map{
+                    $0.map{
+                        .init(content: $0.term)
+                    }
+                })
+            }
+        })
+        
+        let letterHeader: LetterHeader.Model = .init(to: letterHeader.to, from: letterHeader.from, content: letterHeader.content, date: letterHeader.date, blessings: letterHeader.blessings)
+        let assistance: BusinessClientAssistance.Model? = assistance.map{
+            .init(title: $0.title, items: $0.items.map{
+                .init(title: $0.title, content: $0.content)
+            })
+        }
+        let notes: [Note.Model] = notes.contents.map{
+            .init(content: $0)
+        }
+        
+        let replyForm: ReplyForm.Model = .init(subject: replyForm.subject, payments: replyForm.payments.map{
+            .init(name: $0.name, items: $0.items.map{
+                .init(names: $0.names, fee: $0.fee)
+            }, needShowName: $0.needShowName)
+        }, additionalServices: replyForm.additionalServices.map{
+            .init(name: $0.name, isSelected: $0.isSelected)
+        }, showCompanyStamp: replyForm.showCompanyStamp)
+        
+        let contractHeader: ContractHeader.Model? = contractHeader.map{
+            .init(subject: $0.subject, content: $0.content)
+        }
+        let rightsAndObligations: RightsAndObligation.Model? = rightsAndObligations.map{
+            .init(title: $0.title, heading: $0.heading, terms: $0.provisions.map{
+                $0.term
+            })
+        }
+        
+        self.init(no: no, receiver: receiver, sender: sender, purpose: purpose, payments: payments, serviceScope: serviceScope, letterHeader: letterHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, fontSize: fontSize)
     }
 }
