@@ -25,7 +25,7 @@ public struct AuditQuotation: Renderable {
     let rightsAndObligations: RightsAndObligation.Model?
     let fontSize: Float
     
-    public init(no: String?, receiver: String, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil, fontSize: Float? = nil) {
+    public init(no: String?, receiver: String, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil, fontSize: Float = 16) {
         self.no = no
         self.receiver = receiver
         self.sender = sender
@@ -38,7 +38,7 @@ public struct AuditQuotation: Renderable {
         self.replyForm = replyForm
         self.contractHeader =  contractHeader
         self.rightsAndObligations = rightsAndObligations
-        self.fontSize = fontSize ?? 16
+        self.fontSize = fontSize
     }
 
     func build() -> (index: Int, components: [any Component]) {
@@ -209,6 +209,6 @@ extension AuditQuotation {
             })
         }
         
-        self.init(no: no, receiver: receiver, sender: sender, purpose: purpose, payments: payments, serviceScope: serviceScope, letterHeader: letterHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, fontSize: fontSize)
+        self.init(no: no, receiver: receiver, sender: sender, purpose: purpose, payments: payments, serviceScope: serviceScope, letterHeader: letterHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, fontSize: fontSize ?? 16)
     }
 }
