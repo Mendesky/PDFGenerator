@@ -44,24 +44,33 @@ public class PDFGenerator {
 #if os(Linux)
         fontFace = """
             @font-face {
-              font-family: 'CustomBoldFont';                
+              font-family: '特粗楷體';                
               src: url(file:///usr/local/share/fonts/特粗楷體.TTC) format('truetype')
-            }        
+            }  
+            
+            @font-face {
+              font-family: '標楷體-繁';                
+              src: url(file:///usr/local/share/fonts/標楷體-繁.ttc) format('truetype')
+            }
             """
 #else
-        let fontPath = FileManager.default.homeDirectoryForCurrentUser.appending(path: "Library/Fonts/特粗楷體.TTC")
         fontFace = """
             @font-face {
-              font-family: 'CustomBoldFont';                
-              src: url(\(fontPath.absoluteString)) format('truetype')
-            }        
+              font-family: '特粗楷體';                
+              src: url(\(FileManager.default.homeDirectoryForCurrentUser.appending(path: "Library/Fonts/特粗楷體.TTC").absoluteString)) format('truetype')
+            }  
+            
+            @font-face {
+              font-family: '標楷體-繁';                
+              src: url(\(FileManager.default.homeDirectoryForCurrentUser.appending(path: "Library/Fonts/標楷體-繁.ttc").absoluteString)) format('truetype')
+            }  
             """
 #endif
         self.stylesheets = [
             fontFace,
             """
             b { 
-              font-family: 'CustomBoldFont', ser;
+              font-family: '特粗楷體', ser;
               font-weight: 900;
             }
             """,
