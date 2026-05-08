@@ -23,9 +23,10 @@ public struct AuditQuotation: Renderable {
     let replyForm: ReplyForm.Model
     let contractHeader: ContractHeader.Model?
     let rightsAndObligations: RightsAndObligation.Model?
+    let agreementTerms: AgreementTerms.Model?
     let fontSize: Float
-    
-    public init(no: String?, receiver: String, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil, fontSize: Float = 16) {
+
+    public init(no: String?, receiver: String, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil, agreementTerms: AgreementTerms.Model? = nil, fontSize: Float = 16) {
         self.no = no
         self.receiver = receiver
         self.sender = sender
@@ -38,6 +39,7 @@ public struct AuditQuotation: Renderable {
         self.replyForm = replyForm
         self.contractHeader =  contractHeader
         self.rightsAndObligations = rightsAndObligations
+        self.agreementTerms = agreementTerms
         self.fontSize = fontSize
     }
 
@@ -63,6 +65,8 @@ public struct AuditQuotation: Renderable {
     
     public func render(indentedBy indentationKind: Plot.Indentation.Kind?) -> String {
         let (endIndex, components) = build()
+        let rightsAndObligationsIndex = components.count + 1
+        let agreementTermsIndex = rightsAndObligationsIndex + (rightsAndObligations == nil ? 0 : 1)
         let html = HTML{
             LetterHeader(quotingOrganization: sender, model: letterHeader)
             Page.break
@@ -93,7 +97,12 @@ public struct AuditQuotation: Renderable {
                 }
             }
             if let rightsAndObligations{
-                ContractSection.init(index: (components.count+1), title: rightsAndObligations.title, heading: rightsAndObligations.heading, provisions: rightsAndObligations.terms.map{
+                ContractSection.init(index: rightsAndObligationsIndex, title: rightsAndObligations.title, heading: rightsAndObligations.heading, provisions: rightsAndObligations.terms.map{
+                    .init(term: $0)
+                })
+            }
+            if let agreementTerms {
+                ContractSection.init(index: agreementTermsIndex, title: agreementTerms.title, heading: agreementTerms.heading, provisions: agreementTerms.terms.map{
                     .init(term: $0)
                 })
             }
