@@ -29,7 +29,7 @@ public struct ContractSection: Component {
                 for (offset, item) in provisions.enumerated() {
                     Div{
                         Div(Text("（\(offset.representToChineseString(offset: 1))）\(item.term)")).style("display: flex; text-indent: -3em;")
-                    }.style("display: flex; flex-direction: column; padding-left: 5em;")
+                    }.style("display: flex; flex-direction: column; padding-left: 5em; break-inside: avoid-page;")
                 }
             }.style("break-inside: avoid-page; ")
         }
