@@ -11,7 +11,8 @@ extension Array where Element == Payment {
             .init(
                 name: $0.name,
                 items: .init($0.items),
-                needShowName: $0.needShowName)
+                needShowName: $0.needShowName,
+                supplementaryNote: $0.supplementaryNote)
         }
     }
 }
