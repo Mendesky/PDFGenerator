@@ -81,11 +81,43 @@ import Foundation
         .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
         .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/年")
     ]
-    
+
     let payment = Payment(name: title, items: items)
     #expect(payment.render() == """
     <tr><td colspan="3"><b style="font-size: 1.1em;">酬金</b></td></tr><tr style="padding-bottom: 0.5em; width: 100%; padding-top: 0.5em;"><td style="vertical-align: top; width: 1.35rem;">(1)</td><td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</td></tr><tr style="padding-bottom: 0.5em; width: 100%; padding-top: 0.5em;"><td style="vertical-align: top; width: 1.35rem;">(2)</td><td><div>會計帳務處理作業（113 年 5 月開始）</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</td></tr>
     """)
+}
+
+@Test func paymentRendersSupplementaryNoteRowWhenProvided(){
+    let payment = Payment(
+        name: "糕盛有限公司",
+        items: [
+            .init(names: ["民國 114 度財務報表查核簽證"], fee: "100,000 元/年")
+        ],
+        supplementaryNote: "財務簽證依預估資產總額新台幣壹億元報價\n會計帳務處理作業依照預估年營收貳億伍仟萬元報價。"
+    )
+    // 多行 \n 在 HTML 中保留為 \n，由 `white-space: pre-line;` style 在渲染時轉成換行。
+    let rendered = payment.render()
+    #expect(rendered.contains("*財務簽證依預估資產總額新台幣壹億元報價\n會計帳務處理作業依照預估年營收貳億伍仟萬元報價。"))
+    #expect(rendered.contains("white-space: pre-line"))
+    #expect(rendered.contains("colspan=\"2\""))
+}
+
+@Test func paymentOmitsSupplementaryNoteRowWhenNil(){
+    let payment = Payment(
+        name: "X",
+        items: [.init(names: ["item"], fee: "1 元/年")]
+    )
+    #expect(!payment.render().contains("white-space: pre-line"))
+}
+
+@Test func paymentOmitsSupplementaryNoteRowWhenEmptyString(){
+    let payment = Payment(
+        name: "X",
+        items: [.init(names: ["item"], fee: "1 元/年")],
+        supplementaryNote: ""
+    )
+    #expect(!payment.render().contains("white-space: pre-line"))
 }
 
 @Test("two payment", arguments: [
