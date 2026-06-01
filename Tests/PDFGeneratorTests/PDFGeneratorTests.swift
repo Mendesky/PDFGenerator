@@ -120,6 +120,33 @@ import Foundation
     #expect(!payment.render().contains("white-space: pre-line"))
 }
 
+/// 鎖 supplementaryNote 走 raw HTML inject — 內含 `<b>` / `<u>` 等 tag 不會被 escape。
+/// 對應 2026-06 富文字編輯支援（前端 markdown / HTML 混合內容轉 HTML 後傳入此欄位）。
+@Test func paymentRendersSupplementaryNoteAsRawHTML(){
+    let payment = Payment(
+        name: "X",
+        items: [.init(names: ["item"], fee: "1 元/年")],
+        supplementaryNote: "<b>粗體</b> <u>底線</u> <s>刪除線</s>"
+    )
+    let rendered = payment.render()
+    #expect(rendered.contains("*<b>粗體</b> <u>底線</u> <s>刪除線</s>"),
+        "HTML tag 應原樣 inject、不應被 escape 成 &lt;b&gt; 等")
+    #expect(!rendered.contains("&lt;b&gt;"), "確認沒 escape")
+}
+
+/// 鎖內嵌圖片（caller 已轉 data URI）正常 inject — `<img src="data:image/...">`。
+@Test func paymentRendersSupplementaryNoteWithEmbeddedImage(){
+    let dataUri = "data:image/png;base64,iVBORw0KGgo=" // 短的測試用 base64
+    let payment = Payment(
+        name: "X",
+        items: [.init(names: ["item"], fee: "1 元/年")],
+        supplementaryNote: "見附圖：<img src=\"\(dataUri)\" />"
+    )
+    let rendered = payment.render()
+    #expect(rendered.contains("<img src=\"\(dataUri)\""),
+        "data URI img tag 應原樣 inject、可被 weasyprint 渲染為實際圖片")
+}
+
 @Test("two payment", arguments: [
     ([
         Payment(name: "****作業(112 年度)", items: [
