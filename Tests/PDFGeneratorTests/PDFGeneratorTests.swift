@@ -96,13 +96,14 @@ import Foundation
         ],
         supplementaryNote: "財務簽證依預估資產總額新台幣壹億元報價\n會計帳務處理作業依照預估年營收貳億伍仟萬元報價。"
     )
-    // 2026-06：拔掉 `white-space: pre-line` legacy style — HTML 時代由 HTML 結構控制換行
-    // （caller 自行傳 `<br>` / `<p>` 等）；本 row 保留 `padding-top: 0.5em` 與 `*` 前綴 + `colspan="2"`。
+    // 2026-06：拔掉 `white-space: pre-line` legacy style + 拔掉硬寫的 `*` 前綴 — HTML 時代由
+    // caller 決定 marker / 換行；本 row 保留 `padding-top: 0.5em` 與 `colspan="2"`。
     let rendered = payment.render()
-    #expect(rendered.contains("*財務簽證依預估資產總額新台幣壹億元報價"))
+    #expect(rendered.contains("財務簽證依預估資產總額新台幣壹億元報價"))
     #expect(rendered.contains("padding-top: 0.5em"))
     #expect(rendered.contains("colspan=\"2\""))
     #expect(!rendered.contains("white-space: pre-line"), "legacy pre-line style 不應再被 emit")
+    #expect(!rendered.contains(">*財務簽證"), "硬寫的 `*` 前綴不應再被 emit — caller 自行決定 marker")
 }
 
 @Test func paymentOmitsSupplementaryNoteRowWhenNil(){
@@ -110,8 +111,8 @@ import Foundation
         name: "X",
         items: [.init(names: ["item"], fee: "1 元/年")]
     )
-    // 不渲染 supplementaryNote row 時，不會出現 `*` 前綴文字（其他 row 用編號 (1)(2)... 不用 `*`）
-    #expect(!payment.render().contains(">*"))
+    // nil → 整個 supplementaryNote row 不渲染（用 `colspan="2"` 鎖、items row 沒這屬性）
+    #expect(!payment.render().contains("colspan=\"2\""))
 }
 
 @Test func paymentOmitsSupplementaryNoteRowWhenEmptyString(){
@@ -120,10 +121,10 @@ import Foundation
         items: [.init(names: ["item"], fee: "1 元/年")],
         supplementaryNote: ""
     )
-    #expect(!payment.render().contains(">*"))
+    #expect(!payment.render().contains("colspan=\"2\""))
 }
 
-/// 鎖 supplementaryNote 走 raw HTML inject — 內含 `<b>` / `<u>` 等 tag 不會被 escape。
+/// 鎖 supplementaryNote 走 raw HTML inject — 內含 `<b>` / `<u>` 等 tag 不會被 escape，且**不加任何前綴**。
 /// 對應 2026-06 富文字編輯支援（前端 markdown / HTML 混合內容轉 HTML 後傳入此欄位）。
 @Test func paymentRendersSupplementaryNoteAsRawHTML(){
     let payment = Payment(
@@ -132,9 +133,10 @@ import Foundation
         supplementaryNote: "<b>粗體</b> <u>底線</u> <s>刪除線</s>"
     )
     let rendered = payment.render()
-    #expect(rendered.contains("*<b>粗體</b> <u>底線</u> <s>刪除線</s>"),
+    #expect(rendered.contains("<b>粗體</b> <u>底線</u> <s>刪除線</s>"),
         "HTML tag 應原樣 inject、不應被 escape 成 &lt;b&gt; 等")
     #expect(!rendered.contains("&lt;b&gt;"), "確認沒 escape")
+    #expect(!rendered.contains("*<b>"), "硬寫的 `*` 前綴不應再被 emit")
 }
 
 /// 鎖內嵌圖片（caller 已轉 data URI）正常 inject — `<img src="data:image/...">`。
