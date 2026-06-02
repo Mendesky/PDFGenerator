@@ -100,8 +100,10 @@ import Foundation
     // caller 決定 marker / 換行；本 row 保留 `padding-top: 0.5em` 與 `colspan="2"`。
     let rendered = payment.render()
     #expect(rendered.contains("財務簽證依預估資產總額新台幣壹億元報價"))
-    #expect(rendered.contains("padding-top: 0.5em"))
-    #expect(rendered.contains("colspan=\"2\""))
+    // `colspan="2"` + `padding-top: 0.5em` 組合鎖補充說明 cell — 單獨 `padding-top: 0.5em` 會被
+    // item row 的 style 誤命中（item row 也含此 declaration）；`colspan="2"` 是補充說明 row 唯一特徵。
+    #expect(rendered.contains("colspan=\"2\" style=\"padding-top: 0.5em;\""),
+        "補充說明 cell 應保留 padding-top（搭 colspan=2 與 item row 區隔）")
     #expect(!rendered.contains("white-space: pre-line"), "legacy pre-line style 不應再被 emit")
     #expect(!rendered.contains(">*財務簽證"), "硬寫的 `*` 前綴不應再被 emit — caller 自行決定 marker")
 }
