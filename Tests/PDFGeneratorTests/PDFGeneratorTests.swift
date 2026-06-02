@@ -96,11 +96,13 @@ import Foundation
         ],
         supplementaryNote: "財務簽證依預估資產總額新台幣壹億元報價\n會計帳務處理作業依照預估年營收貳億伍仟萬元報價。"
     )
-    // 多行 \n 在 HTML 中保留為 \n，由 `white-space: pre-line;` style 在渲染時轉成換行。
+    // 2026-06：拔掉 `white-space: pre-line` legacy style — HTML 時代由 HTML 結構控制換行
+    // （caller 自行傳 `<br>` / `<p>` 等）；本 row 保留 `padding-top: 0.5em` 與 `*` 前綴 + `colspan="2"`。
     let rendered = payment.render()
-    #expect(rendered.contains("*財務簽證依預估資產總額新台幣壹億元報價\n會計帳務處理作業依照預估年營收貳億伍仟萬元報價。"))
-    #expect(rendered.contains("white-space: pre-line"))
+    #expect(rendered.contains("*財務簽證依預估資產總額新台幣壹億元報價"))
+    #expect(rendered.contains("padding-top: 0.5em"))
     #expect(rendered.contains("colspan=\"2\""))
+    #expect(!rendered.contains("white-space: pre-line"), "legacy pre-line style 不應再被 emit")
 }
 
 @Test func paymentOmitsSupplementaryNoteRowWhenNil(){
@@ -108,7 +110,8 @@ import Foundation
         name: "X",
         items: [.init(names: ["item"], fee: "1 元/年")]
     )
-    #expect(!payment.render().contains("white-space: pre-line"))
+    // 不渲染 supplementaryNote row 時，不會出現 `*` 前綴文字（其他 row 用編號 (1)(2)... 不用 `*`）
+    #expect(!payment.render().contains(">*"))
 }
 
 @Test func paymentOmitsSupplementaryNoteRowWhenEmptyString(){
@@ -117,7 +120,7 @@ import Foundation
         items: [.init(names: ["item"], fee: "1 元/年")],
         supplementaryNote: ""
     )
-    #expect(!payment.render().contains("white-space: pre-line"))
+    #expect(!payment.render().contains(">*"))
 }
 
 /// 鎖 supplementaryNote 走 raw HTML inject — 內含 `<b>` / `<u>` 等 tag 不會被 escape。
