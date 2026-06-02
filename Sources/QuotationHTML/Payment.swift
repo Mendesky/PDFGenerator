@@ -13,12 +13,17 @@ public struct Payment: Component {
     /// 酬金補充說明（per-case 註解，例：「*財務簽證依預估資產總額新台幣壹億元報價」）。
     /// **HTML 字串**（非純文字）— render 時前綴單一個 `*`、整段以 raw HTML inject 到 `<td>`，
     /// 不做 HTML escape。caller（OC composer）負責把 markdown + 內嵌 HTML 轉成乾淨 HTML 字串
-    /// （含內嵌圖片轉 data URI、template variable 替換等）後才傳入。
-    /// `white-space: pre-line` 保留換行；`nil` 或空字串 → 不渲染此 row。
+    /// （含內嵌圖片轉 data URI、template variable 替換等）+ 內嵌 scoped `<style>` block 控版面後傳入。
+    /// `nil` 或空字串 → 不渲染此 row。
     ///
     /// **語意變更（2026-06）**：原為純文字 `Text()` rendering、escape HTML chars；frontend 引入富文字
     /// 編輯（粗體 / 底線 / 刪除線 / 圖片 / 表格等）後改為 HTML。既有純文字 caller 仍可正常渲染
     /// （無 HTML tag 即等同純文字），但若內含 `<` `>` `&` 等 HTML 字元需 caller 先 escape。
+    ///
+    /// **無 `white-space: pre-line` style**（2026-06 拔掉）：原本為純文字 `\n` 換行設計的 legacy CSS；
+    /// HTML 時代由 HTML 結構自身（`<p>` / `<br>` / `<h*>` 等）控制換行，`pre-line` 會把 HTMLFormatter
+    /// 在 block tag 之間插入的實體 `\n` 顯示為**多餘可見換行**、造成大段空白。caller 若仍有純文字
+    /// `\n` 需求，應自行轉 `<br>`；本欄位不再做隱性 `\n` → 換行的 magic。
     public let supplementaryNote: String?
 
     public var body: any Component{
@@ -41,7 +46,7 @@ public struct Payment: Component {
                     TableCell()  // alignment 占位，對齊 (n) 編號欄
                     TableCell(html: "*\(supplementaryNote)")
                         .attribute(named: "colspan", value: "2")
-                        .style("white-space: pre-line; padding-top: 0.5em;")
+                        .style("padding-top: 0.5em;")
                 }
             }
         }
