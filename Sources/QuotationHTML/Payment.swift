@@ -28,6 +28,8 @@ public struct Payment: Component {
     ///    HTML 結構自身（`<p>` / `<br>` / `<h*>` 等）控制換行，`pre-line` 會把 HTMLFormatter 在 block
     ///    tag 之間插入的實體 `\n` 顯示為**多餘可見換行**、造成大段空白。caller 若仍有純文字 `\n`
     ///    需求，應自行轉 `<br>`；本欄位不再做隱性 `\n` → 換行的 magic。
+    /// 4. **上方分隔線（2026-06）**：補充說明 row 帶 row-level `border-top: 1px solid black`，
+    ///    與 `PaymentBlock` 表頭分隔線同手法（`border-collapse` 下跨整欄），取代舊 `*` marker 的視覺分隔功能。
     public let supplementaryNote: String?
 
     public var body: any Component{
@@ -46,11 +48,15 @@ public struct Payment: Component {
                 }.style("padding-bottom: 0.5em; width: 100%; padding-top: 0.5em;")
             }
             if let supplementaryNote, !supplementaryNote.isEmpty {
+                // 補充說明上方一條橫線：border 下在 **cell** 而非 row —— border-collapse 下 weasyprint
+                // 對非首列的 row-level border-top 不穩（會與前一列 border 塌掉而不畫），cell border 才可靠。
+                // 兩個 cell（占位 + colspan=2）都加 → 跨整欄、視覺等同 PaymentBlock 表頭分隔線。
                 TableRow{
                     TableCell()  // alignment 占位，對齊 (n) 編號欄
+                        .style("border-top: 1px solid black;")
                     TableCell(html: supplementaryNote)
                         .attribute(named: "colspan", value: "2")
-                        .style("padding-top: 0.5em;")
+                        .style("border-top: 1px solid black; padding-top: 0.5em;")
                 }
             }
         }
