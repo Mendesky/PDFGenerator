@@ -48,12 +48,12 @@ let assistance = BusinessClientAssistance.Model(title: "貴公司之協助辦理
 
 //print("\n")
 let paymentItems: [PaymentItem.Model] = [
-    .init(names: ["工商登記處理作業(資本額200萬元)(台中市)(不含動資查核)(股東3人)"], fee: "16,000 元/次"),
-    .init(names: ["會計帳務及稅務申報處理作業-書審 (設立完成後開始)"], fee: "優惠免收"),
-    .init(names: ["附設補習班-會計帳務及其稅務申報處理作業-書審(設立完成後開始)"], fee: "1,000 元/月")
+    .init(names: ["工商登記處理作業(資本額200萬元)(台中市)(不含動資查核)(股東3人)"], fee: .oneTime(16000)),
+    .init(names: ["會計帳務及稅務申報處理作業-書審 (設立完成後開始)"], fee: .oneTime(0)),
+    .init(names: ["附設補習班-會計帳務及其稅務申報處理作業-書審(設立完成後開始)"], fee: .monthly(1000))
 ]
 let paymentItems2: [PaymentItem.Model] = [
-    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "5000 元/月"),
+    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .monthly(5000)),
 ]
 
 

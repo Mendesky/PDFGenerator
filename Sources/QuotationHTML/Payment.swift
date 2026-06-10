@@ -11,25 +11,15 @@ public struct Payment: Component {
     public let items: [PaymentItem]
     public let needShowName: Bool
     /// 酬金補充說明（per-case 註解）。
-    /// **HTML 字串**（非純文字）— 整段以 raw HTML inject 到 `<td>`，不做 HTML escape、不加任何前綴。
-    /// caller（OC composer）負責把 markdown + 內嵌 HTML 轉成乾淨 HTML 字串（含內嵌圖片轉 data URI、
-    /// template variable 替換等）+ 內嵌 scoped `<style>` block 控版面後傳入。
+    /// **markdown 字串** — 由 PDFGenerator 內部 `SupplementaryNoteHTMLRenderer` 渲染成 HTML
+    /// （markdown → HTML + soft break 換行 + scoped style）後 inject 到 `<td>`。
+    /// caller（OC）只做領域 / 安全前處理：template variable 替換成實際值、內嵌圖片 fetch + ownership
+    /// 驗證後 inline 成 `<img data:...>`；**不做 markdown→HTML、不傳 CSS、不加 marker**（presentation 全歸此處）。
     /// `nil` 或空字串 → 不渲染此 row。
     ///
-    /// **語意變更（2026-06）**：
-    /// 1. 原為純文字 `Text()` rendering、escape HTML chars；frontend 引入富文字編輯（粗體 / 底線 /
-    ///    刪除線 / 圖片 / 表格等）後改為 HTML。既有純文字 caller 仍可正常渲染（無 HTML tag 即等同純文字），
-    ///    但若內含 `<` `>` `&` 等 HTML 字元需 caller 先 escape。
-    /// 2. **拔掉硬寫的 `*` 前綴**：原 `"*\(supplementaryNote)"` 純文字時代的視覺標記，富文字時代由前端
-    ///    編輯器 / caller 自行決定是否在 content 內加 `*`（或其他 marker）。直接 prepend 會跟 caller 已
-    ///    寫入內容的 leading `*` 重疊，且當 caller HTML 開頭是 block element（如 `<style>` 加 wrapper
-    ///    `<div>`）時 `*` 文字節點會被擠到自己一行造成版面 bug。本欄位不再做任何隱性前綴 magic。
-    /// 3. **無 `white-space: pre-line` style**：原本為純文字 `\n` 換行設計的 legacy CSS；HTML 時代由
-    ///    HTML 結構自身（`<p>` / `<br>` / `<h*>` 等）控制換行，`pre-line` 會把 HTMLFormatter 在 block
-    ///    tag 之間插入的實體 `\n` 顯示為**多餘可見換行**、造成大段空白。caller 若仍有純文字 `\n`
-    ///    需求，應自行轉 `<br>`；本欄位不再做隱性 `\n` → 換行的 magic。
-    /// 4. **上方分隔線（2026-06）**：補充說明 row 帶 row-level `border-top: 1px solid black`，
-    ///    與 `PaymentBlock` 表頭分隔線同手法（`border-collapse` 下跨整欄），取代舊 `*` marker 的視覺分隔功能。
+    /// **渲染重點**：
+    /// - 補充說明 row 兩個 cell 帶 `border-top: 1px solid black` → 上方一條跨整欄分隔線（取代舊 `*` marker）。
+    /// - markdown / 樣式細節見 `SupplementaryNoteHTMLRenderer`。
     public let supplementaryNote: String?
 
     public var body: any Component{
@@ -51,10 +41,11 @@ public struct Payment: Component {
                 // 補充說明上方一條橫線：border 下在 **cell** 而非 row —— border-collapse 下 weasyprint
                 // 對非首列的 row-level border-top 不穩（會與前一列 border 塌掉而不畫），cell border 才可靠。
                 // 兩個 cell（占位 + colspan=2）都加 → 跨整欄、視覺等同 PaymentBlock 表頭分隔線。
+                // markdown → HTML 在此渲染（presentation 歸 PDFGenerator）；caller 傳的是 markdown。
                 TableRow{
                     TableCell()  // alignment 占位，對齊 (n) 編號欄
                         .style("border-top: 1px solid black;")
-                    TableCell(html: supplementaryNote)
+                    TableCell(html: SupplementaryNoteHTMLRenderer.render(markdown: supplementaryNote))
                         .attribute(named: "colspan", value: "2")
                         .style("border-top: 1px solid black; padding-top: 0.5em;")
                 }
