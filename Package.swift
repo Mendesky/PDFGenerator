@@ -16,7 +16,9 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SwiftPackageIndex/Plot.git", from: "0.14.0"),
-        .package(url: "https://github.com/apple/swift-log.git", from: "1.6.2")
+        .package(url: "https://github.com/apple/swift-log.git", from: "1.6.2"),
+        // swift-markdown — supplementaryNote 富文字 markdown → HTML 渲染用（presentation 歸 PDFGenerator）
+        .package(url: "https://github.com/swiftlang/swift-markdown.git", from: "0.6.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -24,7 +26,8 @@ let package = Package(
         .target(
             name: "QuotationHTML",
             dependencies: [
-                .product(name: "Plot", package: "plot")
+                .product(name: "Plot", package: "plot"),
+                .product(name: "Markdown", package: "swift-markdown")
             ], resources: [
                 .copy("Resources/header/quotation-header-01020314.png"),
                 .copy("Resources/footer/quotation-footer-01020314.png"),

@@ -62,7 +62,7 @@ import Foundation
 
 @Test func createPaymentItemHtml(){
     let names: [String] = ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證", "二代健保暨表單彙總處理"]
-    let fee: String = "5,000 元/月"
+    let fee: PaymentItem.Fee = .monthly(5000)
     
     let paymentItem = PaymentItem(names: names, fee: fee)
     
@@ -78,8 +78,8 @@ import Foundation
 @Test func createPaymentHtml(){
     let title = "酬金"
     let items: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/年")
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: .yearly(5000)),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .yearly(6000))
     ]
 
     let payment = Payment(name: title, items: items)
@@ -92,7 +92,7 @@ import Foundation
     let payment = Payment(
         name: "糕盛有限公司",
         items: [
-            .init(names: ["民國 114 度財務報表查核簽證"], fee: "100,000 元/年")
+            .init(names: ["民國 114 度財務報表查核簽證"], fee: .yearly(100000))
         ],
         supplementaryNote: "財務簽證依預估資產總額新台幣壹億元報價\n會計帳務處理作業依照預估年營收貳億伍仟萬元報價。"
     )
@@ -111,7 +111,7 @@ import Foundation
 @Test func paymentOmitsSupplementaryNoteRowWhenNil(){
     let payment = Payment(
         name: "X",
-        items: [.init(names: ["item"], fee: "1 元/年")]
+        items: [.init(names: ["item"], fee: .yearly(1))]
     )
     // nil → 整個 supplementaryNote row 不渲染（用 `colspan="2"` 鎖、items row 沒這屬性）
     #expect(!payment.render().contains("colspan=\"2\""))
@@ -120,7 +120,7 @@ import Foundation
 @Test func paymentOmitsSupplementaryNoteRowWhenEmptyString(){
     let payment = Payment(
         name: "X",
-        items: [.init(names: ["item"], fee: "1 元/年")],
+        items: [.init(names: ["item"], fee: .yearly(1))],
         supplementaryNote: ""
     )
     #expect(!payment.render().contains("colspan=\"2\""))
@@ -131,7 +131,7 @@ import Foundation
 @Test func paymentRendersSupplementaryNoteAsRawHTML(){
     let payment = Payment(
         name: "X",
-        items: [.init(names: ["item"], fee: "1 元/年")],
+        items: [.init(names: ["item"], fee: .yearly(1))],
         supplementaryNote: "<b>粗體</b> <u>底線</u> <s>刪除線</s>"
     )
     let rendered = payment.render()
@@ -146,7 +146,7 @@ import Foundation
     let dataUri = "data:image/png;base64,iVBORw0KGgo=" // 短的測試用 base64
     let payment = Payment(
         name: "X",
-        items: [.init(names: ["item"], fee: "1 元/年")],
+        items: [.init(names: ["item"], fee: .yearly(1))],
         supplementaryNote: "見附圖：<img src=\"\(dataUri)\" />"
     )
     let rendered = payment.render()
@@ -157,18 +157,18 @@ import Foundation
 @Test("two payment", arguments: [
     ([
         Payment(name: "****作業(112 年度)", items: [
-            .init(names: ["Hello"], fee: "5,000 元/月")
+            .init(names: ["Hello"], fee: .monthly(5000))
         ]),
         Payment(name: "****作業(113 年起)", items: [
-            .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
-            .init(names: ["World"], fee: "6,000 元/年")
+            .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: .yearly(5000)),
+            .init(names: ["World"], fee: .yearly(6000))
         ])
     ], """
     <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(112 年度)</b></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="vertical-align: top; width: 1.35rem;">(1)</td><td><div>Hello</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">5,000 元/月</td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 1.1em;">****作業(113 年起)</b></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="vertical-align: top; width: 1.35rem;">(1)</td><td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="vertical-align: top; width: 1.35rem;">(2)</td><td><div>World</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</td></tr></table>
     """),
     ([
         Payment(name: "****作業(112 年度)", items: [
-            .init(names: ["Hello"], fee: "5,000 元/年")
+            .init(names: ["Hello"], fee: .yearly(5000))
         ])
     ], """
     <p style="font-size: 1.1rem;">酬金</p><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="vertical-align: top; width: 1.35rem;">(1)</td><td><div>Hello</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</td></tr></table>
@@ -228,8 +228,8 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     let sender = "88183980"
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
     let paymentItems: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"],  fee: "5,000 元/年"),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/月")
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"],  fee: .yearly(5000)),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .monthly(6000))
     ]
     let payments = [
         Payment(name: "Hello", items: paymentItems)
@@ -252,8 +252,8 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     let sender = "88183980"
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
     let paymentItems: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"],  fee: "5,000 元/年"),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/月")
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"],  fee: .yearly(5000)),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .monthly(6000))
     ]
     let payments = [
         Payment(name: "Hello", items: paymentItems)
@@ -276,8 +276,8 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
     
     let paymentItems: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/月")
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: .yearly(5000)),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .monthly(6000))
     ]
     
     let payments = [
