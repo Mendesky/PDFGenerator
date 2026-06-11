@@ -11,26 +11,35 @@ public struct ReplyFormPaymentBlock: Component {
     let payments: [Payment]
 
     public var body: any Component {
-        ComponentGroup {
+        // 多 case 時與主酬金一致：每個 case 第一個 bundle 上方加 case 名稱標題。
+        let showCaseNames = PaymentCaseGrouping.showsCaseNames(payments)
+        return ComponentGroup {
             Table {
-                for payment in payments {
-                    if payment.needShowName {
+                for run in PaymentCaseGrouping.runs(payments) {
+                    if showCaseNames {
                         TableRow{
-                            TableCell(Text(payment.name).bold()).attribute(named: "colspan", value: "3").style("vertical-align: middle;")
+                            TableCell(Text(run.caseName ?? "").bold().style("font-size: 1.1em;")).attribute(named: "colspan", value: "3").style("vertical-align: middle;")
                         }
                     }
-                    
-                    for (index, item) in payment.items.enumerated() {
-                        TableRow {
-                            TableCell("(\(index+1))").style("vertical-align: top;")
-                            TableCell {
-                                for line in item.lines {
-                                    Div(line)
-                                }
-                            }.style("vertical-align: top; width: 100%;")
-                            TableCell{
-                                Text(item.fee.displayText)
-                            }.style("vertical-align: top; text-align: right; white-space: nowrap;")
+                    for payment in run.payments {
+                        if payment.needShowName {
+                            TableRow{
+                                TableCell(Text(payment.name).bold()).attribute(named: "colspan", value: "3").style("vertical-align: middle;")
+                            }
+                        }
+
+                        for (index, item) in payment.items.enumerated() {
+                            TableRow {
+                                TableCell("(\(index+1))").style("vertical-align: top;")
+                                TableCell {
+                                    for line in item.lines {
+                                        Div(line)
+                                    }
+                                }.style("vertical-align: top; width: 100%;")
+                                TableCell{
+                                    Text(item.fee.displayText)
+                                }.style("vertical-align: top; text-align: right; white-space: nowrap;")
+                            }
                         }
                     }
                 }

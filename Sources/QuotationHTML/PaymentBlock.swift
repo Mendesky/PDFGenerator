@@ -12,7 +12,9 @@ public struct PaymentBlock: Component {
     package let payments: [Payment]
     
     public var body: any Component{
-        ComponentGroup{
+        // ≥2 個不同 case 時，在每個 case 第一個 bundle 上方插入 case 名稱標題（bundle 名標題落在其下）。
+        let showCaseNames = PaymentCaseGrouping.showsCaseNames(payments)
+        return ComponentGroup{
             Paragraph(title).style("font-size: 1.1rem;")
             Table{
                 TableRow{
@@ -21,18 +23,31 @@ public struct PaymentBlock: Component {
                         Div("公費金額").style("white-space: nowrap; text-align: right; padding-right: 1em;")
                     }
                 }.style("border-bottom: 1px solid black;")
-                
-                for payment in payments {
-                    payment.style("font-size: 1rem; padding-bottom: 0.5em; width: 100%;")
+
+                for run in PaymentCaseGrouping.runs(payments) {
+                    if showCaseNames {
+                        TableRow{
+                            TableCell{
+                                Text(run.caseName ?? "").bold().style("font-size: 1.2em;")
+                            }.attribute(named: "colspan", value: "3")
+                        }.style("padding-top: 0.5em;")
+                    }
+                    for payment in run.payments {
+                        payment.style("font-size: 1rem; padding-bottom: 0.5em; width: 100%;")
+                    }
                 }
-                
+
             }.style("border-collapse: collapse; width: 100%;")
         }
     }
-    
+
     public init(title: String, payments: [Payment]) {
         self.title = title
-        self.payments = if payments.count == 1 {
+        // 單一 case 時沿用「單 bundle 不顯示 bundle 名」；多 case 時各 bundle 名都要顯示在 case 名底下，
+        // 故不套用單 bundle 隱藏（body 依 caseName 分組決定是否加 case 標題）。
+        self.payments = if PaymentCaseGrouping.showsCaseNames(payments) {
+            payments
+        } else if payments.count == 1 {
             payments.map{
                 $0.hideName()
             }
