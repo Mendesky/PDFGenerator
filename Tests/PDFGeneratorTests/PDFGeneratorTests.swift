@@ -176,8 +176,41 @@ import Foundation
 ])
 func createPaymentBlocHtml(payments: [Payment], result: String){
     let paymentBlock = PaymentBlock(title: "酬金", payments: payments)
-    
+
     #expect(paymentBlock.render() == result)
+}
+
+@Test("multiple cases render a case-name heading above each case's bundles")
+func paymentBlockRendersCaseHeadingsWhenMultipleCases() {
+    let payments = [
+        Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: .monthly(4000))], caseName: "甲公司"),
+        Payment(name: "規劃1", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
+    ]
+    let rendered = PaymentBlock(title: "酬金", payments: payments).render()
+
+    // 兩個不同 case → 各自的 case 名稱標題（1.2em bold）出現在 bundle 名（1.1em）之上。
+    #expect(rendered.contains("<b style=\"font-size: 1.2em;\">甲公司</b>"))
+    #expect(rendered.contains("<b style=\"font-size: 1.2em;\">乙公司</b>"))
+    // bundle 名標題仍保留（多 case 不隱藏 bundle 名）。
+    #expect(rendered.contains("<b style=\"font-size: 1.1em;\">規劃1</b>"))
+    // 甲公司標題排在乙公司之前（依輸入 case 順序）。
+    let jiaIndex = try! #require(rendered.range(of: "甲公司")).lowerBound
+    let yiIndex = try! #require(rendered.range(of: "乙公司")).lowerBound
+    #expect(jiaIndex < yiIndex)
+}
+
+@Test("single case does not render a case-name heading")
+func paymentBlockOmitsCaseHeadingWhenSingleCase() {
+    // 同一 case 的兩個 bundle：不顯示 case 標題，沿用既有「多 bundle 顯示 bundle 名」行為。
+    let payments = [
+        Payment(name: "規劃1", items: [.init(names: ["A"], fee: .monthly(4000))], caseName: "甲公司"),
+        Payment(name: "規劃2", items: [.init(names: ["B"], fee: .yearly(50000))], caseName: "甲公司"),
+    ]
+    let rendered = PaymentBlock(title: "酬金", payments: payments).render()
+
+    #expect(!rendered.contains("font-size: 1.2em;"), "單一 case 不應出現 case 名稱標題")
+    #expect(rendered.contains("<b style=\"font-size: 1.1em;\">規劃1</b>"))
+    #expect(rendered.contains("<b style=\"font-size: 1.1em;\">規劃2</b>"))
 }
 
 

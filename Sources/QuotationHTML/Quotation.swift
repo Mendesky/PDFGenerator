@@ -179,7 +179,7 @@ extension AuditQuotation {
         let payments: [Payment.Model] = paymentBlock.payments.map{
             .init(name: $0.name, items: $0.items.map{
                 .init(names: $0.names, fee: $0.fee)
-            }, needShowName: $0.needShowName)
+            }, needShowName: $0.needShowName, caseName: $0.caseName)
         }
         let serviceScope: ServiceScope.Model = .init(title: serviceScope.title, heading: serviceScope.heading, items: serviceScope.items.map{
             $0.map{
@@ -204,7 +204,7 @@ extension AuditQuotation {
         let replyForm: ReplyForm.Model = .init(subject: replyForm.subject, payments: replyForm.payments.map{
             .init(name: $0.name, items: $0.items.map{
                 .init(names: $0.names, fee: $0.fee)
-            }, needShowName: $0.needShowName)
+            }, needShowName: $0.needShowName, caseName: $0.caseName)
         }, additionalServices: replyForm.additionalServices.map{
             .init(name: $0.name, isSelected: $0.isSelected)
         }, showCompanyStamp: replyForm.showCompanyStamp)
