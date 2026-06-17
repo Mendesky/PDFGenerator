@@ -6,6 +6,7 @@
 //
 import Foundation
 import QuotationHTML
+import HandoverDocumentHTML
 import Plot
 import PDFGenerator
 
@@ -151,14 +152,149 @@ let htmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "t
 try html.write(to: htmlUrl, atomically: true, encoding: .utf8)
 
 let generator = PDFGenerator(mainHtml: quotation, headerHtml: quotation.headerHTML, footerHtml: quotation.footerHTML)
-let pdfData = try generator.generate()
 //print(pdfData)
 
 
 
 
 let pdfUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test.pdf")
-try pdfData?.write(to: pdfUrl)
+if let pdfData = try? generator.generate() {
+    try pdfData.write(to: pdfUrl)
+}
+
+
+// MARK: - 客戶訪談紀錄表（核心骨架 + 報價區塊）示範
+
+let handover = HandoverDocument(
+    header: .init(
+        companyName: "範例股份有限公司",
+        businessId: "00000000",
+        representative: "王ＯＯ",
+        dealDate: "115/06/17",
+        shareToken: "OOOOOOOO",
+        externalURL: "http://www.google.com",
+        internalURL: "http://www.google.com"
+    ),
+    focusItems: [
+        .init(leftText: "帳務類型", value: "稅務帳"),
+        .init(leftText: "行業類別", value: "買賣業"),
+        .init(leftText: "申報類型", value: "書審申報"),
+        .init(leftText: "成本分析", value: "不適用"),
+        .init(leftText: "申報行代", rightText: "000000", boldSide: .right, value: "範例行業"),
+        .init(leftText: "記帳", rightText: "開始服務時間", boldSide: .left, value: "115年5月"),
+        .init(leftText: "實收資本額", value: "2,000,000"),
+        .init(leftText: "去年營業額", value: "10,000,000"),
+        .init(leftText: "預估今年營業額", value: "10,000,000")
+    ],
+    leftSections: [
+        QuotingBundleBlock(bundles: [
+            .init(name: "財務會計委外作業", units: [
+                .init(billingPeriod: .monthly14, price: 5000, services: [
+                    .init(alias: "記帳服務", items: [
+                        .init(configs: [
+                            .init(name: "開始月份", value: "113 年 5 月"),
+                            .init(name: "預估年營收", value: "500 萬元")
+                        ])
+                    ])
+                ]),
+                .init(billingPeriod: .yearly, price: 30000, services: [
+                    .init(alias: "營所稅查核簽證", items: [
+                        .init(configs: [.init(name: "年度", value: "113 年度")])
+                    ])
+                ])
+            ]),
+            .init(name: "工商登記作業", units: [
+                .init(billingPeriod: .oneTime, price: 16000, services: [
+                    .init(alias: "設立登記", items: [
+                        .init(configs: [
+                            .init(name: "資本額", value: "200 萬元"),
+                            .init(name: "股東人數", value: "3 人")
+                        ])
+                    ])
+                ])
+            ])
+        ]),
+        AdditionalServiceBlock(units: [
+            .init(services: ["代辦年度 CTP 申報"], billingPeriod: .yearly, price: 2000),
+            .init(services: ["二代健保申報作業"], billingPeriod: .yearly, price: 1500)
+        ]),
+        OperationInfoSection(groups: [
+            .init(direction: .horizontal, units: [
+                .init(title: "扣繳人數", text: "1~10人"),
+                .init(title: "分支機構家數", text: "0家")
+            ]),
+            .init(direction: .vertical, units: [
+                .init(title: "營業項目及產品", text: "範例產品")
+            ])
+        ]),
+        InterviewInfoSection(items: [
+            .init(title: "未來預期及追蹤事項", description: "範例追蹤事項第一行\n範例追蹤事項第二行"),
+            .init(title: "客戶背景概況", description: "- 範例背景第一點\n- 範例背景第二點\n- 範例背景第三點"),
+            .init(title: "客戶營運現況", description: "**重點**：範例營運現況說明"),
+            .init(title: "其他需注意事項", description: nil)
+        ]),
+        RelatedBusinessSection(blocks: [
+            .init(title: "持股關係", companies: [
+                .init(businessId: "00000000", name: "範例關係企業有限公司", serviceEmployee: "範例組別 林ＯＯ", description: "**股權結構**：\n- 範例股東持股 60%\n- 其餘為範例法人")
+            ])
+        ])
+    ],
+    rightSections: [
+        DesignatedInfoSection(items: [
+            .init(title: "客戶指定", strongInfoTitle: "簽證會計師", value: "無"),
+            .init(title: "客戶指定", strongInfoTitle: "服務組別", value: "範例組別 審3")
+        ]),
+        MaintenanceInfoSection(
+            familiarPersons: [.init(firmName: "範例所", department: "CPA", name: "陳ＯＯ")],
+            source: "客戶介紹",
+            interviewers: [.init(firmName: "範例所", department: "CPA", name: "陳ＯＯ")]
+        ),
+        ContactSection(
+            contacts: [
+                .init(name: "詹ＯＯ", gender: "小姐", relationship: "會計", methods: [
+                    .init(title: "市內電話", values: ["(00)0000000"]),
+                    .init(title: "Email", values: ["sample@example.com"])
+                ])
+            ],
+            establishedDate: "111 年 02 月 14 日",
+            telephones: ["(00)0000000"],
+            faxes: [],
+            registeredAddress: "範例市範例區範例路 0 號",
+            communicationAddress: "範例市範例區範例路 0 號"
+        ),
+        EvidenceInfoSection(
+            purchaseArrangementType: "由事務所統購",
+            purchaseStartDate: "115 年 09 月",
+            counts: [
+                .init(text: "二聯式", value: "-", unit: "本"),
+                .init(text: "二聯式加副聯", value: "1", unit: "本"),
+                .init(text: "三聯式", value: "-", unit: "本"),
+                .init(text: "三聯式加副聯", value: "1", unit: "本"),
+                .init(text: "特種計稅", value: "-", unit: "本"),
+                .init(text: "二聯式收銀機", value: "-", unit: "卷"),
+                .init(text: "三聯式收銀機", value: "-", unit: "盒"),
+                .init(text: "三聯式加副聯收銀機", value: "-", unit: "盒")
+            ]
+        ),
+        PreserviceOrgSection(items: [
+            .init(title: "前所名稱", value: "-"),
+            .init(title: "前所費用", value: "-"),
+            .init(title: "前所服務業務", labels: ["記帳", "年度CTP"]),
+            .init(title: "前所資訊及更換原因", labels: ["範例原因"])
+        ])
+    ]
+)
+
+let handoverHtml = handover.render()
+let handoverHtmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test-handover.html")
+try handoverHtml.write(to: handoverHtmlUrl, atomically: true, encoding: .utf8)
+
+let handoverGenerator = PDFGenerator(mainHtml: handover)
+let handoverPdfUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test-handover.pdf")
+// 訪談紀錄無 header/footer，需自行帶入上下邊距，否則內容會貼到頁緣
+if let handoverPdfData = try? handoverGenerator.generate(sideMargin: 1.5, extraVerticalMargin: 40) {
+    try handoverPdfData.write(to: handoverPdfUrl)
+}
 
 //import PDFToImage
 //
