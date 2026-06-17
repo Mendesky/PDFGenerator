@@ -205,6 +205,23 @@ func paymentBlockRendersCaseHeadingsWhenMultipleCases() {
     #expect(jiaIndex < yiIndex)
 }
 
+@Test("bundle-name hiding counts total bundles per case, not consecutive runs (order-independent)")
+func paymentBlockCountsBundlesPerCaseRegardlessOfOrder() {
+    // 甲公司的兩個 bundle 在輸入中被乙公司隔開（非連續）→ 仍應視為「甲有 2 bundle」而顯示其 bundle 名。
+    let payments = [
+        Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: .monthly(4000))], caseName: "甲公司"),
+        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
+        Payment(name: "規劃2", items: [.init(names: ["記帳作業"], fee: .monthly(3000))], caseName: "甲公司"),
+    ]
+    let rendered = PaymentBlock(title: "酬金", payments: payments).render()
+
+    // 甲公司總共 2 個 bundle → bundle 名照顯示（不因被乙公司隔開而誤隱藏）。
+    #expect(rendered.contains("<b style=\"font-size: 1.1em;\">規劃1</b>"))
+    #expect(rendered.contains("<b style=\"font-size: 1.1em;\">規劃2</b>"))
+    // 乙公司只有 1 個 bundle → 隱藏。
+    #expect(!rendered.contains("乙方案"), "單一 bundle 的 case 不應顯示 bundle 名")
+}
+
 @Test("single-bundle case hides bundle name even in merged (multi-case) view")
 func paymentBlockHidesSingleBundleNamePerCaseInMergedView() {
     // 兩個 case 各只有 1 個 bundle → case 標題照渲染、但兩個 bundle 名都隱藏。
