@@ -180,23 +180,44 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
     #expect(paymentBlock.render() == result)
 }
 
-@Test("multiple cases render a case-name heading above each case's bundles")
+@Test("multiple cases render a case-name heading; bundle name shown only for cases with ≥2 bundles")
 func paymentBlockRendersCaseHeadingsWhenMultipleCases() {
     let payments = [
+        // 甲公司：2 個 bundle → bundle 名照顯示
         Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: .monthly(4000))], caseName: "甲公司"),
-        Payment(name: "規劃1", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
+        Payment(name: "規劃2", items: [.init(names: ["記帳作業"], fee: .monthly(3000))], caseName: "甲公司"),
+        // 乙公司：1 個 bundle → bundle 名隱藏（case 標題已足夠）
+        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
     ]
     let rendered = PaymentBlock(title: "酬金", payments: payments).render()
 
-    // 兩個不同 case → 各自的 case 名稱標題（1.2em bold）出現在 bundle 名（1.1em）之上。
+    // 兩個不同 case → 各自的 case 名稱標題（1.2em bold）。
     #expect(rendered.contains("<b style=\"font-size: 1.2em;\">甲公司</b>"))
     #expect(rendered.contains("<b style=\"font-size: 1.2em;\">乙公司</b>"))
-    // bundle 名標題仍保留（多 case 不隱藏 bundle 名）。
+    // 甲公司有 ≥2 個 bundle → bundle 名（1.1em）照顯示。
     #expect(rendered.contains("<b style=\"font-size: 1.1em;\">規劃1</b>"))
+    #expect(rendered.contains("<b style=\"font-size: 1.1em;\">規劃2</b>"))
+    // 乙公司只有 1 個 bundle → bundle 名隱藏（即使在合併顯示多 case 情境）。
+    #expect(!rendered.contains("乙方案"), "單一 bundle 的 case 不應顯示 bundle 名")
     // 甲公司標題排在乙公司之前（依輸入 case 順序）。
     let jiaIndex = try! #require(rendered.range(of: "甲公司")).lowerBound
     let yiIndex = try! #require(rendered.range(of: "乙公司")).lowerBound
     #expect(jiaIndex < yiIndex)
+}
+
+@Test("single-bundle case hides bundle name even in merged (multi-case) view")
+func paymentBlockHidesSingleBundleNamePerCaseInMergedView() {
+    // 兩個 case 各只有 1 個 bundle → case 標題照渲染、但兩個 bundle 名都隱藏。
+    let payments = [
+        Payment(name: "甲方案", items: [.init(names: ["稅務帳務處理作業"], fee: .monthly(4000))], caseName: "甲公司"),
+        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
+    ]
+    let rendered = PaymentBlock(title: "酬金", payments: payments).render()
+
+    #expect(rendered.contains("<b style=\"font-size: 1.2em;\">甲公司</b>"))
+    #expect(rendered.contains("<b style=\"font-size: 1.2em;\">乙公司</b>"))
+    #expect(!rendered.contains("甲方案"), "單一 bundle 的 case 不應顯示 bundle 名")
+    #expect(!rendered.contains("乙方案"), "單一 bundle 的 case 不應顯示 bundle 名")
 }
 
 @Test("single case does not render a case-name heading")
