@@ -12,13 +12,15 @@ let package = Package(
         // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "PDFGenerator",
-            targets: ["PDFGenerator", "QuotationHTML", "PDFToImage"]),
+            targets: ["PDFGenerator", "QuotationHTML", "HandoverDocumentHTML", "PDFToImage"]),
     ],
     dependencies: [
         .package(url: "https://github.com/SwiftPackageIndex/Plot.git", from: "0.14.0"),
         .package(url: "https://github.com/apple/swift-log.git", from: "1.6.2"),
         // swift-markdown — supplementaryNote 富文字 markdown → HTML 渲染用（presentation 歸 PDFGenerator）
-        .package(url: "https://github.com/swiftlang/swift-markdown.git", from: "0.6.0")
+        .package(url: "https://github.com/swiftlang/swift-markdown.git", from: "0.6.0"),
+        // 純 Swift QR 產生器（無系統相依，Linux 相容）— 訪談紀錄 header QR code 用
+        .package(url: "https://github.com/fwcd/swift-qrcode-generator.git", from: "2.0.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -44,9 +46,19 @@ let package = Package(
                 .copy("Resources/header/quotation-header-34873876.png"),
                 .copy("Resources/footer/quotation-footer-34873876.png")
               ]),
+        .target(
+            name: "HandoverDocumentHTML",
+            dependencies: [
+                .product(name: "Plot", package: "plot"),
+                .product(name: "QRCodeGenerator", package: "swift-qrcode-generator"),
+                .product(name: "Markdown", package: "swift-markdown")
+            ],
+            resources: [
+                .copy("Resources/header_logo.png")
+            ]),
         .testTarget(
             name: "PDFGeneratorTests",
-            dependencies: ["QuotationHTML"]
+            dependencies: ["QuotationHTML", "HandoverDocumentHTML"]
         ),
         .target(
             name: "PDFGenerator",
@@ -68,6 +80,7 @@ let package = Package(
         .executableTarget(name: "Main",
                           dependencies: [
                             "QuotationHTML",
+                            "HandoverDocumentHTML",
                             "PDFGenerator",
                             "PDFToImage"
                           ])
