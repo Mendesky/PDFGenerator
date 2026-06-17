@@ -43,16 +43,13 @@ public struct PaymentBlock: Component {
 
     public init(title: String, payments: [Payment]) {
         self.title = title
-        // 單一 case 時沿用「單 bundle 不顯示 bundle 名」；多 case 時各 bundle 名都要顯示在 case 名底下，
-        // 故不套用單 bundle 隱藏（body 依 caseName 分組決定是否加 case 標題）。
-        self.payments = if PaymentCaseGrouping.showsCaseNames(payments) {
-            payments
-        } else if payments.count == 1 {
-            payments.map{
-                $0.hideName()
-            }
-        }else{
-            payments
+        // 「單 bundle 不顯示 bundle 名」規則 per-case 套用：每個 case 只有 1 個 bundle 時隱藏 bundle 名
+        // （該 case 的 case 標題已足夠識別），兩種情境一致：
+        // - 多 case（合併顯示）：各 case 名標題照渲染；其中只有 1 個 bundle 的 case 隱藏其 bundle 名，
+        //   只有 ≥2 bundle 的 case 才逐一顯示 bundle 名。
+        // - 單一 case（分開顯示 / case 名標題不渲染）：單 bundle 同樣隱藏 bundle 名。
+        self.payments = PaymentCaseGrouping.runs(payments).flatMap { run in
+            run.payments.count == 1 ? run.payments.map { $0.hideName() } : run.payments
         }
     }
     
