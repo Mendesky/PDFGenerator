@@ -9,7 +9,9 @@
 //
 
 import Foundation
-import Plot
+// 對外 re-export Plot：消費端 `import HandoverDocumentHTML` 即可取得 Component / Renderable，
+// 不必另外宣告 Plot 相依。
+@_exported import Plot
 
 public struct HandoverDocument: Renderable {
     let header: DocumentHeader.Model

@@ -6,6 +6,7 @@ import Foundation
 @Test func billingPeriodLongText() {
     #expect(BillingPeriod.oneTime.text == "次")
     #expect(BillingPeriod.yearly.text == "年")
+    #expect(BillingPeriod.monthly11.text == "月 ( 11 個月 )")
     #expect(BillingPeriod.monthly12.text == "月 ( 12 個月 )")
     #expect(BillingPeriod.monthly13.text == "月 ( 13 個月 )")
     #expect(BillingPeriod.monthly14.text == "月 ( 14 個月 )")
