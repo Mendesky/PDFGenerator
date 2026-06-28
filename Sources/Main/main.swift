@@ -296,6 +296,111 @@ if let handoverPdfData = try? handoverGenerator.generate(sideMargin: 1.5, extraV
     try handoverPdfData.write(to: handoverPdfUrl)
 }
 
+
+// MARK: - 舊版風格訪談紀錄表（ClassicHandoverDocument）示範
+
+let classicPage1 = ClassicFormPage1.Model(
+    contactDate: nil,                 // 新版無來源 → 空格
+    confirmDate: "115.06.17",
+    interviewers: "陳ＯＯ、林ＯＯ",
+    companyName: "範例股份有限公司",
+    representative: "王ＯＯ",
+    contacts: [
+        .init(name: "詹ＯＯ", relationship: "會計", phone: "(00)0000000", mobile: "0900-000-000", email: "sample@example.com"),
+        .init(name: "王ＯＯ", relationship: "負責人", mobile: "0911-111-111")
+    ],
+    businessId: "00000000",
+    revenue: "1,000 萬以內",
+    capital: "2,000,000",
+    industryCode: "範例代碼",
+    registeredPostcode: "100",
+    registeredAddress: "範例市範例區範例路 0 號",
+    communicationPostcode: nil,
+    communicationAddress: nil,
+    products: "範例產品",
+    source: "客戶介紹（範例）",
+    designatedCpa: "無",
+    industryChoices: [("買賣", true), ("製造", false), ("營建", false), ("其它", false)],
+    costAnalysisChoices: [("要", false), ("依法", true)],
+    filingChoices: [("簽證", false), ("所得額", false), ("查帳", false), ("書審", true)],
+    serviceChoices: [
+        ("稅簽", true), ("財簽", false), ("記帳(稅)", true), ("記帳(管)", false),
+        ("年度CTP", true), ("整帳", false), ("工商", false), ("出納", true), ("薪資人力", false)
+    ],
+    invoiceChoices: [
+        ("電子發票", false), ("二聯(副)", true), ("三聯(副)", true),
+        ("二收", false), ("三收(副)", false)
+    ],
+    previousFirmServices: "記帳、年度CTP",
+    previousFirmChangeReason: "服務不好",
+    clientNotesSummary: "公費請詳報價單；詳細追蹤事項見補充頁。",
+    relatedBusinessSummary: "持股關係 1 家，詳補充頁。",
+    bookkeepingFee: "14 個月：5,000 元",
+    tidyingFee: "優惠免收",
+    ctpFee: "2,000 元",
+    taxAuditFee: "30,000 元",
+    financialAuditFee: nil,
+    individualIncomeTaxFee: nil,
+    payrollFee: nil,
+    cashierFee: nil,
+    nhiFee: nil,
+    serviceGroup: "範例組別 陳ＯＯ",
+    serviceStartDate: "115 年 5 月"
+)
+
+let classic = ClassicHandoverDocument(
+    page1: classicPage1,
+    page2Sections: [
+        .init(label: "報價", rows: [
+            .heading("財務會計委外作業"),
+            .field("服務項目", "記帳服務"),
+            .field("設定", "開始月份 115 年 5 月\n預估年營收 1,000 萬元"),
+            .field("公費", "5,000 元 / 月 ( 14 個月 )"),
+            .field("服務項目", "營所稅查核簽證"),
+            .field("設定", "年度 115 年度"),
+            .field("公費", "30,000 元 / 年")
+        ]),
+        .init(label: "附加服務", rows: [
+            .field("代辦年度 CTP 申報", "2,000 元 / 年")
+        ]),
+        .init(label: "營運資訊", rows: [
+            // 扣繳人數／分支機構家數 同一列；營業項目及產品已在第 1 頁，不重複
+            .pairs([("扣繳人數", "1~10人"), ("分支機構家數", "0家")])
+        ]),
+        .init(label: "訪談紀錄", rows: [
+            .field("未來預期及追蹤事項", "範例追蹤事項一\n範例追蹤事項二"),
+            .field("客戶背景概況", "範例客戶背景概況"),
+            .field("客戶營運現況", "範例營運現況")
+        ]),
+        .init(label: "關係企業", rows: [
+            .heading("持股關係（1）"),
+            .field("統一編號", "00000000"),
+            .field("公司名稱", "範例關係企業有限公司"),
+            .field("服務人員", "範例組別 林ＯＯ"),
+            .field("關係說明", "範例關係說明")
+        ]),
+        .init(label: "統購", rows: [
+            .field("統購需求", "由事務所統購"),
+            .field("統購開始期別", "115 年 09 月"),
+            // 各式發票張數併為一列
+            .pairs([("二聯式", "-"), ("二聯式加副聯", "1 本"), ("三聯式", "-"), ("三聯式加副聯", "1 本")])
+        ])
+    ],
+    externalURL: "http://www.google.com",
+    internalURL: "http://www.google.com",
+    fontSize: 15
+)
+
+let classicHtml = classic.render()
+let classicHtmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test-classic.html")
+try classicHtml.write(to: classicHtmlUrl, atomically: true, encoding: .utf8)
+
+let classicGenerator = PDFGenerator(mainHtml: classic)
+let classicPdfUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test-classic.pdf")
+if let classicPdfData = try? classicGenerator.generate(sideMargin: 1.2, extraVerticalMargin: 18) {
+    try classicPdfData.write(to: classicPdfUrl)
+}
+
 //import PDFToImage
 //
 //let converter = PDFImageConverter()
