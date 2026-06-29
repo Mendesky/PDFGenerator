@@ -54,7 +54,8 @@ enum Stylesheet {
     .handover .bundle { width: 100%; display: flex; flex-direction: column; gap: 8px; }
     .handover .bundle .bundleName p { font-size: 12pt; font-weight: 600; }
     .handover table.unit { width: 100%; border-collapse: collapse; break-inside: avoid-page; }
-    .handover .unit .services { vertical-align: top; }
+    /* 服務名/設定可能很長（甚至無斷點的英文）；強制可斷行，避免撐爆欄寬把金額擠到重疊 */
+    .handover .unit .services { vertical-align: top; word-break: break-all; overflow-wrap: anywhere; }
     .handover .unit .service { margin-bottom: 6px; }
     .handover .unit .serviceName { padding: 0; }
     .handover .unit .serviceName p { font-size: 12pt; font-weight: 600; }
@@ -70,7 +71,7 @@ enum Stylesheet {
     .handover .additionalService { display: flex; flex-direction: column; gap: 4px; padding: 4px 8px; width: 100%; }
     .handover .additionalService .title p { font-size: 11pt; color: #939393; }
     .handover .additionalService table.unit { width: 100%; border-collapse: collapse; }
-    .handover .additionalService .nameCell { vertical-align: top; }
+    .handover .additionalService .nameCell { vertical-align: top; word-break: break-all; overflow-wrap: anywhere; }
     .handover .additionalService .name p { font-size: 11pt; }
     .handover .additionalService .price { text-align: right; white-space: nowrap; width: 1%; vertical-align: top; padding-left: 16px; padding-right: 4px; }
     .handover .additionalService .price .dollar { font-size: 12pt; font-weight: 500; }
