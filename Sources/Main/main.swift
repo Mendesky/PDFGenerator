@@ -352,7 +352,7 @@ let classic = ClassicHandoverDocument(
     page1: classicPage1,
     page2Sections: [
         .init(label: "報價", rows: [
-            .heading("財務會計委外作業"),
+            .heading("▼ 財務會計委外作業"),
             // 服務名 + 公費同列；設定以 - 條列於其下（跨欄）
             .field("服務項目", "記帳服務 $5,000 元 / 月 ( 14 個月 )"),
             .full("- 開始月份 115 年 5 月\n- 預估年營收 1,000 萬元"),
