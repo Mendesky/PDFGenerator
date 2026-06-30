@@ -360,7 +360,7 @@ let classic = ClassicHandoverDocument(
             .full("- 年度 115 年度")
         ]),
         .init(label: "附加服務", rows: [
-            .field("代辦年度 CTP 申報", "2,000 元 / 年")
+            .full("代辦年度 CTP 申報 $2,000 元 / 年")
         ]),
         .init(label: "營運資訊", rows: [
             // 扣繳人數／分支機構家數 同一列；營業項目及產品已在第 1 頁，不重複
