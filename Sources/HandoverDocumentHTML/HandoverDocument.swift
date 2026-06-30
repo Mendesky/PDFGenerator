@@ -61,6 +61,11 @@ public struct HandoverDocument: Renderable {
         return html.render(indentedBy: indentationKind)
     }
 
+    /// 每頁固定置頂的事務所 logo header（交給 PDFGenerator 的 headerHtml 參數）。
+    public var headerHTML: Component {
+        LogoHeader(sideMarginCM: 1.5)
+    }
+
     /// 把一組 section 依序排入欄位，section 之間插入分隔線。
     private func column(_ sections: [any Component]) -> Component {
         ComponentGroup {

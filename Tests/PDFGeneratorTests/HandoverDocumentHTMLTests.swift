@@ -330,10 +330,26 @@ import Foundation
     #expect(html.contains("外網連結"))
     #expect(html.contains("內網連結"))
     #expect(html.contains("href=\"http://www.google.com\""))
-    // logo 改用事務所圖檔（取代文字佔位）
-    #expect(html.contains("<img"))
-    #expect(html.contains("header_logo"))
+    // logo 已移到每頁固定 running header（LogoHeader），不再出現在內文 header
+    #expect(!html.contains("header_logo"))
     // QR code（由外網連結生成）+ 分享碼於下方
     #expect(html.contains("qrImage"))
     #expect(html.contains("<svg"))
+}
+
+@Test func handoverDocumentHeaderHTMLCarriesLogo() {
+    let doc = HandoverDocument(header: .init(companyName: "範例股份有限公司"))
+    let headerHTML = doc.headerHTML.render()
+    // 事務所 logo 改由每頁固定 running header 呈現
+    #expect(headerHTML.contains("<header"))
+    #expect(headerHTML.contains("header_logo"))
+    #expect(headerHTML.contains("position: fixed"))
+}
+
+@Test func classicDocumentHeaderHTMLCarriesLogo() {
+    let doc = ClassicHandoverDocument(page1: .init(companyName: "範例股份有限公司"))
+    let headerHTML = doc.headerHTML.render()
+    #expect(headerHTML.contains("<header"))
+    #expect(headerHTML.contains("header_logo"))
+    #expect(headerHTML.contains("position: fixed"))
 }

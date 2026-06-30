@@ -289,10 +289,10 @@ let handoverHtml = handover.render()
 let handoverHtmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test-handover.html")
 try handoverHtml.write(to: handoverHtmlUrl, atomically: true, encoding: .utf8)
 
-let handoverGenerator = PDFGenerator(mainHtml: handover)
+let handoverGenerator = PDFGenerator(mainHtml: handover, headerHtml: handover.headerHTML)
 let handoverPdfUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test-handover.pdf")
-// 訪談紀錄無 header/footer，需自行帶入上下邊距，否則內容會貼到頁緣
-if let handoverPdfData = try? handoverGenerator.generate(sideMargin: 1.5, extraVerticalMargin: 40) {
+// logo 走每頁固定 running header；上邊距由 header 高度自動讓出，extraVerticalMargin 只補 header 與內文間距
+if let handoverPdfData = try? handoverGenerator.generate(sideMargin: 1.5, extraVerticalMargin: 16) {
     try handoverPdfData.write(to: handoverPdfUrl)
 }
 
@@ -395,9 +395,9 @@ let classicHtml = classic.render()
 let classicHtmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test-classic.html")
 try classicHtml.write(to: classicHtmlUrl, atomically: true, encoding: .utf8)
 
-let classicGenerator = PDFGenerator(mainHtml: classic)
+let classicGenerator = PDFGenerator(mainHtml: classic, headerHtml: classic.headerHTML)
 let classicPdfUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test-classic.pdf")
-if let classicPdfData = try? classicGenerator.generate(sideMargin: 1.2, extraVerticalMargin: 18) {
+if let classicPdfData = try? classicGenerator.generate(sideMargin: 1.2, extraVerticalMargin: 12) {
     try classicPdfData.write(to: classicPdfUrl)
 }
 

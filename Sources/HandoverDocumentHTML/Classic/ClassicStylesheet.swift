@@ -13,9 +13,6 @@ enum ClassicStylesheet {
     .classic p { margin: 0; }
 
     /* ===== 標題列 ===== */
-    /* 事務所 logo letterhead（第 1 頁頂部，置中） */
-    .classic .logoRow { text-align: center; margin-bottom: 6px; }
-    .classic .logoRow .logoImg { height: 52px; width: auto; }
     /* 第 1 頁：單純置中 */
     .classic .titleRow { text-align: center; margin-bottom: 4px; }
     /* 第 2 頁：左空白 | 置中標題 | 右上角(連結按鈕+QR) */
