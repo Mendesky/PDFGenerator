@@ -352,10 +352,15 @@ let classic = ClassicHandoverDocument(
     page1: classicPage1,
     page2Sections: [
         .init(label: "報價", rows: [
-            .heading("▼ 財務會計委外作業"),
-            // 服務項目（rowspan）｜服務名+公費；設定以 - 條列於其下、只佔值欄
-            .service(name: "記帳服務 $5,000 元 / 月 ( 14 個月 )", configs: "- 開始月份 115 年 5 月\n- 預估年營收 1,000 萬元"),
-            .service(name: "營所稅查核簽證 $30,000 元 / 年", configs: "- 年度 115 年度")
+            // 組合項目（多服務共用一價）：每項可顯示金額（④欄），總價在最右（⑤欄、跨整組）
+            .quoting(.init(label: "組合項目", total: "$279,000\n元 / 年", services: [
+                .init(name: "財務簽證", amount: "$279,000", configs: "- 開始服務時間 115年1月"),
+                .init(name: "稅務簽證（含未分配盈餘）", amount: "$279,000", configs: "- 開始服務時間 115年1月")
+            ])),
+            // 服務項目（單服務）：服務名跨 ③④，總價在最右
+            .quoting(.init(label: "服務項目", total: "$7,000 元 /\n月\n( 14 個月 )", services: [
+                .init(name: "稅務帳", configs: "- 開始服務時間 115年7月\n- 申報類型 按期申報\n- 申報方式 稅務簽證")
+            ]))
         ]),
         .init(label: "附加服務", rows: [
             .full("代辦年度 CTP 申報 $2,000 元 / 年")
