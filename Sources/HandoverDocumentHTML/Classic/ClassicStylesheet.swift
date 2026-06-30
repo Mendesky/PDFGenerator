@@ -33,7 +33,8 @@ enum ClassicStylesheet {
     .classic table.classicForm, .classic table.classicForm2 { width: 100%; border-collapse: collapse; }
     .classic table.classicForm { table-layout: fixed; }
     .classic table.classicForm2 { table-layout: auto; margin-top: 4px; }
-    .classic .sectionLabel, .classic .fieldLabel, .classic .fieldValue, .classic .blockCell { border: 1px solid #000; }
+    .classic .sectionLabel, .classic .fieldLabel, .classic .fieldValue, .classic .blockCell,
+    .classic .serviceName, .classic .serviceAmount, .classic .serviceTotal, .classic .serviceConfig { border: 1px solid #000; }
 
     /* 區塊直書標籤（逐字斷行堆疊，不用 writing-mode，避免末字被裁） */
     /* 非粗體：粗體楷體（特粗楷體）缺「訊/錄」等字形會變空白，故區塊標籤不加粗 */
@@ -48,6 +49,10 @@ enum ClassicStylesheet {
     /* 第 2 頁：label 欄固定窄寬、長標籤換行（避免整欄被「代辦年度CTP申報」撐寬） */
     .classic .classicForm2 .fieldLabel { width: 110px; white-space: normal; word-break: normal; }
     .classic .classicForm2 .rowHeading { background: #fafafa; font-weight: 700; }
+    /* 報價群組：服務名 / 每項金額(右) / 設定 / 總價(置中、跨整組) */
+    .classic .serviceName, .classic .serviceConfig { word-break: break-all; padding: 3px 8px; font-size: 1.08rem; vertical-align: top; }
+    .classic .serviceAmount { white-space: nowrap; text-align: right; padding: 3px 8px; font-size: 1.08rem; vertical-align: top; }
+    .classic .serviceTotal { text-align: center; padding: 3px 8px; font-size: 1.08rem; vertical-align: middle; word-break: keep-all; }
     /* 一列多組 label｜value（扣繳人數／分支機構家數；各式發票張數） */
     .classic .pairLabel { color: #555; margin-right: 6px; }
     .classic .pairValue { font-weight: 600; margin-right: 22px; }
