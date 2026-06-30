@@ -51,8 +51,9 @@ enum ClassicStylesheet {
     .classic .classicForm2 .rowHeading { background: #fafafa; font-weight: 700; }
     /* 報價群組：服務名 / 每項金額(右) / 設定 / 總價(置中、跨整組) */
     .classic .serviceName, .classic .serviceConfig { word-break: break-all; padding: 3px 8px; font-size: 1.08rem; vertical-align: top; }
-    .classic .serviceAmount { white-space: nowrap; text-align: right; padding: 3px 8px; font-size: 1.08rem; vertical-align: top; }
-    .classic .serviceTotal { text-align: center; padding: 3px 8px; font-size: 1.08rem; vertical-align: middle; word-break: keep-all; }
+    /* width:1% → 收縮到內容寬，不分配多餘表寬（否則 auto-layout 會把右側欄撐寬） */
+    .classic .serviceAmount { white-space: nowrap; text-align: right; padding: 3px 8px; font-size: 1.08rem; vertical-align: top; width: 1%; }
+    .classic .serviceTotal { text-align: center; padding: 3px 8px; font-size: 1.08rem; vertical-align: middle; word-break: keep-all; width: 1%; }
     /* 一列多組 label｜value（扣繳人數／分支機構家數；各式發票張數） */
     .classic .pairLabel { color: #555; margin-right: 6px; }
     .classic .pairValue { font-weight: 600; margin-right: 22px; }
