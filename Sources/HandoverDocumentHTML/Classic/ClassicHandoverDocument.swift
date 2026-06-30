@@ -48,4 +48,9 @@ public struct ClassicHandoverDocument: Renderable {
         }.node.style("font-family: 華康標楷體,標楷體-繁,標楷體; width: 100%; line-height: 1.5em; font-size: \(fontSizeCSS)px;")
         return html.render(indentedBy: indentationKind)
     }
+
+    /// 每頁固定置頂的事務所 logo header（交給 PDFGenerator 的 headerHtml 參數）。
+    public var headerHTML: Component {
+        LogoHeader(sideMarginCM: 1.2)
+    }
 }

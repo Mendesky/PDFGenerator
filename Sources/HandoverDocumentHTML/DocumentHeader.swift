@@ -15,11 +15,8 @@ public struct DocumentHeader: Component {
 
     public var body: any Component {
         Div {
-            // 事務所 logo（bundle 內圖檔）＋ 外網/內網連結
+            // 外網/內網連結（事務所 logo 改由每頁固定 running header 呈現，見 LogoHeader）
             Div {
-                if let logoUrl = Bundle.module.url(forResource: "header_logo", withExtension: "png") {
-                    Image(logoUrl).class("logoImg")
-                }
                 Div {
                     Div {
                         Span(html: Self.linkIconSVG).class("urlIcon")

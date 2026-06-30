@@ -19,7 +19,7 @@ public struct ClassicFormPage1: Component {
 
     public var body: any Component {
         ComponentGroup {
-            // 標題列：置中標題
+            // 標題列：置中標題（事務所 logo 改由每頁固定 running header 呈現，見 LogoHeader）
             Div(H1("新客戶訪談記錄表").class("formTitle")).class("titleRow")
 
             // 單一扁平表格：全部框線出自同一 border-collapse，粗細一致（不用巢狀表格）
