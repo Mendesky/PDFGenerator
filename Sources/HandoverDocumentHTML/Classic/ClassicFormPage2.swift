@@ -54,41 +54,65 @@ public struct ClassicFormPage2: Component {
     }
 
     /// 第一列帶左側直書標籤格（rowspan 跨整個區塊），其餘列只放內容格。
+    /// 每個 Row 展開成一或多個 table row（.service 含設定時為 2 列），區塊標籤 rowspan 跨展開後的總列數。
     private func flatSection(_ section: Section) -> Component {
-        let rows = section.rows
+        let groups: [Component] = section.rows.flatMap(cellGroups(for:))
         return ComponentGroup {
-            for (index, row) in rows.enumerated() {
+            for (index, group) in groups.enumerated() {
                 TableRow {
                     if index == 0 {
                         TableCell(ClassicVerticalLabel(text: section.label))
                             .class("sectionLabel")
-                            .attribute(named: "rowspan", value: "\(rows.count)")
+                            .attribute(named: "rowspan", value: "\(groups.count)")
                     }
-                    rowCells(row)
+                    group
                 }
             }
         }
     }
 
-    private func rowCells(_ row: Row) -> Component {
+    /// 一個 Row 對應的 table row 內容（不含最左區塊標籤）。多數 1 列；.service 含設定時 2 列。
+    private func cellGroups(for row: Row) -> [Component] {
         switch row.kind {
         case .field:
-            return ComponentGroup {
+            return [ComponentGroup {
                 TableCell(Text(row.label ?? "")).class("fieldLabel")
                 multilineCell(row.value).class("fieldValue")
-            }
+            }]
+        case .markdown:
+            // 值為 markdown 原文，渲染成 HTML 後注入（標題/清單/粗體/inline <span> 等）。
+            return [ComponentGroup {
+                TableCell(Text(row.label ?? "")).class("fieldLabel")
+                TableCell(Div(html: MarkdownHTML.render(row.value))).class("fieldValue")
+            }]
         case .heading:
-            return TableCell(Text(row.value)).class("fieldValue rowHeading").attribute(named: "colspan", value: "2")
+            return [TableCell(Text(row.value)).class("fieldValue rowHeading").attribute(named: "colspan", value: "2")]
         case .full:
-            return multilineCell(row.value).class("fieldValue").attribute(named: "colspan", value: "2")
+            return [multilineCell(row.value).class("fieldValue").attribute(named: "colspan", value: "2")]
         case .pairs:
             // 一列多組 label｜value 內嵌於單一跨欄格（避免增生表格欄、壓縮其他列的值欄）
-            return TableCell {
+            return [TableCell {
                 for pair in row.pairs {
                     Span(pair.0).class("pairLabel")
                     Span(pair.1).class("pairValue")
                 }
-            }.class("fieldValue").attribute(named: "colspan", value: "2")
+            }.class("fieldValue").attribute(named: "colspan", value: "2")]
+        case .service:
+            // 服務名(+公費)為主列；設定條列於其下，「服務項目」標籤 rowspan 跨兩列、設定只佔值欄。
+            let label = row.label ?? "服務項目"
+            if row.detail.isEmpty {
+                return [ComponentGroup {
+                    TableCell(Text(label)).class("fieldLabel")
+                    multilineCell(row.value).class("fieldValue")
+                }]
+            }
+            return [
+                ComponentGroup {
+                    TableCell(Text(label)).class("fieldLabel").attribute(named: "rowspan", value: "2")
+                    multilineCell(row.value).class("fieldValue")
+                },
+                multilineCell(row.detail).class("fieldValue")
+            ]
         }
     }
 
@@ -118,27 +142,37 @@ extension ClassicFormPage2 {
     }
 
     public struct Row {
-        enum Kind { case field, heading, full, pairs }
+        enum Kind { case field, markdown, heading, full, pairs, service }
         let kind: Kind
         let label: String?
         let value: String
+        let detail: String
         let pairs: [(String, String)]
 
         /// label｜value 一般欄位
         public static func field(_ label: String, _ value: String) -> Row {
-            Row(kind: .field, label: label, value: value, pairs: [])
+            Row(kind: .field, label: label, value: value, detail: "", pairs: [])
         }
-        /// 粗體跨欄小標（如報價的服務項目名）
+        /// label｜value，value 以 markdown 渲染（訪談紀錄等富文字欄位）
+        public static func markdown(_ label: String, _ value: String) -> Row {
+            Row(kind: .markdown, label: label, value: value, detail: "", pairs: [])
+        }
+        /// 粗體跨欄小標（如報價的 bundle 名）
         public static func heading(_ text: String) -> Row {
-            Row(kind: .heading, label: nil, value: text, pairs: [])
+            Row(kind: .heading, label: nil, value: text, detail: "", pairs: [])
         }
         /// 跨欄整段文字
         public static func full(_ value: String) -> Row {
-            Row(kind: .full, label: nil, value: value, pairs: [])
+            Row(kind: .full, label: nil, value: value, detail: "", pairs: [])
         }
         /// 一列多組 label｜value
         public static func pairs(_ pairs: [(String, String)]) -> Row {
-            Row(kind: .pairs, label: nil, value: "", pairs: pairs)
+            Row(kind: .pairs, label: nil, value: "", detail: "", pairs: pairs)
+        }
+        /// 報價服務項目：服務名(+公費)為主列；configs（設定，可含 \n 條列）顯示於其下，
+        /// 「服務項目」標籤 rowspan 跨兩列、設定只佔值欄。configs 空字串則只有一列。
+        public static func service(name: String, configs: String) -> Row {
+            Row(kind: .service, label: "服務項目", value: name, detail: configs, pairs: [])
         }
     }
 }

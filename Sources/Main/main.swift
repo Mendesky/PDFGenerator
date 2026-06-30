@@ -352,25 +352,22 @@ let classic = ClassicHandoverDocument(
     page1: classicPage1,
     page2Sections: [
         .init(label: "報價", rows: [
-            .heading("財務會計委外作業"),
-            .field("服務項目", "記帳服務"),
-            .field("設定", "開始月份 115 年 5 月\n預估年營收 1,000 萬元"),
-            .field("公費", "5,000 元 / 月 ( 14 個月 )"),
-            .field("服務項目", "營所稅查核簽證"),
-            .field("設定", "年度 115 年度"),
-            .field("公費", "30,000 元 / 年")
+            .heading("▼ 財務會計委外作業"),
+            // 服務項目（rowspan）｜服務名+公費；設定以 - 條列於其下、只佔值欄
+            .service(name: "記帳服務 $5,000 元 / 月 ( 14 個月 )", configs: "- 開始月份 115 年 5 月\n- 預估年營收 1,000 萬元"),
+            .service(name: "營所稅查核簽證 $30,000 元 / 年", configs: "- 年度 115 年度")
         ]),
         .init(label: "附加服務", rows: [
-            .field("代辦年度 CTP 申報", "2,000 元 / 年")
+            .full("代辦年度 CTP 申報 $2,000 元 / 年")
         ]),
         .init(label: "營運資訊", rows: [
             // 扣繳人數／分支機構家數 同一列；營業項目及產品已在第 1 頁，不重複
             .pairs([("扣繳人數", "1~10人"), ("分支機構家數", "0家")])
         ]),
         .init(label: "訪談紀錄", rows: [
-            .field("未來預期及追蹤事項", "範例追蹤事項一\n範例追蹤事項二"),
-            .field("客戶背景概況", "範例客戶背景概況"),
-            .field("客戶營運現況", "範例營運現況")
+            .markdown("未來預期及追蹤事項", "範例追蹤事項一\n範例追蹤事項二"),
+            .markdown("客戶背景概況", "### 概況\n1. **背景**\n2. <span style=\"color:#3a9ccd\">營業</span>"),
+            .markdown("客戶營運現況", "範例營運現況")
         ]),
         .init(label: "關係企業", rows: [
             .heading("持股關係（1）"),
