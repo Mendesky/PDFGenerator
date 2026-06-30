@@ -15,7 +15,7 @@ enum Stylesheet {
     /* ===== header ===== */
     .handover .printHeader { width: 100%; display: flex; flex-direction: column; gap: 12px; }
     .handover .printHeader .logo { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-    .handover .printHeader .logoImg { height: 30px; width: auto; }
+    .handover .printHeader .logoImg { height: 48px; width: auto; }
     .handover .shareUrlContainer { display: flex; padding: 4px; align-items: center; gap: 6px; }
     .handover .shareUrlContainer .url { display: flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 4px; background: #3A9CCD; white-space: nowrap; }
     .handover .shareUrlContainer .url a { color: #F1F3F5; font-size: 9pt; text-decoration: none; white-space: nowrap; }

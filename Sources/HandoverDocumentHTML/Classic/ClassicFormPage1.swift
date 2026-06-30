@@ -8,6 +8,7 @@
 //  舊版有但新版無資料來源的欄位（接洽日期、LINE 群組…）保留空格。
 //
 
+import Foundation
 import Plot
 
 public struct ClassicFormPage1: Component {
@@ -19,6 +20,10 @@ public struct ClassicFormPage1: Component {
 
     public var body: any Component {
         ComponentGroup {
+            // 事務所 logo letterhead（bundle 內圖檔）
+            if let logoUrl = Bundle.module.url(forResource: "header_logo", withExtension: "png") {
+                Div(Image(logoUrl).class("logoImg")).class("logoRow")
+            }
             // 標題列：置中標題
             Div(H1("新客戶訪談記錄表").class("formTitle")).class("titleRow")
 
