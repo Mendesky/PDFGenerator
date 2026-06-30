@@ -77,6 +77,12 @@ public struct ClassicFormPage2: Component {
                 TableCell(Text(row.label ?? "")).class("fieldLabel")
                 multilineCell(row.value).class("fieldValue")
             }
+        case .markdown:
+            // 值為 markdown 原文，渲染成 HTML 後注入（標題/清單/粗體/inline <span> 等）。
+            return ComponentGroup {
+                TableCell(Text(row.label ?? "")).class("fieldLabel")
+                TableCell(Div(html: MarkdownHTML.render(row.value))).class("fieldValue")
+            }
         case .heading:
             return TableCell(Text(row.value)).class("fieldValue rowHeading").attribute(named: "colspan", value: "2")
         case .full:
@@ -118,7 +124,7 @@ extension ClassicFormPage2 {
     }
 
     public struct Row {
-        enum Kind { case field, heading, full, pairs }
+        enum Kind { case field, markdown, heading, full, pairs }
         let kind: Kind
         let label: String?
         let value: String
@@ -127,6 +133,10 @@ extension ClassicFormPage2 {
         /// label｜value 一般欄位
         public static func field(_ label: String, _ value: String) -> Row {
             Row(kind: .field, label: label, value: value, pairs: [])
+        }
+        /// label｜value，value 以 markdown 渲染（訪談紀錄等富文字欄位）
+        public static func markdown(_ label: String, _ value: String) -> Row {
+            Row(kind: .markdown, label: label, value: value, pairs: [])
         }
         /// 粗體跨欄小標（如報價的服務項目名）
         public static func heading(_ text: String) -> Row {
