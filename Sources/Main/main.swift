@@ -353,11 +353,9 @@ let classic = ClassicHandoverDocument(
     page2Sections: [
         .init(label: "報價", rows: [
             .heading("▼ 財務會計委外作業"),
-            // 服務名 + 公費同列；設定以 - 條列於其下（跨欄）
-            .field("服務項目", "記帳服務 $5,000 元 / 月 ( 14 個月 )"),
-            .full("- 開始月份 115 年 5 月\n- 預估年營收 1,000 萬元"),
-            .field("服務項目", "營所稅查核簽證 $30,000 元 / 年"),
-            .full("- 年度 115 年度")
+            // 服務項目（rowspan）｜服務名+公費；設定以 - 條列於其下、只佔值欄
+            .service(name: "記帳服務 $5,000 元 / 月 ( 14 個月 )", configs: "- 開始月份 115 年 5 月\n- 預估年營收 1,000 萬元"),
+            .service(name: "營所稅查核簽證 $30,000 元 / 年", configs: "- 年度 115 年度")
         ]),
         .init(label: "附加服務", rows: [
             .full("代辦年度 CTP 申報 $2,000 元 / 年")
