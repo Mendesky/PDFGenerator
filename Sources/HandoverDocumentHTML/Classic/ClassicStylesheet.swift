@@ -21,12 +21,16 @@ enum ClassicStylesheet {
     /* 標題用一般字重：粗體楷體（特粗楷體）缺「錄/訊」等字形會變空白，故不加粗 */
     .classic .formTitle { font-size: 1.7rem; font-weight: normal; margin: 0; letter-spacing: 6px; }
     .classic .titleRow2 .formTitle { flex: 0 0 auto; align-self: center; }
-    .classic .classicTopRight { flex: 1 1 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
-    .classic .shareUrlContainer { display: flex; gap: 6px; }
-    .classic .shareUrlContainer .url { display: flex; align-items: center; gap: 4px; padding: 3px 10px; border-radius: 4px; background: #3A9CCD; white-space: nowrap; }
-    .classic .shareUrlContainer .url a { color: #F1F3F5; font-size: 0.8rem; text-decoration: none; white-space: nowrap; }
-    .classic .shareUrlContainer .urlIcon { display: flex; align-items: center; }
-    .classic .shareUrlContainer .urlIcon svg { display: block; }
+    /* 不用巢狀 flex / gap：舊版 WeasyPrint 的 flexbox（尤其 gap、flex-direction:column）
+       會把兩個連結按鈕疊在一起。改用 inline-block + margin + text-align，跨 WeasyPrint 版本一致。
+       (flex: 1 1 0 僅為 titleRow2 內的 flex-item 佔寬用，與本區塊內部排版無關) */
+    .classic .classicTopRight { flex: 1 1 0; text-align: right; }
+    .classic .shareUrlContainer { margin-bottom: 4px; white-space: nowrap; }
+    .classic .shareUrlContainer .url { display: inline-block; margin-left: 6px; padding: 3px 10px; border-radius: 4px; background: #3A9CCD; white-space: nowrap; }
+    .classic .shareUrlContainer .url:first-child { margin-left: 0; }
+    .classic .shareUrlContainer .url a { color: #F1F3F5; font-size: 0.8rem; text-decoration: none; white-space: nowrap; vertical-align: middle; }
+    .classic .shareUrlContainer .urlIcon { display: inline-block; vertical-align: middle; margin-right: 4px; }
+    .classic .shareUrlContainer .urlIcon svg { display: inline-block; vertical-align: middle; }
     .classic .qrImage svg { display: block; width: 58px; height: 58px; }
 
     /* ===== 主表（單一扁平表格，框線統一 1px） ===== */
