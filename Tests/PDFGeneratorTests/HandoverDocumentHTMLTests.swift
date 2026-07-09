@@ -353,3 +353,12 @@ import Foundation
     #expect(headerHTML.contains("header_logo"))
     #expect(headerHTML.contains("position: fixed"))
 }
+
+@Test func classicPage1ClientNotesRendersLineBreaks() {
+    // 客戶狀況摘要含 \n（多段落接起）→ 第 1 頁應以 <br> 斷行
+    let doc = ClassicHandoverDocument(page1: .init(companyName: "範例股份有限公司", clientNotesSummary: "第一段\n第二段"))
+    let html = doc.render()
+    #expect(html.contains("第一段"))
+    #expect(html.contains("第二段"))
+    #expect(html.contains("<br"))
+}

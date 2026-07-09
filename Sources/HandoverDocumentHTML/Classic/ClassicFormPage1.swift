@@ -96,9 +96,25 @@ public struct ClassicFormPage1: Component {
         Div {
             Paragraph("1. 前所服務業務：\(model.previousFirmServices ?? "")")
             Paragraph("2. 前所資訊及更換原因：\(model.previousFirmChangeReason ?? "")")
-            Paragraph("3. 客戶狀況及注意事項：\(model.clientNotesSummary ?? "")")
+            // 客戶狀況摘要可含 \n（多段落接起），逐行以 <br> 斷開。
+            clientNotesParagraph
             Paragraph("關係企業：\(model.relatedBusinessSummary ?? "")")
         }.class("interviewBlock")
+    }
+
+    /// 「3. 客戶狀況及注意事項」：值可含 \n（多段落），逐行以 <br> 斷開。
+    private var clientNotesParagraph: Component {
+        let lines = (model.clientNotesSummary ?? "").split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
+        return Paragraph {
+            Text("3. 客戶狀況及注意事項：")
+            for (index, line) in lines.enumerated() {
+                if index < lines.count - 1 {
+                    Text(line).addLineBreak()
+                } else {
+                    Text(line)
+                }
+            }
+        }
     }
 
     // MARK: 服務（由報價推導勾選）
