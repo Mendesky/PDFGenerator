@@ -102,18 +102,21 @@ public struct ClassicFormPage1: Component {
         }.class("interviewBlock")
     }
 
-    /// 「3. 客戶狀況及注意事項」：值可含 \n（多段落），逐行以 <br> 斷開。
+    /// 「3. 客戶狀況及注意事項」：標題獨立一行，內容以「縮排文字區塊」呈現（值可含 \n 多段落，逐行 <br>；
+    /// 區塊 padding-left 讓過長換行也維持縮排）。
     private var clientNotesParagraph: Component {
         let lines = (model.clientNotesSummary ?? "").split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
-        return Paragraph {
-            Text("3. 客戶狀況及注意事項：")
-            for (index, line) in lines.enumerated() {
-                if index < lines.count - 1 {
-                    Text(line).addLineBreak()
-                } else {
-                    Text(line)
+        return ComponentGroup {
+            Paragraph("3. 客戶狀況及注意事項：")
+            Div {
+                for (index, line) in lines.enumerated() {
+                    if index < lines.count - 1 {
+                        Text(line).addLineBreak()
+                    } else {
+                        Text(line)
+                    }
                 }
-            }
+            }.class("clientNotesBody")
         }
     }
 
