@@ -68,6 +68,8 @@ enum ClassicStylesheet {
     .classic .remarkBlock { padding: 4px 8px; font-size: 1.08rem; }
     .classic .interviewBlock p,
     .classic .remarkBlock p { padding: 1px 0; }
+    /* 客戶狀況及注意事項：縮排文字區塊（左側細線 + 內縮，過長換行仍維持縮排） */
+    .classic .interviewBlock .clientNotesBody { margin: 1px 0 3px 0.4em; padding: 1px 0 1px 0.9em; border-left: 2px solid #bbb; line-height: 1.5; }
     .classic .serviceBlock { line-height: 1.85; }
     .classic .invoiceLine { padding-top: 3px; }
 
