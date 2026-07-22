@@ -39,6 +39,10 @@ enum ClassicStylesheet {
     .classic table.classicForm, .classic table.classicForm2 { width: 100%; border-collapse: collapse; }
     .classic table.classicForm { table-layout: fixed; }
     .classic table.classicForm2 { table-layout: auto; margin-top: 4px; }
+    /* 分頁以 section(<tbody>) 為單位整段移動，避免區塊直書標籤/首列被孤兒留在上一頁；tr 也不從中間斷開。
+       break-inside 與 page-break-inside 併列以相容不同 WeasyPrint 版本。 */
+    .classic .classicForm2 .sectionGroup { break-inside: avoid; page-break-inside: avoid; }
+    .classic .classicForm2 tr { break-inside: avoid; page-break-inside: avoid; }
     .classic .sectionLabel, .classic .fieldLabel, .classic .fieldValue, .classic .blockCell,
     .classic .serviceName, .classic .serviceAmount, .classic .serviceTotal, .classic .serviceConfig { border: 1px solid #000; }
 

@@ -354,6 +354,23 @@ import Foundation
     #expect(headerHTML.contains("position: fixed"))
 }
 
+@Test func classicPage2WrapsEachSectionInBreakAvoidTbody() {
+    // 每個 section 應包成獨立 <tbody class="sectionGroup">，供分頁時整段一起移動
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "關係企業", rows: [.field("公司名稱", "誠信商事有限公司")]),
+            .init(label: "前手", rows: [.field("前所名稱", "捷瑞會計師事務所")]),
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("<tbody"))
+    #expect(html.contains("sectionGroup"))
+    #expect(html.contains("break-inside: avoid"))
+    // 不應出現把 tbody 誤包進 tr 的結構
+    #expect(!html.contains("<tr><tbody"))
+}
+
 @Test func classicPage1ClientNotesRendersIndentedBlockWithLineBreaks() {
     // 客戶狀況摘要含 \n（多段落接起）→ 第 1 頁以「縮排文字區塊」呈現、逐行 <br> 斷行
     let doc = ClassicHandoverDocument(page1: .init(companyName: "範例股份有限公司", clientNotesSummary: "第一段\n第二段"))
