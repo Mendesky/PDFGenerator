@@ -44,10 +44,15 @@ public struct ClassicFormPage2: Component {
                     }
                 }.class("classicTopRight")
             }.class("titleRow2")
-            // 單一扁平表格（同第 1 頁），框線統一 1px
-            Table {
+            // 單一扁平表格（同第 1 頁），框線統一 1px。每個 section 包成獨立 <tbody>，
+            // 分頁時以 section 為單位整段移動（break-inside: avoid），不會把區塊直書標籤與首列
+            // 孤兒留在上一頁。用 Element 自建 table/tbody，避開 Plot 的 Table 會把每個 child
+            // 自動包成 <tr> 的行為（會產生 <tr><tbody>）。
+            Element(name: "table") {
                 for section in sections {
-                    flatSection(section)
+                    Element(name: "tbody") {
+                        flatSection(section)
+                    }.class("sectionGroup")
                 }
             }.class("classicForm2")
         }
