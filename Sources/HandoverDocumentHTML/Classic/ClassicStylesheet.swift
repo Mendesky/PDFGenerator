@@ -31,7 +31,9 @@ enum ClassicStylesheet {
     .classic .shareUrlContainer .url a { color: #F1F3F5; font-size: 0.8rem; text-decoration: none; white-space: nowrap; vertical-align: middle; }
     .classic .shareUrlContainer .urlIcon { display: inline-block; vertical-align: middle; margin-right: 4px; }
     .classic .shareUrlContainer .urlIcon svg { display: inline-block; vertical-align: middle; }
-    .classic .qrImage svg { display: block; width: 58px; height: 58px; }
+    /* inline-block（非 block）→ 受 classicTopRight 的 text-align:right 影響而右對齊，與連結按鈕右緣切齊 */
+    .classic .qrImage { display: block; text-align: right; }
+    .classic .qrImage svg { display: inline-block; width: 58px; height: 58px; }
 
     /* ===== 主表（單一扁平表格，框線統一 1px） ===== */
     .classic table.classicForm, .classic table.classicForm2 { width: 100%; border-collapse: collapse; }
