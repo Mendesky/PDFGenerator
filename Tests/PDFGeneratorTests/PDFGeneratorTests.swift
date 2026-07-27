@@ -96,18 +96,17 @@ import Foundation
         ],
         supplementaryNote: "財務簽證依預估資產總額新台幣壹億元報價\n會計帳務處理作業依照預估年營收貳億伍仟萬元報價。"
     )
-    // 2026-07：補充說明改回 `*` 標記（marker 由 renderer 以 scoped `::before` inject 到行首）+ 拿掉上方橫線。
-    // marker 走 CSS content，不硬寫進文字節點；換行 legacy style 不再 emit。
+    // 2026-07：補充說明不加任何標記符號、不畫上方橫線；僅以 markdown 渲染的內文呈現。
     let rendered = payment.render()
     #expect(rendered.contains("財務簽證依預估資產總額新台幣壹億元報價"))
-    // 補充說明 cell 的唯一特徵：套 `with-marker` class（`*` 標記）。
-    #expect(rendered.contains("<div class=\"rich-supplementaryNote with-marker\">"),
-        "補充說明應套用 with-marker（* 標記）")
-    #expect(rendered.contains(".rich-supplementaryNote.with-marker > :first-child::before { content: \"*\"; }"),
-        "`*` 標記應以 scoped ::before 呈現")
-    #expect(!rendered.contains("border-top: 1px solid black"), "不應再畫上方分隔線（改用 * 標記）")
+    // 補充說明 cell：純 rich-supplementaryNote，不帶 marker。
+    #expect(rendered.contains("<div class=\"rich-supplementaryNote\">"),
+        "補充說明應以 rich-supplementaryNote 呈現")
+    #expect(!rendered.contains("with-marker"), "不應再套 with-marker（* 標記已移除）")
+    #expect(!rendered.contains("::before"), "不應再有 * marker 的 ::before 規則")
+    #expect(!rendered.contains("border-top: 1px solid black"), "不應再畫上方分隔線")
     #expect(!rendered.contains("white-space: pre-line"), "legacy pre-line style 不應再被 emit")
-    #expect(!rendered.contains(">*財務簽證"), "`*` 應由 ::before 呈現、非硬寫進文字節點")
+    #expect(!rendered.contains(">*財務簽證"), "不應出現硬寫的 * 前綴")
 }
 
 @Test func paymentOmitsSupplementaryNoteRowWhenNil(){

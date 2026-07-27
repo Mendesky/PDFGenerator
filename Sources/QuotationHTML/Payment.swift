@@ -23,8 +23,7 @@ public struct Payment: Component {
     /// `nil` 或空字串 → 不渲染此 row。
     ///
     /// **渲染重點**：
-    /// - 補充說明 row 為跨整欄（colspan=3）cell，內文以 `*` 標記開頭（marker 由 renderer 以 scoped
-    ///   `::before` inject 到行首，與內文同一行）；不再畫上方橫線。
+    /// - 補充說明 row 為跨整欄（colspan=3）cell，上方留 padding；不加標記符號、不畫橫線。
     /// - markdown / 樣式細節見 `SupplementaryNoteHTMLRenderer`。
     public let supplementaryNote: String?
 
@@ -44,11 +43,10 @@ public struct Payment: Component {
                 }.style("padding-bottom: 0.5em; width: 100%; padding-top: 0.5em;")
             }
             if let supplementaryNote, !supplementaryNote.isEmpty {
-                // 補充說明以 `*` 標記開頭（不再畫上方橫線）：marker 由 renderer 以 scoped `::before` inject
-                // 到內文行首，故與內文同一行、且不污染 caller 的 markdown。整段跨欄（colspan=3）從左緣起排。
+                // 補充說明：整段跨欄（colspan=3）從左緣起排、上方留 padding，不加任何標記或橫線。
                 // markdown → HTML 在此渲染（presentation 歸 PDFGenerator）；caller 傳的是 markdown。
                 TableRow{
-                    TableCell(html: SupplementaryNoteHTMLRenderer.render(markdown: supplementaryNote, marker: "*"))
+                    TableCell(html: SupplementaryNoteHTMLRenderer.render(markdown: supplementaryNote))
                         .attribute(named: "colspan", value: "3")
                         .style("padding-top: 0.5em;")
                 }
