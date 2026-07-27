@@ -23,7 +23,8 @@ public struct Payment: Component {
     /// `nil` 或空字串 → 不渲染此 row。
     ///
     /// **渲染重點**：
-    /// - 補充說明 row 兩個 cell 帶 `border-top: 1px solid black` → 上方一條跨整欄分隔線（取代舊 `*` marker）。
+    /// - 補充說明 row 為跨整欄（colspan=3）cell，內文以 `*` 標記開頭（marker 由 renderer 以 scoped
+    ///   `::before` inject 到行首，與內文同一行）；不再畫上方橫線。
     /// - markdown / 樣式細節見 `SupplementaryNoteHTMLRenderer`。
     public let supplementaryNote: String?
 
@@ -32,27 +33,24 @@ public struct Payment: Component {
             if needShowName {
                 TableRow{
                     TableCell{
-                        Text(name).bold().style("font-size: 1.1em;")
+                        Text(name).bold().style("font-size: 0.95em;")
                     }.attribute(named: "colspan", value: "3")
                 }
             }
             for (index, item) in items.enumerated(){
                 TableRow{
-                    TableCell("(\(index+1))").style("vertical-align: top; width: 1.35rem;")
+                    TableCell("\(index+1).").style("vertical-align: top; width: 1.35rem;")
                     item
                 }.style("padding-bottom: 0.5em; width: 100%; padding-top: 0.5em;")
             }
             if let supplementaryNote, !supplementaryNote.isEmpty {
-                // 補充說明上方一條橫線：border 下在 **cell** 而非 row —— border-collapse 下 weasyprint
-                // 對非首列的 row-level border-top 不穩（會與前一列 border 塌掉而不畫），cell border 才可靠。
-                // 兩個 cell（占位 + colspan=2）都加 → 跨整欄、視覺等同 PaymentBlock 表頭分隔線。
+                // 補充說明以 `*` 標記開頭（不再畫上方橫線）：marker 由 renderer 以 scoped `::before` inject
+                // 到內文行首，故與內文同一行、且不污染 caller 的 markdown。整段跨欄（colspan=3）從左緣起排。
                 // markdown → HTML 在此渲染（presentation 歸 PDFGenerator）；caller 傳的是 markdown。
                 TableRow{
-                    TableCell()  // alignment 占位，對齊 (n) 編號欄
-                        .style("border-top: 1px solid black;")
-                    TableCell(html: SupplementaryNoteHTMLRenderer.render(markdown: supplementaryNote))
-                        .attribute(named: "colspan", value: "2")
-                        .style("border-top: 1px solid black; padding-top: 0.5em;")
+                    TableCell(html: SupplementaryNoteHTMLRenderer.render(markdown: supplementaryNote, marker: "*"))
+                        .attribute(named: "colspan", value: "3")
+                        .style("padding-top: 0.5em;")
                 }
             }
         }

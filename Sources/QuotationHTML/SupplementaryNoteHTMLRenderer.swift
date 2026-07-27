@@ -21,26 +21,37 @@ import Markdown
 ///   margin 歸零讓標題與一般段落行距一致。
 enum SupplementaryNoteHTMLRenderer {
 
-    static func render(markdown: String) -> String {
+    /// - Parameter marker: 補充說明開頭要顯示的標記字元（例：`"*"`）。以 scoped `::before` inject 到
+    ///   第一個 block 的行首，故與內文同一行、且不會被 markdown parser 誤判（不污染 caller 的 markdown 字串）。
+    ///   `nil` 則不加標記。
+    static func render(markdown: String, marker: String? = nil) -> String {
         let document = Document(parsing: markdown)
         var rewriter = SoftBreakToLineBreakRewriter()
         let rewritten = rewriter.visit(document) ?? document
         let body = HTMLFormatter.format(rewritten)
-        return scopedStyleBlock + "<div class=\"rich-supplementaryNote\">\(body)</div>"
+        let markerClass = marker == nil ? "" : " with-marker"
+        return scopedStyleBlock(marker: marker) + "<div class=\"rich-supplementaryNote\(markerClass)\">\(body)</div>"
     }
 
-    static let scopedStyleBlock: String = """
-    <style>
-    .rich-supplementaryNote table { border-collapse: collapse; }
-    .rich-supplementaryNote table td,
-    .rich-supplementaryNote table th { border: 1px solid #999; padding: 0.15em 0.5em; }
-    .rich-supplementaryNote img { max-width: 200px; height: auto; }
-    .rich-supplementaryNote p,
-    .rich-supplementaryNote h1, .rich-supplementaryNote h2, .rich-supplementaryNote h3,
-    .rich-supplementaryNote h4, .rich-supplementaryNote h5, .rich-supplementaryNote h6,
-    .rich-supplementaryNote ul, .rich-supplementaryNote ol { margin: 0; }
-    </style>
-    """
+    static func scopedStyleBlock(marker: String? = nil) -> String {
+        // marker 用 `::before` 加在第一個 block（通常是 `<p>`）行首，與內文同一行；換行時後續行回到區塊左緣。
+        let markerRule = marker.map {
+            ".rich-supplementaryNote.with-marker > :first-child::before { content: \"\($0)\"; }"
+        } ?? ""
+        return """
+        <style>
+        .rich-supplementaryNote table { border-collapse: collapse; }
+        .rich-supplementaryNote table td,
+        .rich-supplementaryNote table th { border: 1px solid #999; padding: 0.15em 0.5em; }
+        .rich-supplementaryNote img { max-width: 200px; height: auto; }
+        .rich-supplementaryNote p,
+        .rich-supplementaryNote h1, .rich-supplementaryNote h2, .rich-supplementaryNote h3,
+        .rich-supplementaryNote h4, .rich-supplementaryNote h5, .rich-supplementaryNote h6,
+        .rich-supplementaryNote ul, .rich-supplementaryNote ol { margin: 0; }
+        \(markerRule)
+        </style>
+        """
+    }
 }
 
 /// 把 markdown AST 的 `SoftBreak`（段落內單一 `\n`）改寫成 `LineBreak`（HTML `<br>`）。

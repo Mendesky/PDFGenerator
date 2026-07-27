@@ -53,36 +53,42 @@ public struct ReplyForm: Component{
                         }.style("font-size: 0.875rem;")
                     }
                 }
-                TableRow{
-                    TableCell("附　件：")
-                    if let quotationNo {
-                        TableCell("\(sender.quotationNoPrefix)第\(quotationNo)號公費報價單")
-                    }
-                }
             }.style("width: 100%;")
             Node.br()
-            Table{
-                TableRow{
-                    TableCell().style("width: 102px;")
-                    TableCell(receiver)
-                    TableCell().style("width: 10rem;")
-                }
-                TableRow{
-                    TableCell()
-                    TableCell()
-                    if showCompanyStamp {
-                        TableCell("（公　司　章）　　").style("height: 6rem;vertical-align: top;")
-                    }else{
-                        TableCell("　").style("height: 6rem;vertical-align: top;")
+            // 附件行 + 公司名稱 + 公司章／授權人簽名區塊視為同一區塊，不被分頁切開。
+            Div{
+                Table{
+                    TableRow{
+                        TableCell("附　件：").style("white-space: nowrap; vertical-align: top;")
+                        if let quotationNo {
+                            TableCell("\(sender.quotationNoPrefix)第\(quotationNo)號公費報價單")
+                        }
                     }
-                }
-                
-                TableRow{
-                    TableCell()
-                    TableCell()
-                    TableCell("（授權人簽名或蓋章）").style("height: 6rem;vertical-align: top;")
-                }
-            }.style("width: 100%;")
+                }.style("width: 100%;")
+                Node.br()
+                Table{
+                    TableRow{
+                        TableCell().style("width: 102px;")
+                        TableCell(receiver)
+                        TableCell().style("width: 10rem;")
+                    }
+                    TableRow{
+                        TableCell()
+                        TableCell()
+                        if showCompanyStamp {
+                            TableCell("（公　司　章）　　").style("height: 6rem;vertical-align: top;")
+                        }else{
+                            TableCell("　").style("height: 6rem;vertical-align: top;")
+                        }
+                    }
+
+                    TableRow{
+                        TableCell()
+                        TableCell()
+                        TableCell("（授權人簽名或蓋章）").style("height: 6rem;vertical-align: top;")
+                    }
+                }.style("width: 100%;")
+            }.style("break-inside: avoid-page;")
             Div{
                 Paragraph("中　　華　　民　　國")
                 Paragraph("年")
