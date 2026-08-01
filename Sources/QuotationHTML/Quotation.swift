@@ -87,7 +87,7 @@ public struct AuditQuotation: Renderable {
                 let chineseNumber = components.count.representToChineseString(offset: 1)
                 TableRow{
                     TableCell{
-                        Paragraph("\(chineseNumber)、")
+                        Paragraph("\(chineseNumber)、").style("font-size: 1.1em;")
                     }.style("vertical-align: top;")
                     TableCell(PaymentBlock(payments: payments))
                 }.style("break-inside: avoid-page;")

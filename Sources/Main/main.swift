@@ -136,17 +136,23 @@ let content = "感謝 貴公司對本事務所的支持與愛護，本事務所�
 let contractHeader = ContractHeader.Model.init(subject: contractSubject, content: content)
 
 
-let rightsAndObligations = ContractSection(title: "權利義務事項", heading: "本事務所將會依照現行法規的規範及符合專業慣例之基礎上提供上開服務：", provisions: [
-    .init(term: "本事務所將依現行有效之法規，提供上開各項服務；就服務事項完辦後相關法規之變更、修正或廢止所導致之變動，應另行修正報價單之內容。"),
-    .init(term: "本事務所將依據  貴公司所提供之資料及文件，利用會計專業知識蒐集、分類及彙總財務資訊，進而提供會計帳務處理作業服務項目，無須對資訊加以查核或核閱，所提供之財務資訊亦不提供任何程度之確信。"),
-    .init(term: "本事務所所提供會計帳務處理作業服務，僅限協助 貴公司完成相關專業服務使用。除本事務所有可歸責之情形外，如本事務所於本報價單意旨提供會計帳務處理作業服務事項，而遭致第三人向本事務所為法律上之主張而致生損害時， 貴公司同意負責補償。另未經本事務所書面同意，本事務所所提供之服務不得提供他人使用(其中不包含提供予股東開會使用)；且若有此種情形致他人權益受損，本事務所不負任何責任。"),
-    .init(term: "本事務所履行委任書所涉之服務事項，將本誠信履踐應有之注意義務，惟僅於經法院判決確定後，在本案已收受之服務公費範圍內負擔相關責任。"),
-    .init(term: "本公司對 貴公司所提供之各項資料或相關文件，當盡保密之責。"),
-    .init(term: "本委任書由 貴公司與本公司雙方各執一份。")
+let rightsAndObligations = RightsAndObligation.Model(title: "權利義務事項", heading: "本事務所將會依照現行法規的規範及符合專業慣例之基礎上提供上開服務：", terms: [
+    "本事務所將依現行有效之法規，提供上開各項服務；就服務事項完辦後相關法規之變更、修正或廢止所導致之變動，應另行修正報價單之內容。",
+    "本事務所將依據  貴公司所提供之資料及文件，利用會計專業知識蒐集、分類及彙總財務資訊，進而提供會計帳務處理作業服務項目，無須對資訊加以查核或核閱，所提供之財務資訊亦不提供任何程度之確信。",
+    "本事務所所提供會計帳務處理作業服務，僅限協助 貴公司完成相關專業服務使用。除本事務所有可歸責之情形外，如本事務所於本報價單意旨提供會計帳務處理作業服務事項，而遭致第三人向本事務所為法律上之主張而致生損害時， 貴公司同意負責補償。另未經本事務所書面同意，本事務所所提供之服務不得提供他人使用(其中不包含提供予股東開會使用)；且若有此種情形致他人權益受損，本事務所不負任何責任。",
+    "本事務所履行委任書所涉之服務事項，將本誠信履踐應有之注意義務，惟僅於經法院判決確定後，在本案已收受之服務公費範圍內負擔相關責任。",
+    "本公司對 貴公司所提供之各項資料或相關文件，當盡保密之責。",
+    "本委任書由 貴公司與本公司雙方各執一份。"
 ])
 
 
-let quotation = AuditQuotation(no: quotationNo, receiver: receiver, sender: .kd, purpose: purpose, payments: payments, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, fontSize: 20)
+let agreementTerms = AgreementTerms.Model(title: "其它約定事項", heading: "", terms: [
+    "上開服務公費自本函發出日有效期間為三個月，倘　貴公司簽署回函時點已逾本函發出日三個月以上，本事務所保有修改本服務委任書之權利。",
+    "在本報價單所載之工作服務期間，任何一方可提前三個月要求終止服務或終止雙方之委任關係，惟 貴公司仍應支付本事務所已完成工作之服務費用。貴公司同意於雙方之委任關係終止後15日內，不經本事務所催告即應對本事務所清償所有 貴公司應付之費用。",
+    "貴公司或 貴公司之代理人或使用人所提供之文件將暫存於本事務所處，本事務所將依本事務所當時之正常文件管理方式保管之。本事務所得於每年度終了或特定服務完成後，返還本事務所為 貴公司所留存之文件。"
+])
+
+let quotation = AuditQuotation(no: quotationNo, receiver: receiver, sender: .kd, purpose: purpose, payments: payments, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, agreementTerms: agreementTerms, fontSize: 20)
 let html = quotation.render()
 let htmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test.html")
 try html.write(to: htmlUrl, atomically: true, encoding: .utf8)

@@ -22,7 +22,7 @@ public struct ContractSection: Component {
                     }else{
                         Text("\(title)")
                     }
-                }.style("dislpay: flex; font-size: 1.1em;")
+                }.style("font-size: 1.1em; margin-top: 1em;")
                 
                 Paragraph(heading).style("display: flex; text-indent: 2em;")
                 
