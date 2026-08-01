@@ -16,7 +16,7 @@ public struct ServiceScope: Component {
         ComponentGroup{
             Div{
                 let chineseNumber = index.representToChineseString(offset: 1)
-                TableRow(TableCell("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
+                Div(Text("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
                 Paragraph(heading).style("text-indent: 2em;")
             }.style("break-inside: avoid-page;")
             

@@ -17,7 +17,7 @@ public struct BusinessClientAssistance: Component {
             Div{
                 Div{
                     let chineseNumber = index.representToChineseString(offset: 1)
-                    TableRow(TableCell("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
+                    Div(Text("\(chineseNumber)、\(title)")).style("font-size: 1.1em;")
                     if let firstItem = items.first {
                         Div{
                             Div(Text("（\(0.representToChineseString(offset: 1))）\(firstItem.title)")).style("display: flex; text-indent: 2em; padding-top: 1em;")
