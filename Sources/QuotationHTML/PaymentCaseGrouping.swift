@@ -27,4 +27,14 @@ enum PaymentCaseGrouping {
     static func showsCaseNames(_ payments: [Payment]) -> Bool {
         runs(payments).count > 1
     }
+
+    /// 「單 bundle 不顯示 bundle 名」規則 per-case 套用：每個 case **總共**只有 1 個 bundle 時
+    /// 隱藏其 bundle 名（該 case 的 case 標題已足夠識別；單一 case 亦同——單 bundle 隱藏、多 bundle 照顯示）。
+    /// 用「per-caseName 總數」而非連續 run 數，避免同 case bundle 在輸入中非連續時被誤判為各自單 bundle。
+    static func hidingSingleBundleNames(_ payments: [Payment]) -> [Payment] {
+        let bundleCountByCase = Dictionary(grouping: payments, by: \.caseName).mapValues(\.count)
+        return payments.map { payment in
+            (bundleCountByCase[payment.caseName] ?? 0) == 1 ? payment.hideName() : payment
+        }
+    }
 }

@@ -52,13 +52,8 @@ public struct ReplyFormPaymentBlock: Component {
         }
     }
     
-    public init(payments: [Payment]) {        
-        self.payments = if payments.count == 1 {
-            payments.map{
-                $0.hideName()
-            }
-        }else{
-            payments
-        }
+    public init(payments: [Payment]) {
+        // 與主酬金 PaymentBlock 一致：單 bundle 的 case 隱藏 bundle 名（per-case 判斷，非全域 count）。
+        self.payments = PaymentCaseGrouping.hidingSingleBundleNames(payments)
     }
 }
