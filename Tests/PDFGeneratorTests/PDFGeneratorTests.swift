@@ -264,6 +264,53 @@ func paymentBlockOmitsCaseHeadingWhenSingleCase() {
     #expect(rendered.contains("<b style=\"font-size: 0.95em;\">規劃2</b>"))
 }
 
+@Test("reply form: single-bundle case hides bundle name even in merged (multi-case) view")
+func replyFormPaymentBlockHidesSingleBundleNamePerCaseInMergedView() {
+    // 兩個 case 各只有 1 個 bundle → case 標題照渲染、但兩個 bundle 名都隱藏（與主酬金 PaymentBlock 一致）。
+    let payments = [
+        Payment(name: "規劃1", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(320000))], caseName: "誠鋼實業股份有限公司"),
+        Payment(name: "規劃1", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(120000))], caseName: "東經投資有限公司"),
+    ]
+    let rendered = ReplyFormPaymentBlock(payments: payments).render()
+
+    #expect(rendered.contains("<b style=\"font-size: 1.1em;\">誠鋼實業股份有限公司</b>"))
+    #expect(rendered.contains("<b style=\"font-size: 1.1em;\">東經投資有限公司</b>"))
+    #expect(!rendered.contains("規劃1"), "單一 bundle 的 case 不應顯示 bundle 名")
+}
+
+@Test("reply form: bundle names shown only for cases with ≥2 bundles, order-independent")
+func replyFormPaymentBlockCountsBundlesPerCaseRegardlessOfOrder() {
+    // 甲公司的兩個 bundle 被乙公司隔開（非連續）→ 仍視為「甲有 2 bundle」照顯示；乙單 bundle 隱藏。
+    let payments = [
+        Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: .monthly(4000))], caseName: "甲公司"),
+        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
+        Payment(name: "規劃2", items: [.init(names: ["記帳作業"], fee: .monthly(3000))], caseName: "甲公司"),
+    ]
+    let rendered = ReplyFormPaymentBlock(payments: payments).render()
+
+    #expect(rendered.contains("<b>規劃1</b>"))
+    #expect(rendered.contains("<b>規劃2</b>"))
+    #expect(!rendered.contains("乙方案"), "單一 bundle 的 case 不應顯示 bundle 名")
+}
+
+@Test("reply form: single case keeps existing single/multi bundle behavior")
+func replyFormPaymentBlockSingleCaseBehaviorUnchanged() {
+    // 單一 case、多 bundle → bundle 名照顯示、無 case 標題。
+    let multi = ReplyFormPaymentBlock(payments: [
+        Payment(name: "規劃1", items: [.init(names: ["A"], fee: .monthly(4000))], caseName: "甲公司"),
+        Payment(name: "規劃2", items: [.init(names: ["B"], fee: .yearly(50000))], caseName: "甲公司"),
+    ]).render()
+    #expect(!multi.contains("甲公司"), "單一 case 不應出現 case 名稱標題")
+    #expect(multi.contains("<b>規劃1</b>"))
+    #expect(multi.contains("<b>規劃2</b>"))
+
+    // 單一 case、單 bundle → bundle 名隱藏（既有行為）。
+    let single = ReplyFormPaymentBlock(payments: [
+        Payment(name: "規劃1", items: [.init(names: ["A"], fee: .monthly(4000))], caseName: nil),
+    ]).render()
+    #expect(!single.contains("規劃1"), "單 bundle 不應顯示 bundle 名")
+}
+
 
 
 
