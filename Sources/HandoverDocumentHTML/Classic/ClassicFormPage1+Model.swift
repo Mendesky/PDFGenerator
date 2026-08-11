@@ -68,9 +68,34 @@ extension ClassicFormPage1 {
         public var cashierFee: String?
         public var nhiFee: String?
 
+        /// 備註區的「電子發票服務平台」一行。四個欄位皆為選填，未填時標籤後留白。
+        ///
+        /// 整體為 optional：未使用電子發票（或未填答）時呼叫端傳 `nil`，該行不印，
+        /// 避免在表單上留下一排空標籤。
+        public struct EinvoicePlatform {
+            public var account: String?
+            /// 密碼**明文**。目前無權限管控，一律印出（見設計 spec 2.6）。
+            public var password: String?
+            public var trackNumberStart: String?
+            public var trackNumberEnd: String?
+
+            public init(
+                account: String? = nil,
+                password: String? = nil,
+                trackNumberStart: String? = nil,
+                trackNumberEnd: String? = nil
+            ) {
+                self.account = account
+                self.password = password
+                self.trackNumberStart = trackNumberStart
+                self.trackNumberEnd = trackNumberEnd
+            }
+        }
+
         // 備註
         public var serviceGroup: String?
         public var serviceStartDate: String?
+        public var einvoicePlatform: EinvoicePlatform?
 
         public init(
             contactDate: String? = nil,
@@ -109,7 +134,8 @@ extension ClassicFormPage1 {
             cashierFee: String? = nil,
             nhiFee: String? = nil,
             serviceGroup: String? = nil,
-            serviceStartDate: String? = nil
+            serviceStartDate: String? = nil,
+            einvoicePlatform: EinvoicePlatform? = nil
         ) {
             self.contactDate = contactDate
             self.confirmDate = confirmDate
@@ -148,6 +174,7 @@ extension ClassicFormPage1 {
             self.nhiFee = nhiFee
             self.serviceGroup = serviceGroup
             self.serviceStartDate = serviceStartDate
+            self.einvoicePlatform = einvoicePlatform
         }
     }
 }

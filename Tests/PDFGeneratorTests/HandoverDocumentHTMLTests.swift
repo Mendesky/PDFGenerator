@@ -424,3 +424,60 @@ import Foundation
     #expect(html.contains("第二段"))
     #expect(html.contains("<br"))
 }
+
+// MARK: 備註區的電子發票整合服務平台
+//
+// 印在「發票明細」勾選列下方，一行帶出帳號 / 密碼 / 字軌起訖。
+// 未使用電子發票（或未填答）時呼叫端傳 nil，整行不印——避免留下一排空標籤。
+
+@Test func classicFormPage1RendersEinvoicePlatformLineBelowInvoiceChoices() {
+    let page = ClassicFormPage1(model: .init(
+        companyName: "範例股份有限公司",
+        invoiceChoices: [("電子發票", true), ("二聯(副)", false)],
+        einvoicePlatform: .init(
+            account: "einvoice-user",
+            password: "p@ssw0rd",
+            trackNumberStart: "AB12345678",
+            trackNumberEnd: "CD12345700"
+        )
+    ))
+    let html = page.render()
+
+    #expect(html.contains("電子發票服務平台"))
+    #expect(html.contains("einvoice-user"))
+    #expect(html.contains("p@ssw0rd"))
+    #expect(html.contains("AB12345678"))
+    #expect(html.contains("CD12345700"))
+    // 位置：發票明細列之後
+    guard let invoiceIndex = html.range(of: "發票明細")?.lowerBound,
+          let platformIndex = html.range(of: "電子發票服務平台")?.lowerBound else {
+        Issue.record("兩個區塊都應存在")
+        return
+    }
+    #expect(invoiceIndex < platformIndex)
+}
+
+@Test func classicFormPage1OmitsEinvoicePlatformLineWhenAbsent() {
+    let page = ClassicFormPage1(model: .init(
+        companyName: "範例股份有限公司",
+        invoiceChoices: [("電子發票", false)]
+    ))
+    let html = page.render()
+
+    #expect(!html.contains("電子發票服務平台"))
+    #expect(html.contains("發票明細"))
+}
+
+// 四個欄位皆為選填：有平台但欄位未填時仍印出該行（標籤後留白），
+// 與同區塊的「服務組別」「開始服務時間」一致。
+@Test func classicFormPage1RendersEinvoicePlatformLineWithEmptyFields() {
+    let page = ClassicFormPage1(model: .init(
+        companyName: "範例股份有限公司",
+        einvoicePlatform: .init()
+    ))
+    let html = page.render()
+
+    #expect(html.contains("電子發票服務平台"))
+    #expect(html.contains("帳號"))
+    #expect(html.contains("發票號碼起訖"))
+}
