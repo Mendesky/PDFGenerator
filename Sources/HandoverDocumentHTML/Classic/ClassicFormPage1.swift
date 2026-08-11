@@ -151,6 +151,15 @@ public struct ClassicFormPage1: Component {
                 Span("發票明細：")
                 ClassicCheckboxGroup(items: model.invoiceChoices)
             }.class("invoiceLine")
+            // 未使用電子發票（或未填答）時整行不印——留一排空標籤只是噪音
+            if let platform = model.einvoicePlatform {
+                Paragraph(
+                    "電子發票服務平台："
+                    + "帳號：\(platform.account ?? "")　"
+                    + "密碼：\(platform.password ?? "")　"
+                    + "發票號碼起訖：\(platform.trackNumberStart ?? "") ~ \(platform.trackNumberEnd ?? "")"
+                )
+            }
             Paragraph("開始服務時間：\(model.serviceStartDate ?? "")")
         }.class("remarkBlock")
     }
