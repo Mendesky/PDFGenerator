@@ -208,6 +208,23 @@ import Foundation
     #expect(html.contains("客戶自行繳納"))
 }
 
+/// 區塊標題必須存在 —— 本區塊各列 label 是稅種名（營業稅、扣繳…），不像其他 section
+/// 的第一列自帶身分（「統購需求」「聯絡人資料」）。少了標題，五個稅種名會憑空接在
+/// 前一個區塊底下、讀者看不出這是「代繳稅金」。
+@Test func taxRemitterSectionRendersSectionTitle() {
+    let section = TaxRemitterSection(items: [.init(title: "營業稅", value: nil)])
+    let html = section.render()
+    #expect(html.contains("sectionTitle"))
+    #expect(html.contains("代繳稅金"))
+}
+
+@Test func taxRemitterSectionAllowsCustomSectionTitle() {
+    let section = TaxRemitterSection(title: "稅款代繳", items: [.init(title: "營業稅", value: nil)])
+    let html = section.render()
+    #expect(html.contains("稅款代繳"))
+    #expect(!html.contains("代繳稅金"))
+}
+
 /// 未選（`value == nil`）必須呈現「-」而非空白或字面 "nil" ——
 /// 紙本上空白會讓人誤以為漏印，"nil" 更是直接漏出實作細節。
 @Test func taxRemitterSectionRendersDashWhenUnselected() {

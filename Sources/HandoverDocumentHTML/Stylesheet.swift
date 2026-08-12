@@ -131,8 +131,11 @@ enum Stylesheet {
     .handover .evidenceInfo .grey60 { color: #939393; font-size: 10pt; }
     .handover .evidenceInfo .evidence .grey60 { font-size: 12pt; font-weight: 600; }
 
-    /* ===== 代繳稅金 — 視覺比照統購（label 在上、值在下），排在統購之後 ===== */
+    /* ===== 代繳稅金 — 視覺比照統購（label 在上、值在下），排在統購之後 =====
+       多一個 sectionTitle：本區塊各列 label 是稅種名，不像其他 section 的第一列自帶身分
+       （「統購需求」「聯絡人資料」），少了標題五列會失去歸屬。 */
     .handover .taxRemitterInfo { line-height: 1.3; }
+    .handover .taxRemitterInfo .sectionTitle { font-size: 12pt; font-weight: 600; margin-bottom: 2px; }
     .handover .taxRemitterInfo .gap8 { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
     .handover .taxRemitterInfo .gap8 .text { font-weight: 600; }
     .handover .taxRemitterInfo .grey60 { color: #939393; font-size: 10pt; }

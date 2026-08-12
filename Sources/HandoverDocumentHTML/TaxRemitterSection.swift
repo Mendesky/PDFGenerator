@@ -18,10 +18,12 @@ import Plot
 /// 「沒有資料來源」與「使用者未選」—— 兩者在紙本上都是空白。但呼叫端**不可**把讀取失敗
 /// （例如上游 503）也轉成 `nil`，那會把故障印成使用者的選擇。
 public struct TaxRemitterSection: Component {
+    let title: String
     let items: [Item]
 
     public var body: any Component {
         Div {
+            Paragraph(title).class("sectionTitle")
             for item in items {
                 Div {
                     Paragraph(item.title).class("grey60")
@@ -31,8 +33,13 @@ public struct TaxRemitterSection: Component {
         }.class("taxRemitterInfo")
     }
 
-    /// - Parameter items: 稅種列，順序即呈現順序（由呼叫端決定，通常照訪談表印製順序）。
-    public init(items: [Item]) {
+    /// - Parameters:
+    ///   - title: 區塊標題。**必要**：本區塊各列的 label 是稅種名（營業稅、扣繳…），
+    ///     不像其他 section 的第一列 label 自帶身分（「統購需求」「聯絡人資料」）。
+    ///     少了標題，五個稅種名會憑空接在前一個區塊底下、失去歸屬。
+    ///   - items: 稅種列，順序即呈現順序（由呼叫端決定，通常照訪談表印製順序）。
+    public init(title: String = "代繳稅金", items: [Item]) {
+        self.title = title
         self.items = items
     }
 }
