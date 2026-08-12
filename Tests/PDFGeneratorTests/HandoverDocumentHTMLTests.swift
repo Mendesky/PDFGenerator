@@ -214,7 +214,8 @@ import Foundation
 @Test func taxRemitterSectionRendersSectionTitle() {
     let section = TaxRemitterSection(items: [.init(title: "營業稅", value: nil)])
     let html = section.render()
-    #expect(html.contains("sectionTitle"))
+    // 用既有的 `.title` class（10pt 灰、不加粗），與其他 section 標題同規格
+    #expect(html.contains("class=\"title\""))
     #expect(html.contains("代繳稅金"))
 }
 

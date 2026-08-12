@@ -23,7 +23,9 @@ public struct TaxRemitterSection: Component {
 
     public var body: any Component {
         Div {
-            Paragraph(title).class("sectionTitle")
+            // 用既有的 `.title`（10pt / #939393 / 不加粗）—— 與 `關係企業清單`、`聯絡人資料`、
+            // `客戶來源` 等 section 標題同規格，也與同區塊內的稅種 label（`.grey60`）同字級。
+            Div(Paragraph(title)).class("title")
             for item in items {
                 Div {
                     Paragraph(item.title).class("grey60")
