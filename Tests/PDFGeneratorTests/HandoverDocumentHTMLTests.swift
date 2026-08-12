@@ -195,6 +195,31 @@ import Foundation
     #expect(!html.contains("統購開始期別"))
 }
 
+@Test func taxRemitterSectionRendersTitlesAndValues() {
+    let section = TaxRemitterSection(items: [
+        .init(title: "營業稅", value: "由事務所代繳"),
+        .init(title: "營所稅", value: "客戶自行繳納")
+    ])
+    let html = section.render()
+    #expect(html.contains("taxRemitterInfo"))
+    #expect(html.contains("營業稅"))
+    #expect(html.contains("由事務所代繳"))
+    #expect(html.contains("營所稅"))
+    #expect(html.contains("客戶自行繳納"))
+}
+
+/// 未選（`value == nil`）必須呈現「-」而非空白或字面 "nil" ——
+/// 紙本上空白會讓人誤以為漏印，"nil" 更是直接漏出實作細節。
+@Test func taxRemitterSectionRendersDashWhenUnselected() {
+    let section = TaxRemitterSection(items: [
+        .init(title: "扣繳", value: nil)
+    ])
+    let html = section.render()
+    #expect(html.contains("扣繳"))
+    #expect(html.contains(">-<"))
+    #expect(!html.contains("nil"))
+}
+
 @Test func preserviceOrgSectionRendersValueAndLabels() {
     let section = PreserviceOrgSection(items: [
         .init(title: "前所名稱", value: "-"),

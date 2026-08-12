@@ -80,7 +80,7 @@ enum Stylesheet {
     .handover .chip, .handover .preserviceOrg .labelContainer .label {
         display: flex; align-items: center; padding: 2px 8px; line-height: 1.3; white-space: nowrap;
         border: 1px solid #E7E7E7; border-radius: 4px; background: #FFF; }
-    .handover .designatedInfo, .handover .maintenanceInfo, .handover .contactInfo, .handover .preserviceOrg, .handover .evidenceInfo {
+    .handover .designatedInfo, .handover .maintenanceInfo, .handover .contactInfo, .handover .preserviceOrg, .handover .evidenceInfo, .handover .taxRemitterInfo {
         display: flex; flex-direction: column; gap: 6px; padding: 4px 8px; width: 100%; }
 
     /* ===== 指派資訊 ===== */
@@ -130,6 +130,12 @@ enum Stylesheet {
     .handover .evidenceInfo .evidence .grey60, .handover .evidenceInfo .evidence .text { margin-right: 4px; }
     .handover .evidenceInfo .grey60 { color: #939393; font-size: 10pt; }
     .handover .evidenceInfo .evidence .grey60 { font-size: 12pt; font-weight: 600; }
+
+    /* ===== 代繳稅金 — 視覺比照統購（label 在上、值在下），排在統購之後 ===== */
+    .handover .taxRemitterInfo { line-height: 1.3; }
+    .handover .taxRemitterInfo .gap8 { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; }
+    .handover .taxRemitterInfo .gap8 .text { font-weight: 600; }
+    .handover .taxRemitterInfo .grey60 { color: #939393; font-size: 10pt; }
     .handover .evidenceInfo .text { font-size: 12pt; font-weight: 600; }
     .handover .evidenceInfo .bold { font-weight: 600; }
 
