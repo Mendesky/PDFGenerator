@@ -83,13 +83,13 @@ public struct ClassicFormPage2: Component {
         switch row.kind {
         case .field:
             return [ComponentGroup {
-                TableCell(Text(row.label ?? "")).class("fieldLabel")
+                multilineCell(row.label ?? "").class("fieldLabel")
                 multilineCell(row.value).class("fieldValue").attribute(named: "colspan", value: "3")
             }]
         case .markdown:
             // 值為 markdown 原文，渲染成 HTML 後注入（標題/清單/粗體/inline <span> 等）。
             return [ComponentGroup {
-                TableCell(Text(row.label ?? "")).class("fieldLabel")
+                multilineCell(row.label ?? "").class("fieldLabel")
                 TableCell(Div(html: MarkdownHTML.render(row.value))).class("fieldValue").attribute(named: "colspan", value: "3")
             }]
         case .heading:
@@ -139,7 +139,9 @@ public struct ClassicFormPage2: Component {
         return out
     }
 
-    /// 值可含 \n，逐行以 <br> 斷開。
+    /// 值可含 \n，逐行以 <br> 斷開。label 亦沿用：label 欄寬固定（classicForm2 為 110px）且
+    /// CJK 可任意斷行，長標籤會落在不自然的位置（如「二代健保補充保」/「費」）。斷在哪屬領域
+    /// 語意，由呼叫端在字串中以 \n 指定；不含 \n 時渲染結果與先前完全相同。
     private func multilineCell(_ value: String) -> Component {
         let lines = value.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
         return TableCell {
