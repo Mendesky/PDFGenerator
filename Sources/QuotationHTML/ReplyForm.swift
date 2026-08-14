@@ -110,7 +110,7 @@ public struct ReplyForm: Component{
     }
     
     public init(receiver: String, sender: String, subject: String, payments: [Payment] = [], additionalServices: [AdditionalService], quotationNo: String?, showCompanyStamp: Bool = true) {
-        self.client = .init(name: receiver)
+        self.client = .single(name: receiver)
         self.sender = Organization(rawValue: sender)
         self.subject = subject
         self.payments = payments
@@ -120,7 +120,7 @@ public struct ReplyForm: Component{
     }
     
     public init(receiver: String, sender: Organization, subject: String, payments: [Payment.Model] = [], additionalServices: [AdditionalService], quotationNo: String?, showCompanyStamp: Bool = true) {
-        self.client = .init(name: receiver)
+        self.client = .single(name: receiver)
         self.sender = sender
         self.subject = subject
         self.payments = .init(payments)
@@ -141,7 +141,7 @@ public struct ReplyForm: Component{
 
     /// 單一公司的便捷建構。集團請走 `init(client:...)`。
     public init(receiver: String, sender: Organization, quotationNo: String?, model: Model) {
-        self.client = .init(name: receiver)
+        self.client = .single(name: receiver)
         self.sender = sender
         self.subject = model.subject
         self.payments = .init(model.payments)

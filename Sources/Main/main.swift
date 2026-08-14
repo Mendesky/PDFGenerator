@@ -152,7 +152,7 @@ let agreementTerms = AgreementTerms.Model(title: "其它約定事項", heading: 
     "貴公司或 貴公司之代理人或使用人所提供之文件將暫存於本事務所處，本事務所將依本事務所當時之正常文件管理方式保管之。本事務所得於每年度終了或特定服務完成後，返還本事務所為 貴公司所留存之文件。"
 ])
 
-let quotation = AuditQuotation(no: quotationNo, client: .init(name: receiver), sender: .kd, purpose: purpose, payments: payments, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, agreementTerms: agreementTerms, fontSize: 20)
+let quotation = AuditQuotation(no: quotationNo, client: .single(name: receiver), sender: .kd, purpose: purpose, payments: payments, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, agreementTerms: agreementTerms, fontSize: 20)
 let html = quotation.render()
 let htmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test.html")
 try html.write(to: htmlUrl, atomically: true, encoding: .utf8)

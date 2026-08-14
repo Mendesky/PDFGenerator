@@ -14,7 +14,7 @@ public struct ContractHeader: Component {
 
     /// 單一公司的便捷建構。集團請走 `init(client:...)`。
     public init(receiver: String, sender: String, subject: String, content: String) {
-        self.client = .init(name: receiver)
+        self.client = .single(name: receiver)
         self.sender = Organization(rawValue: sender)
         self.subject = subject
         self.content = content
