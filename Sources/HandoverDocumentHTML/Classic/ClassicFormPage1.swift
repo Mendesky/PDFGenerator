@@ -156,7 +156,8 @@ public struct ClassicFormPage1: Component {
                 Paragraph(
                     "電子發票服務平台："
                     + "帳號：\(platform.account ?? "")　"
-                    + "密碼：\(platform.password ?? "")　"
+                    // 密碼不印明文：已設定印遮罩＋查看指引，未設定比照同行其他欄位留白。
+                    + "密碼：\(platform.passwordIsSet ? "●●●●●（請上嘉威平台查看）" : "")　"
                     + "發票號碼起訖：\(platform.trackNumberStart ?? "") ~ \(platform.trackNumberEnd ?? "")"
                 )
             }

@@ -427,8 +427,11 @@ import Foundation
 
 // MARK: 備註區的電子發票整合服務平台
 //
-// 印在「發票明細」勾選列下方，一行帶出帳號 / 密碼 / 字軌起訖。
+// 印在「發票明細」勾選列下方，一行帶出帳號 / 密碼狀態 / 字軌起訖。
 // 未使用電子發票（或未填答）時呼叫端傳 nil，整行不印——避免留下一排空標籤。
+//
+// **密碼不印明文**：model 只收 `passwordIsSet: Bool`，已設定時由本套件印遮罩與查看指引。
+// 型別上不接受 String，故「呼叫端不小心傳明文」在編譯期就不可能。
 
 @Test func classicFormPage1RendersEinvoicePlatformLineBelowInvoiceChoices() {
     let page = ClassicFormPage1(model: .init(
@@ -436,7 +439,7 @@ import Foundation
         invoiceChoices: [("電子發票", true), ("二聯(副)", false)],
         einvoicePlatform: .init(
             account: "einvoice-user",
-            password: "p@ssw0rd",
+            passwordIsSet: true,
             trackNumberStart: "AB12345678",
             trackNumberEnd: "CD12345700"
         )
@@ -445,7 +448,7 @@ import Foundation
 
     #expect(html.contains("電子發票服務平台"))
     #expect(html.contains("einvoice-user"))
-    #expect(html.contains("p@ssw0rd"))
+    #expect(html.contains("●●●●●（請上嘉威平台查看）"))
     #expect(html.contains("AB12345678"))
     #expect(html.contains("CD12345700"))
     // 位置：發票明細列之後
@@ -480,4 +483,19 @@ import Foundation
     #expect(html.contains("電子發票服務平台"))
     #expect(html.contains("帳號"))
     #expect(html.contains("發票號碼起訖"))
+}
+
+// 密碼未設定：標籤留白，比照同一行其他未填欄位；**不可**印遮罩，
+// 否則紙本會讓人以為客戶已經設過密碼。
+@Test func classicFormPage1LeavesEinvoicePasswordBlankWhenNotSet() {
+    let page = ClassicFormPage1(model: .init(
+        companyName: "範例股份有限公司",
+        einvoicePlatform: .init(account: "einvoice-user", passwordIsSet: false)
+    ))
+    let html = page.render()
+
+    #expect(html.contains("電子發票服務平台"))
+    #expect(html.contains("einvoice-user"))
+    #expect(html.contains("密碼"))
+    #expect(!html.contains("●"))
 }
