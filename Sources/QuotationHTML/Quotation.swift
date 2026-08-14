@@ -12,7 +12,9 @@ struct Page{
 
 public struct AuditQuotation: Renderable {
     let no: String?
-    let receiver: String
+    /// 客戶方（受文者 / 立約人）。傳結構而非預先組好的字串——受文者與同意函簽名區
+    /// 對同一客戶方的呈現不同（頓號串接+共N家 vs 逐家換行），見 `QuotationClient`。
+    let client: QuotationClient
     let sender: Organization
     let purpose: Purpose.Model?
     let payments: [Payment.Model]
@@ -26,9 +28,9 @@ public struct AuditQuotation: Renderable {
     let agreementTerms: AgreementTerms.Model?
     let fontSize: Float
 
-    public init(no: String?, receiver: String, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil, agreementTerms: AgreementTerms.Model? = nil, fontSize: Float = 16) {
+    public init(no: String?, client: QuotationClient, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil, agreementTerms: AgreementTerms.Model? = nil, fontSize: Float = 16) {
         self.no = no
-        self.receiver = receiver
+        self.client = client
         self.sender = sender
         self.purpose = purpose
         self.payments = payments
@@ -76,7 +78,7 @@ public struct AuditQuotation: Renderable {
             }
             
             if let contractHeader {
-                ContractHeader(receiver: receiver, sender: sender, model: contractHeader).style("font-size: 0.9rem;")
+                ContractHeader(client: client, sender: sender, model: contractHeader).style("font-size: 0.9rem;")
             }
             
             for component in components {
@@ -107,7 +109,7 @@ public struct AuditQuotation: Renderable {
                 })
             }
             Page.break
-            ReplyForm(receiver: receiver, sender: sender, quotationNo: no, model: replyForm)
+            ReplyForm(client: client, sender: sender, quotationNo: no, model: replyForm)
         }.node.style("font-family: 華康標楷體,標楷體-繁,標楷體; width: 100%; line-height: 1.5em; font-size: \(fontSize)px;" )
         return html.render(indentedBy: indentationKind)
     }
@@ -171,7 +173,7 @@ extension AuditQuotation {
     @available(*, deprecated, message: "This initialize method scope will be converted to private in the future nearly.")
     internal init(no: String?, purpose: ContentItem?, paymentBlock: PaymentBlock, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?, rightsAndObligations: ContractSection? = nil, fontSize: Float?) {
 
-        let receiver = replyForm.receiver
+        let client = replyForm.client
         let sender = replyForm.sender
         let purpose: Purpose.Model? = purpose.map{
             .init(title: $0.title, content: $0.content)
@@ -218,6 +220,6 @@ extension AuditQuotation {
             })
         }
         
-        self.init(no: no, receiver: receiver, sender: sender, purpose: purpose, payments: payments, serviceScope: serviceScope, letterHeader: letterHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, fontSize: fontSize ?? 16)
+        self.init(no: no, client: client, sender: sender, purpose: purpose, payments: payments, serviceScope: serviceScope, letterHeader: letterHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, fontSize: fontSize ?? 16)
     }
 }
