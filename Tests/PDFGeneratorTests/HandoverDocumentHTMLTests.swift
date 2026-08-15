@@ -427,8 +427,11 @@ import Foundation
 
 // MARK: 備註區的電子發票整合服務平台
 //
-// 印在「發票明細」勾選列下方，一行帶出帳號 / 密碼 / 字軌起訖。
+// 印在「發票明細」勾選列下方，一行帶出帳號 / 密碼狀態 / 字軌起訖。
 // 未使用電子發票（或未填答）時呼叫端傳 nil，整行不印——避免留下一排空標籤。
+//
+// **密碼不印明文**：model 只收 `passwordIsSet: Bool`，已設定時由本套件印遮罩與查看指引。
+// 型別上不接受 String，故「呼叫端不小心傳明文」在編譯期就不可能。
 
 @Test func classicFormPage1RendersEinvoicePlatformLineBelowInvoiceChoices() {
     let page = ClassicFormPage1(model: .init(
@@ -436,7 +439,7 @@ import Foundation
         invoiceChoices: [("電子發票", true), ("二聯(副)", false)],
         einvoicePlatform: .init(
             account: "einvoice-user",
-            password: "p@ssw0rd",
+            passwordIsSet: true,
             trackNumberStart: "AB12345678",
             trackNumberEnd: "CD12345700"
         )
@@ -445,9 +448,11 @@ import Foundation
 
     #expect(html.contains("電子發票服務平台"))
     #expect(html.contains("einvoice-user"))
-    #expect(html.contains("p@ssw0rd"))
+    #expect(html.contains("●●●●●（請上嘉威平台查看）"))
     #expect(html.contains("AB12345678"))
     #expect(html.contains("CD12345700"))
+    // 帳密與起訖都有值 → 起訖斷到下一行（同一個 <p> 內以 <br> 斷，不多出段距）
+    #expect(html.contains("<br/>發票號碼起訖") || html.contains("<br>發票號碼起訖"))
     // 位置：發票明細列之後
     guard let invoiceIndex = html.range(of: "發票明細")?.lowerBound,
           let platformIndex = html.range(of: "電子發票服務平台")?.lowerBound else {
@@ -468,8 +473,10 @@ import Foundation
     #expect(html.contains("發票明細"))
 }
 
-// 四個欄位皆為選填：有平台但欄位未填時仍印出該行（標籤後留白），
-// 與同區塊的「服務組別」「開始服務時間」一致。
+// 四個欄位皆為選填：有平台但欄位未填時仍印出該行，各欄位印 `-`
+// （對齊檢視頁與 page2 各欄位列的慣例）。
+//
+// 起訖兩邊都沒有時收成**單一** `-`，不是 `- ~ -` —— 後者會被讀成「有範圍，只是兩端沒填」。
 @Test func classicFormPage1RendersEinvoicePlatformLineWithEmptyFields() {
     let page = ClassicFormPage1(model: .init(
         companyName: "範例股份有限公司",
@@ -478,6 +485,63 @@ import Foundation
     let html = page.render()
 
     #expect(html.contains("電子發票服務平台"))
-    #expect(html.contains("帳號"))
-    #expect(html.contains("發票號碼起訖"))
+    #expect(html.contains("帳號：-"))
+    #expect(html.contains("密碼：-"))
+    #expect(html.contains("發票號碼起訖：-"))
+    #expect(!html.contains("- ~ -"))
+    // 起訖沒值 → 不換行，免得多出一行只寫著「發票號碼起訖：-」
+    #expect(!html.contains("<br/>發票號碼起訖"))
+    #expect(!html.contains("<br>發票號碼起訖"))
+}
+
+// 只有起訖、帳密皆無 → 維持單行（整行很短，不需要斷）。
+@Test func classicFormPage1KeepsEinvoiceSingleLineWhenOnlyRangePresent() {
+    let page = ClassicFormPage1(model: .init(
+        companyName: "範例股份有限公司",
+        einvoicePlatform: .init(
+            account: nil,
+            passwordIsSet: false,
+            trackNumberStart: "AB12345678",
+            trackNumberEnd: "AB12345700"
+        )
+    ))
+    let html = page.render()
+
+    #expect(html.contains("帳號：-"))
+    #expect(html.contains("密碼：-"))
+    #expect(html.contains("AB12345678"))
+    #expect(!html.contains("<br/>發票號碼起訖"))
+    #expect(!html.contains("<br>發票號碼起訖"))
+}
+
+// 只有帳號（無密碼）+ 起訖 → 仍要換行。
+@Test func classicFormPage1BreaksEinvoiceRangeWhenOnlyAccountPresent() {
+    let page = ClassicFormPage1(model: .init(
+        companyName: "範例股份有限公司",
+        einvoicePlatform: .init(
+            account: "einvoice-user",
+            passwordIsSet: false,
+            trackNumberStart: "AB12345678",
+            trackNumberEnd: "AB12345700"
+        )
+    ))
+    let html = page.render()
+
+    #expect(html.contains("密碼：-"))
+    #expect(html.contains("<br/>發票號碼起訖") || html.contains("<br>發票號碼起訖"))
+}
+
+// 密碼未設定：印 "-"（對齊檢視頁 view-tab3 的 `passwordIsSet ? '••••••••' : '-'`）。
+// **不可**印遮罩，否則紙本會讓人以為客戶已經設過密碼。
+@Test func classicFormPage1MarksEinvoicePasswordAsAbsentWhenNotSet() {
+    let page = ClassicFormPage1(model: .init(
+        companyName: "範例股份有限公司",
+        einvoicePlatform: .init(account: "einvoice-user", passwordIsSet: false)
+    ))
+    let html = page.render()
+
+    #expect(html.contains("電子發票服務平台"))
+    #expect(html.contains("einvoice-user"))
+    #expect(html.contains("密碼：-"))
+    #expect(!html.contains("●"))
 }

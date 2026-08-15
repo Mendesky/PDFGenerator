@@ -153,15 +153,63 @@ public struct ClassicFormPage1: Component {
             }.class("invoiceLine")
             // 未使用電子發票（或未填答）時整行不印——留一排空標籤只是噪音
             if let platform = model.einvoicePlatform {
-                Paragraph(
-                    "電子發票服務平台："
-                    + "帳號：\(platform.account ?? "")　"
-                    + "密碼：\(platform.password ?? "")　"
-                    + "發票號碼起訖：\(platform.trackNumberStart ?? "") ~ \(platform.trackNumberEnd ?? "")"
-                )
+                let lines = Self.einvoicePlatformLines(platform)
+                Paragraph {
+                    for (index, line) in lines.enumerated() {
+                        if index < lines.count - 1 {
+                            Text(line).addLineBreak()
+                        } else {
+                            Text(line)
+                        }
+                    }
+                }
             }
             Paragraph("開始服務時間：\(model.serviceStartDate ?? "")")
         }.class("remarkBlock")
+    }
+
+    /// 電子發票服務平台的一到兩行。
+    ///
+    /// **起訖換到下一行的條件：帳號或密碼有值，且起訖有值。** 其餘情況維持單行 ——
+    /// 起訖沒值就換行會多出一行只寫著「發票號碼起訖：-」；帳號密碼都沒值時整行很短，
+    /// 不需要斷。斷點取在欄位邊界，避免整行過長時自動折在欄位中間。
+    private static func einvoicePlatformLines(_ platform: Model.EinvoicePlatform) -> [String] {
+        // 密碼不印明文：已設定印遮罩＋查看指引，未設定印 "-"。
+        let credentials = "帳號：\(fieldText(platform.account))　"
+            + "密碼：\(platform.passwordIsSet ? "●●●●●（請上嘉威平台查看）" : "-")"
+        let range = "發票號碼起訖：\(trackNumberRangeText(platform))"
+
+        let hasCredentials = hasValue(platform.account) || platform.passwordIsSet
+        let hasRange = hasValue(platform.trackNumberStart) || hasValue(platform.trackNumberEnd)
+        guard hasCredentials, hasRange else {
+            return ["電子發票服務平台：" + credentials + "　" + range]
+        }
+        return ["電子發票服務平台：" + credentials, range]
+    }
+
+    /// 字軌起訖的呈現。空值一律 `-`（對齊檢視頁與 page2 各欄位列的慣例）。
+    ///
+    /// 起訖是一組語意整體，兩邊都沒有時收成**單一** `-`，不印 `- ~ -` ——
+    /// 後者容易被讀成「有一個範圍，只是兩端沒填」。
+    ///
+    /// 單邊有值在寫入端是不可能的（同時給值或同時清空，違反回 `invalidEinvoiceTrackNumber`），
+    /// 此處仍逐邊 fallback，純粹是不讓呈現層對上游 invariant 做假設。
+    private static func trackNumberRangeText(
+        _ platform: Model.EinvoicePlatform
+    ) -> String {
+        guard hasValue(platform.trackNumberStart) || hasValue(platform.trackNumberEnd) else { return "-" }
+        return "\(fieldText(platform.trackNumberStart)) ~ \(fieldText(platform.trackNumberEnd))"
+    }
+
+    /// 欄位值的呈現：沒有值（nil 或只有空白）→ `-`。
+    /// 與檢視頁 `view-tab3` 的 `display()` 同一套判斷，含 trim。
+    private static func fieldText(_ value: String?) -> String {
+        hasValue(value) ? (value ?? "-") : "-"
+    }
+
+    private static func hasValue(_ value: String?) -> Bool {
+        guard let value else { return false }
+        return value.contains { !$0.isWhitespace }
     }
 
     // MARK: helpers

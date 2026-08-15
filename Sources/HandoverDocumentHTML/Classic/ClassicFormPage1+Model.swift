@@ -74,19 +74,23 @@ extension ClassicFormPage1 {
         /// 避免在表單上留下一排空標籤。
         public struct EinvoicePlatform {
             public var account: String?
-            /// 密碼**明文**。目前無權限管控，一律印出（見設計 spec 2.6）。
-            public var password: String?
+            /// 密碼**是否已設定**，不是密碼本身。
+            ///
+            /// 刻意收 `Bool` 而非 `String?`：紙本不印客戶密碼，只印遮罩與查看指引。
+            /// 型別上不接受明文，呼叫端就無從「不小心」把密碼傳進來 ——
+            /// 這比在呼叫端自律更可靠。已設定時的顯示字串由本套件負責（見 `ClassicFormPage1`）。
+            public var passwordIsSet: Bool
             public var trackNumberStart: String?
             public var trackNumberEnd: String?
 
             public init(
                 account: String? = nil,
-                password: String? = nil,
+                passwordIsSet: Bool = false,
                 trackNumberStart: String? = nil,
                 trackNumberEnd: String? = nil
             ) {
                 self.account = account
-                self.password = password
+                self.passwordIsSet = passwordIsSet
                 self.trackNumberStart = trackNumberStart
                 self.trackNumberEnd = trackNumberEnd
             }
