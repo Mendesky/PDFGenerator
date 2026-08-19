@@ -17,7 +17,13 @@ public struct AuditQuotation: Renderable {
     /// 同意函簽名區的立約人——**以 `\n` 分隔多行**（集團逐家各占一行）。
     ///
     /// 與 `receiver` 刻意分開：兩處的**內容**不同（受文者附「共N家」、簽名區不附），
-    /// 不只是格式不同，故單一字串無法同時服務兩者。組字規則屬呼叫端。
+    /// 不只是格式不同，故單一字串無法同時服務兩者。
+    ///
+    /// **組字規則不在本 package**：集團要怎麼串（頓號／換行／是否附家數／有自訂集團名時
+    /// 一律取代羅列）全由呼叫端決定。原因是同一批規則還要套用在信件「致」欄與內文，
+    /// 而那兩處的文字在到達本 package 前就已被替換成成品字串 —— 規則放這裡會變成兩份實作。
+    /// 決策與完整規則見呼叫端的 ADR `2026-08-conglomerate-company-name-presentation.md`
+    /// （刻意只寫檔名不寫路徑：本 package 是共用套件，綁 consumer 的目錄結構會 rot）。
     let replyFormReceiver: String
     let sender: Organization
     let purpose: Purpose.Model?
