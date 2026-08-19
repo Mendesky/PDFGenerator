@@ -7,28 +7,20 @@
 import Plot
 
 public struct ContractHeader: Component {
-    let client: QuotationClient
+    let receiver: String
     let sender: Organization
     let subject: String
     let content: String
 
-    /// 單一公司的便捷建構。集團請走 `init(client:...)`。
     public init(receiver: String, sender: String, subject: String, content: String) {
-        self.client = .single(name: receiver)
+        self.receiver = receiver
         self.sender = Organization(rawValue: sender)
         self.subject = subject
         self.content = content
     }
 
-    public init(client: QuotationClient, sender: String, subject: String, content: String) {
-        self.client = client
-        self.sender = Organization(rawValue: sender)
-        self.subject = subject
-        self.content = content
-    }
-
-    init(client: QuotationClient, sender: Organization, model: Model){
-        self.client = client
+    init(receiver: String, sender: Organization, model: Model){
+        self.receiver = receiver
         self.sender = sender
         self.subject = model.subject
         self.content = model.content
@@ -39,9 +31,9 @@ public struct ContractHeader: Component {
             Table{
                 TableRow{
                     TableCell("受 文 者：").style("vertical-align: top; width: 6em; font-size: 1rem;")
-                    // 集團以頓號串接並附「共N家」（`inlineJoinedText`）；「（以下簡稱 貴公司）」
-                    // 是公文樣板，留在本 component 不下放給呼叫端。
-                    TableCell("\(client.inlineJoinedText)（以下簡稱 貴公司）").style("font-size: 1rem;")
+                    // `receiver` 由呼叫端組好（集團的串接方式、是否附家數皆為呼叫端的業務規則）。
+                    // 「（以下簡稱 貴公司）」是公文樣板，屬版面、留在此處。
+                    TableCell("\(receiver)（以下簡稱 貴公司）").style("font-size: 1rem;")
                 }
                 TableRow{
                     TableCell("發 文 者：").style("vertical-align: top; font-size: 1rem;")

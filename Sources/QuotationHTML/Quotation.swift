@@ -12,9 +12,13 @@ struct Page{
 
 public struct AuditQuotation: Renderable {
     let no: String?
-    /// 客戶方（受文者 / 立約人）。傳結構而非預先組好的字串——受文者與同意函簽名區
-    /// 對同一客戶方的呈現不同（頓號串接+共N家 vs 逐家換行），見 `QuotationClient`。
-    let client: QuotationClient
+    /// 受文者（公文表頭）——單行，呼叫端已組好。
+    let receiver: String
+    /// 同意函簽名區的立約人——**以 `\n` 分隔多行**（集團逐家各占一行）。
+    ///
+    /// 與 `receiver` 刻意分開：兩處的**內容**不同（受文者附「共N家」、簽名區不附），
+    /// 不只是格式不同，故單一字串無法同時服務兩者。組字規則屬呼叫端。
+    let replyFormReceiver: String
     let sender: Organization
     let purpose: Purpose.Model?
     let payments: [Payment.Model]
@@ -28,9 +32,10 @@ public struct AuditQuotation: Renderable {
     let agreementTerms: AgreementTerms.Model?
     let fontSize: Float
 
-    public init(no: String?, client: QuotationClient, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil, agreementTerms: AgreementTerms.Model? = nil, fontSize: Float = 16) {
+    public init(no: String?, receiver: String, replyFormReceiver: String, sender: Organization, purpose: Purpose.Model?, payments: [Payment.Model], serviceScope: ServiceScope.Model, letterHeader: LetterHeader.Model, assistance: BusinessClientAssistance.Model?, notes: [Note.Model], replyForm: ReplyForm.Model, contractHeader: ContractHeader.Model?, rightsAndObligations: RightsAndObligation.Model? = nil, agreementTerms: AgreementTerms.Model? = nil, fontSize: Float = 16) {
         self.no = no
-        self.client = client
+        self.receiver = receiver
+        self.replyFormReceiver = replyFormReceiver
         self.sender = sender
         self.purpose = purpose
         self.payments = payments
@@ -78,7 +83,7 @@ public struct AuditQuotation: Renderable {
             }
             
             if let contractHeader {
-                ContractHeader(client: client, sender: sender, model: contractHeader).style("font-size: 0.9rem;")
+                ContractHeader(receiver: receiver, sender: sender, model: contractHeader).style("font-size: 0.9rem;")
             }
             
             for component in components {
@@ -109,7 +114,7 @@ public struct AuditQuotation: Renderable {
                 })
             }
             Page.break
-            ReplyForm(client: client, sender: sender, quotationNo: no, model: replyForm)
+            ReplyForm(receiver: replyFormReceiver, sender: sender, quotationNo: no, model: replyForm)
         }.node.style("font-family: 華康標楷體,標楷體-繁,標楷體; width: 100%; line-height: 1.5em; font-size: \(fontSize)px;" )
         return html.render(indentedBy: indentationKind)
     }
@@ -173,7 +178,8 @@ extension AuditQuotation {
     @available(*, deprecated, message: "This initialize method scope will be converted to private in the future nearly.")
     internal init(no: String?, purpose: ContentItem?, paymentBlock: PaymentBlock, serviceScope: ServiceScope, letterHeader: LetterHeader, assistance: BusinessClientAssistance?, notes: Note, replyForm: ReplyForm, contractHeader: ContractHeader?, rightsAndObligations: ContractSection? = nil, fontSize: Float?) {
 
-        let client = replyForm.client
+        let receiver = replyForm.receiver
+        let replyFormReceiver = replyForm.receiver
         let sender = replyForm.sender
         let purpose: Purpose.Model? = purpose.map{
             .init(title: $0.title, content: $0.content)
@@ -220,6 +226,6 @@ extension AuditQuotation {
             })
         }
         
-        self.init(no: no, client: client, sender: sender, purpose: purpose, payments: payments, serviceScope: serviceScope, letterHeader: letterHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, fontSize: fontSize ?? 16)
+        self.init(no: no, receiver: receiver, replyFormReceiver: replyFormReceiver, sender: sender, purpose: purpose, payments: payments, serviceScope: serviceScope, letterHeader: letterHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, fontSize: fontSize ?? 16)
     }
 }

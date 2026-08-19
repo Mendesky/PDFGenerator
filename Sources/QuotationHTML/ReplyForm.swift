@@ -7,7 +7,15 @@
 import Plot
 
 public struct ReplyForm: Component{
-    let client: QuotationClient
+    /// 同意函簽名區的立約人。**以 `\n` 分隔多行**（集團逐家各占一行）——
+    /// 組字規則（頓號／換行／家數／自訂集團名）屬呼叫端業務規則，本 package 只負責切行渲染。
+    /// 與 `LetterHeader.to` 相同慣例。
+    let receiver: String
+
+    /// 以 `\n` 切行；單一公司即一行。
+    var receiverLines: [String] {
+        receiver.split(separator: "\n").map(String.init)
+    }
     let sender: Organization
     let subject: String
     let payments: [Payment]
@@ -69,11 +77,11 @@ public struct ReplyForm: Component{
                 Table{
                     TableRow{
                         TableCell().style("width: 102px;")
-                        // 集團逐家換行（不用頓號串接）——簽章欄位要讓每家公司各占一行。
-                        // 用 `Node.br()` 而非 `Paragraph`：單一公司時輸出與改版前完全相同
-                        // （`<td>名稱</td>`），不會因為多一層 `<p>` 的預設邊界而改變既有版面。
+                        // 逐行渲染（單一公司即一行）。用 `Node.br()` 而非 `Paragraph`：
+                        // 單一公司時輸出與改版前完全相同（`<td>名稱</td>`），不會因為多一層
+                        // `<p>` 的預設邊界而改變既有版面。
                         TableCell{
-                            for (index, name) in client.displayLines.enumerated() {
+                            for (index, name) in receiverLines.enumerated() {
                                 if index > 0 {
                                     Node.br()
                                 }
@@ -110,7 +118,7 @@ public struct ReplyForm: Component{
     }
     
     public init(receiver: String, sender: String, subject: String, payments: [Payment] = [], additionalServices: [AdditionalService], quotationNo: String?, showCompanyStamp: Bool = true) {
-        self.client = .single(name: receiver)
+        self.receiver = receiver
         self.sender = Organization(rawValue: sender)
         self.subject = subject
         self.payments = payments
@@ -120,7 +128,7 @@ public struct ReplyForm: Component{
     }
     
     public init(receiver: String, sender: Organization, subject: String, payments: [Payment.Model] = [], additionalServices: [AdditionalService], quotationNo: String?, showCompanyStamp: Bool = true) {
-        self.client = .single(name: receiver)
+        self.receiver = receiver
         self.sender = sender
         self.subject = subject
         self.payments = .init(payments)
@@ -129,19 +137,8 @@ public struct ReplyForm: Component{
         self.showCompanyStamp = showCompanyStamp
     }
     
-    public init(client: QuotationClient, sender: Organization, quotationNo: String?, model: Model) {
-        self.client = client
-        self.sender = sender
-        self.subject = model.subject
-        self.payments = .init(model.payments)
-        self.additionalServices = .init(model.additionalServices)
-        self.quotationNo = quotationNo
-        self.showCompanyStamp = model.showCompanyStamp
-    }
-
-    /// 單一公司的便捷建構。集團請走 `init(client:...)`。
     public init(receiver: String, sender: Organization, quotationNo: String?, model: Model) {
-        self.client = .single(name: receiver)
+        self.receiver = receiver
         self.sender = sender
         self.subject = model.subject
         self.payments = .init(model.payments)
