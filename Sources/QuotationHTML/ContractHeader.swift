@@ -11,14 +11,14 @@ public struct ContractHeader: Component {
     let sender: Organization
     let subject: String
     let content: String
-    
+
     public init(receiver: String, sender: String, subject: String, content: String) {
         self.receiver = receiver
         self.sender = Organization(rawValue: sender)
         self.subject = subject
         self.content = content
     }
-    
+
     init(receiver: String, sender: Organization, model: Model){
         self.receiver = receiver
         self.sender = sender
@@ -31,6 +31,8 @@ public struct ContractHeader: Component {
             Table{
                 TableRow{
                     TableCell("受 文 者：").style("vertical-align: top; width: 6em; font-size: 1rem;")
+                    // `receiver` 由呼叫端組好（集團的串接方式、是否附家數皆為呼叫端的業務規則）。
+                    // 「（以下簡稱 貴公司）」是公文樣板，屬版面、留在此處。
                     TableCell("\(receiver)（以下簡稱 貴公司）").style("font-size: 1rem;")
                 }
                 TableRow{

@@ -7,7 +7,15 @@
 import Plot
 
 public struct ReplyForm: Component{
+    /// 同意函簽名區的立約人。**以 `\n` 分隔多行**（集團逐家各占一行）——
+    /// 組字規則（頓號／換行／家數／自訂集團名）屬呼叫端業務規則，本 package 只負責切行渲染。
+    /// 與 `LetterHeader.to` 相同慣例。
     let receiver: String
+
+    /// 以 `\n` 切行；單一公司即一行。
+    var receiverLines: [String] {
+        receiver.split(separator: "\n").map(String.init)
+    }
     let sender: Organization
     let subject: String
     let payments: [Payment]
@@ -69,7 +77,17 @@ public struct ReplyForm: Component{
                 Table{
                     TableRow{
                         TableCell().style("width: 102px;")
-                        TableCell(receiver)
+                        // 逐行渲染（單一公司即一行）。用 `Node.br()` 而非 `Paragraph`：
+                        // 單一公司時輸出與改版前完全相同（`<td>名稱</td>`），不會因為多一層
+                        // `<p>` 的預設邊界而改變既有版面。
+                        TableCell{
+                            for (index, name) in receiverLines.enumerated() {
+                                if index > 0 {
+                                    Node.br()
+                                }
+                                Text(name)
+                            }
+                        }
                         TableCell().style("width: 10rem;")
                     }
                     TableRow{

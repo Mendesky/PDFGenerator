@@ -49,12 +49,12 @@ let assistance = BusinessClientAssistance.Model(title: "貴公司之協助辦理
 
 //print("\n")
 let paymentItems: [PaymentItem.Model] = [
-    .init(names: ["工商登記處理作業(資本額200萬元)(台中市)(不含動資查核)(股東3人)"], fee: .oneTime(16000)),
-    .init(names: ["會計帳務及稅務申報處理作業-書審 (設立完成後開始)"], fee: .oneTime(0)),
-    .init(names: ["附設補習班-會計帳務及其稅務申報處理作業-書審(設立完成後開始)"], fee: .monthly(1000))
+    .init(names: ["工商登記處理作業(資本額200萬元)(台中市)(不含動資查核)(股東3人)"], fee: "16,000 元/次"),
+    .init(names: ["會計帳務及稅務申報處理作業-書審 (設立完成後開始)"], fee: "優惠免收"),
+    .init(names: ["附設補習班-會計帳務及其稅務申報處理作業-書審(設立完成後開始)"], fee: "1,000 元/月")
 ]
 let paymentItems2: [PaymentItem.Model] = [
-    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .monthly(5000)),
+    .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "5,000 元/月"),
 ]
 
 
@@ -152,7 +152,7 @@ let agreementTerms = AgreementTerms.Model(title: "其它約定事項", heading: 
     "貴公司或 貴公司之代理人或使用人所提供之文件將暫存於本事務所處，本事務所將依本事務所當時之正常文件管理方式保管之。本事務所得於每年度終了或特定服務完成後，返還本事務所為 貴公司所留存之文件。"
 ])
 
-let quotation = AuditQuotation(no: quotationNo, receiver: receiver, sender: .kd, purpose: purpose, payments: payments, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, agreementTerms: agreementTerms, fontSize: 20)
+let quotation = AuditQuotation(no: quotationNo, receiver: receiver, replyFormReceiver: receiver, sender: .kd, purpose: purpose, payments: payments, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, agreementTerms: agreementTerms, fontSize: 20)
 let html = quotation.render()
 let htmlUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: "test.html")
 try html.write(to: htmlUrl, atomically: true, encoding: .utf8)

@@ -73,7 +73,7 @@ import Foundation
 
 @Test func createPaymentItemHtml(){
     let names: [String] = ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證", "二代健保暨表單彙總處理"]
-    let fee: PaymentItem.Fee = .monthly(5000)
+    let fee = "5,000 元/月"
     
     let paymentItem = PaymentItem(names: names, fee: fee)
     
@@ -89,8 +89,8 @@ import Foundation
 @Test func createPaymentHtml(){
     let title = "酬金"
     let items: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: .yearly(5000)),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .yearly(6000))
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/年")
     ]
 
     let payment = Payment(name: title, items: items)
@@ -103,7 +103,7 @@ import Foundation
     let payment = Payment(
         name: "糕盛有限公司",
         items: [
-            .init(names: ["民國 114 度財務報表查核簽證"], fee: .yearly(100000))
+            .init(names: ["民國 114 度財務報表查核簽證"], fee: "100,000 元/年")
         ],
         supplementaryNote: "財務簽證依預估資產總額新台幣壹億元報價\n會計帳務處理作業依照預估年營收貳億伍仟萬元報價。"
     )
@@ -123,7 +123,7 @@ import Foundation
 @Test func paymentOmitsSupplementaryNoteRowWhenNil(){
     let payment = Payment(
         name: "X",
-        items: [.init(names: ["item"], fee: .yearly(1))]
+        items: [.init(names: ["item"], fee: "1 元/年")]
     )
     // nil → 整個 supplementaryNote row 不渲染（用 `colspan="2"` 鎖、items row 沒這屬性）
     #expect(!payment.render().contains("colspan=\"2\""))
@@ -132,7 +132,7 @@ import Foundation
 @Test func paymentOmitsSupplementaryNoteRowWhenEmptyString(){
     let payment = Payment(
         name: "X",
-        items: [.init(names: ["item"], fee: .yearly(1))],
+        items: [.init(names: ["item"], fee: "1 元/年")],
         supplementaryNote: ""
     )
     #expect(!payment.render().contains("colspan=\"2\""))
@@ -143,7 +143,7 @@ import Foundation
 @Test func paymentRendersSupplementaryNoteAsRawHTML(){
     let payment = Payment(
         name: "X",
-        items: [.init(names: ["item"], fee: .yearly(1))],
+        items: [.init(names: ["item"], fee: "1 元/年")],
         supplementaryNote: "<b>粗體</b> <u>底線</u> <s>刪除線</s>"
     )
     let rendered = payment.render()
@@ -158,7 +158,7 @@ import Foundation
     let dataUri = "data:image/png;base64,iVBORw0KGgo=" // 短的測試用 base64
     let payment = Payment(
         name: "X",
-        items: [.init(names: ["item"], fee: .yearly(1))],
+        items: [.init(names: ["item"], fee: "1 元/年")],
         supplementaryNote: "見附圖：<img src=\"\(dataUri)\" />"
     )
     let rendered = payment.render()
@@ -169,18 +169,18 @@ import Foundation
 @Test("two payment", arguments: [
     ([
         Payment(name: "****作業(112 年度)", items: [
-            .init(names: ["Hello"], fee: .monthly(5000))
+            .init(names: ["Hello"], fee: "5,000 元/月")
         ]),
         Payment(name: "****作業(113 年起)", items: [
-            .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: .yearly(5000)),
-            .init(names: ["World"], fee: .yearly(6000))
+            .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
+            .init(names: ["World"], fee: "6,000 元/年")
         ])
     ], """
     <p style="font-size: 1.1rem;">酬金</p><div style="break-inside: avoid-page;"><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 0.95em;">****作業(112 年度)</b></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="vertical-align: top; width: 1.35rem;">1.</td><td><div>Hello</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">5,000 元/月</td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td colspan="3"><b style="font-size: 0.95em;">****作業(113 年起)</b></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="vertical-align: top; width: 1.35rem;">1.</td><td><div>民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="vertical-align: top; width: 1.35rem;">2.</td><td><div>World</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">6,000 元/年</td></tr></table></div>
     """),
     ([
         Payment(name: "****作業(112 年度)", items: [
-            .init(names: ["Hello"], fee: .yearly(5000))
+            .init(names: ["Hello"], fee: "5,000 元/年")
         ])
     ], """
     <p style="font-size: 1.1rem;">酬金</p><div style="break-inside: avoid-page;"><table style="border-collapse: collapse; width: 100%;"><tr style="border-bottom: 1px solid black;"><td colspan="2" style="text-align: center ;">服務項目</td><td><div style="white-space: nowrap; text-align: right; padding-right: 1em;">公費金額</div></td></tr><tr style="font-size: 1rem; padding-bottom: 0.5em; width: 100%;"><td style="vertical-align: top; width: 1.35rem;">1.</td><td><div>Hello</div></td><td style="text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;">5,000 元/年</td></tr></table></div>
@@ -196,10 +196,10 @@ func createPaymentBlocHtml(payments: [Payment], result: String){
 func paymentBlockRendersCaseHeadingsWhenMultipleCases() {
     let payments = [
         // 甲公司：2 個 bundle → bundle 名照顯示
-        Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: .monthly(4000))], caseName: "甲公司"),
-        Payment(name: "規劃2", items: [.init(names: ["記帳作業"], fee: .monthly(3000))], caseName: "甲公司"),
+        Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: "4,000 元/月")], caseName: "甲公司"),
+        Payment(name: "規劃2", items: [.init(names: ["記帳作業"], fee: "3,000 元/月")], caseName: "甲公司"),
         // 乙公司：1 個 bundle → bundle 名隱藏（case 標題已足夠）
-        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
+        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: "50,000 元/年")], caseName: "乙公司"),
     ]
     let rendered = PaymentBlock(title: "酬金", payments: payments).render()
 
@@ -221,9 +221,9 @@ func paymentBlockRendersCaseHeadingsWhenMultipleCases() {
 func paymentBlockCountsBundlesPerCaseRegardlessOfOrder() {
     // 甲公司的兩個 bundle 在輸入中被乙公司隔開（非連續）→ 仍應視為「甲有 2 bundle」而顯示其 bundle 名。
     let payments = [
-        Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: .monthly(4000))], caseName: "甲公司"),
-        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
-        Payment(name: "規劃2", items: [.init(names: ["記帳作業"], fee: .monthly(3000))], caseName: "甲公司"),
+        Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: "4,000 元/月")], caseName: "甲公司"),
+        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: "50,000 元/年")], caseName: "乙公司"),
+        Payment(name: "規劃2", items: [.init(names: ["記帳作業"], fee: "3,000 元/月")], caseName: "甲公司"),
     ]
     let rendered = PaymentBlock(title: "酬金", payments: payments).render()
 
@@ -238,8 +238,8 @@ func paymentBlockCountsBundlesPerCaseRegardlessOfOrder() {
 func paymentBlockHidesSingleBundleNamePerCaseInMergedView() {
     // 兩個 case 各只有 1 個 bundle → case 標題照渲染、但兩個 bundle 名都隱藏。
     let payments = [
-        Payment(name: "甲方案", items: [.init(names: ["稅務帳務處理作業"], fee: .monthly(4000))], caseName: "甲公司"),
-        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
+        Payment(name: "甲方案", items: [.init(names: ["稅務帳務處理作業"], fee: "4,000 元/月")], caseName: "甲公司"),
+        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: "50,000 元/年")], caseName: "乙公司"),
     ]
     let rendered = PaymentBlock(title: "酬金", payments: payments).render()
 
@@ -253,8 +253,8 @@ func paymentBlockHidesSingleBundleNamePerCaseInMergedView() {
 func paymentBlockOmitsCaseHeadingWhenSingleCase() {
     // 同一 case 的兩個 bundle：不顯示 case 標題，沿用既有「多 bundle 顯示 bundle 名」行為。
     let payments = [
-        Payment(name: "規劃1", items: [.init(names: ["A"], fee: .monthly(4000))], caseName: "甲公司"),
-        Payment(name: "規劃2", items: [.init(names: ["B"], fee: .yearly(50000))], caseName: "甲公司"),
+        Payment(name: "規劃1", items: [.init(names: ["A"], fee: "4,000 元/月")], caseName: "甲公司"),
+        Payment(name: "規劃2", items: [.init(names: ["B"], fee: "50,000 元/年")], caseName: "甲公司"),
     ]
     let rendered = PaymentBlock(title: "酬金", payments: payments).render()
 
@@ -268,8 +268,8 @@ func paymentBlockOmitsCaseHeadingWhenSingleCase() {
 func replyFormPaymentBlockHidesSingleBundleNamePerCaseInMergedView() {
     // 兩個 case 各只有 1 個 bundle → case 標題照渲染、但兩個 bundle 名都隱藏（與主酬金 PaymentBlock 一致）。
     let payments = [
-        Payment(name: "規劃1", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(320000))], caseName: "誠鋼實業股份有限公司"),
-        Payment(name: "規劃1", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(120000))], caseName: "東經投資有限公司"),
+        Payment(name: "規劃1", items: [.init(names: ["財務報表查核簽證"], fee: "320,000 元/年")], caseName: "誠鋼實業股份有限公司"),
+        Payment(name: "規劃1", items: [.init(names: ["財務報表查核簽證"], fee: "120,000 元/年")], caseName: "東經投資有限公司"),
     ]
     let rendered = ReplyFormPaymentBlock(payments: payments).render()
 
@@ -282,9 +282,9 @@ func replyFormPaymentBlockHidesSingleBundleNamePerCaseInMergedView() {
 func replyFormPaymentBlockCountsBundlesPerCaseRegardlessOfOrder() {
     // 甲公司的兩個 bundle 被乙公司隔開（非連續）→ 仍視為「甲有 2 bundle」照顯示；乙單 bundle 隱藏。
     let payments = [
-        Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: .monthly(4000))], caseName: "甲公司"),
-        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: .yearly(50000))], caseName: "乙公司"),
-        Payment(name: "規劃2", items: [.init(names: ["記帳作業"], fee: .monthly(3000))], caseName: "甲公司"),
+        Payment(name: "規劃1", items: [.init(names: ["稅務帳務處理作業"], fee: "4,000 元/月")], caseName: "甲公司"),
+        Payment(name: "乙方案", items: [.init(names: ["財務報表查核簽證"], fee: "50,000 元/年")], caseName: "乙公司"),
+        Payment(name: "規劃2", items: [.init(names: ["記帳作業"], fee: "3,000 元/月")], caseName: "甲公司"),
     ]
     let rendered = ReplyFormPaymentBlock(payments: payments).render()
 
@@ -297,8 +297,8 @@ func replyFormPaymentBlockCountsBundlesPerCaseRegardlessOfOrder() {
 func replyFormPaymentBlockSingleCaseBehaviorUnchanged() {
     // 單一 case、多 bundle → bundle 名照顯示、無 case 標題。
     let multi = ReplyFormPaymentBlock(payments: [
-        Payment(name: "規劃1", items: [.init(names: ["A"], fee: .monthly(4000))], caseName: "甲公司"),
-        Payment(name: "規劃2", items: [.init(names: ["B"], fee: .yearly(50000))], caseName: "甲公司"),
+        Payment(name: "規劃1", items: [.init(names: ["A"], fee: "4,000 元/月")], caseName: "甲公司"),
+        Payment(name: "規劃2", items: [.init(names: ["B"], fee: "50,000 元/年")], caseName: "甲公司"),
     ]).render()
     #expect(!multi.contains("甲公司"), "單一 case 不應出現 case 名稱標題")
     #expect(multi.contains("<b>規劃1</b>"))
@@ -306,7 +306,7 @@ func replyFormPaymentBlockSingleCaseBehaviorUnchanged() {
 
     // 單一 case、單 bundle → bundle 名隱藏（既有行為）。
     let single = ReplyFormPaymentBlock(payments: [
-        Payment(name: "規劃1", items: [.init(names: ["A"], fee: .monthly(4000))], caseName: nil),
+        Payment(name: "規劃1", items: [.init(names: ["A"], fee: "4,000 元/月")], caseName: nil),
     ]).render()
     #expect(!single.contains("規劃1"), "單 bundle 不應顯示 bundle 名")
 }
@@ -359,8 +359,8 @@ func replyFormPaymentBlockSingleCaseBehaviorUnchanged() {
     let sender = "88183980"
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
     let paymentItems: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"],  fee: .yearly(5000)),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .monthly(6000))
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"],  fee: "5,000 元/年"),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/月")
     ]
     let payments = [
         Payment(name: "Hello", items: paymentItems)
@@ -383,8 +383,8 @@ func replyFormPaymentBlockSingleCaseBehaviorUnchanged() {
     let sender = "88183980"
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
     let paymentItems: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"],  fee: .yearly(5000)),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .monthly(6000))
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"],  fee: "5,000 元/年"),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/月")
     ]
     let payments = [
         Payment(name: "Hello", items: paymentItems)
@@ -407,8 +407,8 @@ func replyFormPaymentBlockSingleCaseBehaviorUnchanged() {
     let subject = "本公司同意委託貴事務所執行本公司有關營利事業所得稅查核簽證與未分配盈餘查核簽證及財會委外處理作業之專業服務項目及公費，請查照。"
     
     let paymentItems: [PaymentItem] = [
-        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: .yearly(5000)),
-        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: .monthly(6000))
+        .init(names: ["民國 113 年度之營利事業所得稅查核簽證與未分配盈餘查核簽證"], fee: "5,000 元/年"),
+        .init(names: ["會計帳務處理作業（113 年 5 月開始）"], fee: "6,000 元/月")
     ]
     
     let payments = [

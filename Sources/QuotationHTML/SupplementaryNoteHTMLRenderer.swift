@@ -2,7 +2,8 @@
 //  SupplementaryNoteHTMLRenderer.swift
 //  PDFGenerator
 //
-//  把酬金補充說明的 markdown 渲染成 PDF 用 HTML — presentation 歸 PDFGenerator。
+//  把酬金補充說明的 markdown 渲染成 PDF 用 HTML — markdown 渲染屬本 package 職責
+//  （業務呈現規則如金額格式、集團名串接歸呼叫端）。
 //
 
 import Foundation
