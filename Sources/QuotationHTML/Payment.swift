@@ -19,7 +19,7 @@ public struct Payment: Component {
     /// **markdown 字串** — 由 PDFGenerator 內部 `SupplementaryNoteHTMLRenderer` 渲染成 HTML
     /// （markdown → HTML + soft break 換行 + scoped style）後 inject 到 `<td>`。
     /// caller（OC）只做領域 / 安全前處理：template variable 替換成實際值、內嵌圖片 fetch + ownership
-    /// 驗證後 inline 成 `<img data:...>`；**不做 markdown→HTML、不傳 CSS、不加 marker**（presentation 全歸此處）。
+    /// 驗證後 inline 成 `<img data:...>`；**不做 markdown→HTML、不傳 CSS、不加 marker**（markdown 渲染全歸此處）。
     /// `nil` 或空字串 → 不渲染此 row。
     ///
     /// **渲染重點**：
@@ -44,7 +44,7 @@ public struct Payment: Component {
             }
             if let supplementaryNote, !supplementaryNote.isEmpty {
                 // 補充說明：整段跨欄（colspan=3）從左緣起排、上方留 padding，不加任何標記或橫線。
-                // markdown → HTML 在此渲染（presentation 歸 PDFGenerator）；caller 傳的是 markdown。
+                // markdown → HTML 在此渲染（渲染引擎職責）；caller 傳的是 markdown。
                 TableRow{
                     TableCell(html: SupplementaryNoteHTMLRenderer.render(markdown: supplementaryNote))
                         .attribute(named: "colspan", value: "3")

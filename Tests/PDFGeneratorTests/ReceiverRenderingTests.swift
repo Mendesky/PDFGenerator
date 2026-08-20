@@ -15,8 +15,8 @@ struct ReceiverRenderingTests {
 
     @Test("受文者原樣印出並附上公文樣板")
     func contractHeaderAppendsBoilerplate() {
-        let header = ContractHeader(receiver: "光泉、味全、台鳳共3家", sender: "88183980", subject: "主旨", content: "說明")
-        #expect(header.render().contains("<td style=\"font-size: 1rem;\">光泉、味全、台鳳共3家（以下簡稱 貴公司）</td>"))
+        let header = ContractHeader(receiver: "甲公司、乙公司、丙公司共3家", sender: "88183980", subject: "主旨", content: "說明")
+        #expect(header.render().contains("<td style=\"font-size: 1rem;\">甲公司、乙公司、丙公司共3家（以下簡稱 貴公司）</td>"))
     }
 
     /// 受文者是單行欄位：即使字串含 `\n` 也不切行（切行是簽名區的事）。
@@ -41,12 +41,12 @@ struct ReceiverRenderingTests {
     @Test("單一行不產生 br（既有版面不變）")
     func replyFormSingleLineHasNoLineBreak() {
         let replyForm = ReplyForm(
-            receiver: "光泉牧場股份有限公司",
+            receiver: "甲公司股份有限公司",
             sender: .jw,
             quotationNo: "111112101",
             model: .init(subject: "主旨", payments: [], additionalServices: [], showCompanyStamp: true)
         )
-        #expect(replyForm.render().contains("<td>光泉牧場股份有限公司</td>"))
+        #expect(replyForm.render().contains("<td>甲公司股份有限公司</td>"))
     }
 
     /// 兩處刻意可以是不同內容（受文者附家數、簽名區不附）。
