@@ -69,6 +69,12 @@ enum ServiceContentHTMLRenderer {
     .rich-serviceContent p,
     .rich-serviceContent ul,
     .rich-serviceContent ol { margin: 0; }
+    /* 多段落／段落與清單之間要有呼吸空間；單段落時不受影響（相鄰選擇器） */
+    .rich-serviceContent p + p,
+    .rich-serviceContent p + ul,
+    .rich-serviceContent p + ol,
+    .rich-serviceContent ul + p,
+    .rich-serviceContent ol + p { margin-top: 0.5em; }
     .rich-serviceContent ul,
     .rich-serviceContent ol { list-style-position: inside; padding-left: 0; text-indent: 0; }
     .rich-serviceContent li { text-indent: 0; }

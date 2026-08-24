@@ -81,6 +81,19 @@ import Foundation
 // 服務範圍原本是三層遞進縮排（標題 text-indent:2em → 內文 2em+3em+2em → 編號項 3.8em），
 // 一層比一層右。要求是內文與編號項**共用同一層縮排**（仍縮在標題底下，不是貼齊容器左緣）。
 // 這條鎖住「兩者深度相同」——分開寫就會重演遞進縮排，而版面問題不會有測試訊號。
+// `<ol>` 的上下 margin 不得歸零：它就是「內文與第一個編號項之間」那道間距。
+// 為了讓編號與內文同左緣只需要關掉 padding-left，一併寫 margin: 0 會讓整段比原本更擠
+// （行距本身是 Quotation.swift 根容器的 1.5em，與這裡無關）。
+@Test func serviceScopeKeepsListBlockSpacing() {
+    let model = QuotingServiceTerm.Model(
+        title: "標題", term: "內文", serviceItemTerms: [.init(content: "工作項目")]
+    )
+    let html = ServiceScope(index: 0, model: .init(title: "T", heading: "H", items: [model])).render()
+
+    #expect(html.contains("list-style-position: inside; padding-left: 0;"))
+    #expect(!html.contains("padding-left: 0; margin: 0"))
+}
+
 @Test func serviceScopeHasNoProgressiveIndent() {
     let model = QuotingServiceTerm.Model(
         title: "標題",

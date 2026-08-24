@@ -52,7 +52,12 @@ public struct ServiceScope: Component {
                                 .environmentValue(.ordered, key: .listStyle)
                                 // `<ol>` 自身仍會吃瀏覽器／weasyprint 預設的 padding-left（約 40px），
                                 // 不關掉的話編號會比內文右一截。`inside` 讓「1.」排進文字流，與內文同左緣。
-                                .style("list-style-position: inside; padding-left: 0; margin: 0;")
+                                //
+                                // **margin 不歸零**：先前一併寫了 `margin: 0`，那超出「對齊」的需要——
+                                // 它拿掉的是 `<ol>` 預設的上下 margin，也就是「內文與第一個編號項之間」
+                                // 那道間距，結果整段看起來比原本更擠。行距本身沒動過（1.5em，
+                                // 設在 Quotation.swift 的根容器），變窄的是區塊間距。
+                                .style("list-style-position: inside; padding-left: 0;")
                                 // 編號與內文共用同一條左緣：外層用同一個 `bodyIndent`，清單自身不再吃
                                 // 瀏覽器預設的 padding（約 40px），標記 `inside` 排進文字流。
                             }.style("display: flex; padding-left: \(Self.bodyIndent);")
@@ -66,8 +71,10 @@ public struct ServiceScope: Component {
     /// 內文與編號項共用的縮排深度（相對於區塊左緣）。
     ///
     /// 兩者**必須用同一個值**——它們在版面上是同一層；分開寫就是先前「一層比一層右」的來源。
-    /// 標題（`（一）…`）自己用 `text-indent: 2em`，比這層淺一階。
-    static let bodyIndent = "4em"
+    ///
+    /// `5em` 是算出來的，不是估的：標題自己 `text-indent: 2em`，前綴「（一）」佔 3 個全形字（≈3em），
+    /// 所以標題第一個字（例：「稅務帳務處理作業」的「稅」）落在 5em —— 內文與編號項對齊到那裡。
+    static let bodyIndent = "5em"
 
     public init(title: String, heading: String, items: [QuotingServiceTerm]?) {
         self.index = -1
