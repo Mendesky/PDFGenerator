@@ -27,7 +27,11 @@ public struct ServiceScope: Component {
                         Div(Text("（\(offset.representToChineseString(offset: 1))）\(item.title)")).style("display: flex; text-indent: 2em;")
                         Div{
                             if let term = item.term{
-                                Div(term).style("display: flex; padding-left: 3em; text-indent: 2em;")
+                                // 服務內容吃 markdown（項目符號清單 + 段落內換行）；escape 由 renderer 負責，
+                                // 見 ServiceContentHTMLRenderer。原本是 `Div(term)`：Plot 會 escape，
+                                // 但完全不處理 `\n`，多行內容在 PDF 會連成一行。
+                                Div(html: ServiceContentHTMLRenderer.render(markdown: term))
+                                    .style("display: flex; padding-left: 3em; text-indent: 2em;")
                             }
                         }.style("display: flex; flex-direction: column; padding-left: 2em;")
                         if let serviceItemTerms = item.serviceItemTerms{

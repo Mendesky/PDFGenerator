@@ -42,6 +42,42 @@ import Foundation
 }
 
 
+// 服務內容（自訂服務項目走 .introOnly → 落在 QuotingServiceTerm.term）改吃 markdown：
+// 1. `- ` 要變成真正的 <ul><li>（原本整段是純文字，圓點印不出來）
+// 2. 段落內的 \n 要換行 —— 原本 `Div(term)` 完全不處理 \n，多行內容在 PDF 會連成一行
+// 3. 使用者輸入的 HTML 必須被 escape：這欄會印進報價單，不該讓自由文字注入標記
+//    （酬金補充說明那條路刻意允許 raw HTML，服務內容不比照）
+@Test func serviceScopeTermRendersMarkdownBulletList() {
+    let term = "本服務包含：\n- 每月帳務處理\n- 稅務申報代辦"
+    let model = QuotingServiceTerm.Model(title: "ItemTitle", term: term, serviceItemTerms: nil)
+    let html = ServiceScope(index: 0, model: .init(title: "T", heading: "H", items: [model])).render()
+
+    // swift-markdown 的 HTMLFormatter 對 list item 一律包 <p>（不分 tight/loose），
+    // 故斷言 `<li><p>…</p>` 而非 `<li>…</li>` —— 寫死後者會誤判成沒渲染。
+    #expect(html.contains("<ul>"))
+    #expect(html.contains("<li><p>每月帳務處理</p>"))
+    #expect(html.contains("<li><p>稅務申報代辦</p>"))
+    #expect(html.contains("<p>本服務包含：</p>"))
+}
+
+@Test func serviceScopeTermKeepsSingleNewlineAsLineBreak() {
+    let model = QuotingServiceTerm.Model(title: "ItemTitle", term: "第一行\n第二行", serviceItemTerms: nil)
+    let html = ServiceScope(index: 0, model: .init(title: "T", heading: "H", items: [model])).render()
+
+    #expect(html.contains("<br />"))
+    #expect(html.contains("第一行"))
+    #expect(html.contains("第二行"))
+}
+
+@Test func serviceScopeTermEscapesUserHtml() {
+    let model = QuotingServiceTerm.Model(title: "ItemTitle", term: "<script>alert(1)</script> a & b", serviceItemTerms: nil)
+    let html = ServiceScope(index: 0, model: .init(title: "T", heading: "H", items: [model])).render()
+
+    #expect(!html.contains("<script>"))
+    #expect(html.contains("&lt;script&gt;"))
+    #expect(html.contains("a &amp; b"))
+}
+
 @Test func createServiceScopeHtml(){
     let title = "Quotation Service Scope"
     let content = "This is a description of the Service Scope."
@@ -53,8 +89,12 @@ import Foundation
     
     let serviceScope = ServiceScope(index: 0, model: .init(title: title, heading: content, items: quotingServiceTerms))
     
+    // 服務內容改走 markdown 渲染後，term 外多包一層 .rich-serviceContent（見 ServiceContentHTMLRenderer）。
+    // style block 以常數內插而非貼死字串：否則之後微調清單縮排，這條 snapshot 又會誤紅。
+    let expectedContent = ServiceContentHTMLRenderer.scopedStyleBlock
+        + "<div class=\"rich-serviceContent\"><p>ItemContent</p>\n</div>"
     #expect(serviceScope.render() == """
-<div style="break-inside: avoid-page;"><div style="font-size: 1.1em;">一、Quotation Service Scope</div><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column; padding-left: 2em;"><div style="display: flex; padding-left: 3em; text-indent: 2em;">ItemContent</div></div></div>
+<div style="break-inside: avoid-page;"><div style="font-size: 1.1em;">一、Quotation Service Scope</div><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column; padding-left: 2em;"><div style="display: flex; padding-left: 3em; text-indent: 2em;">\(expectedContent)</div></div></div>
 """)
 }
 
