@@ -78,6 +78,24 @@ import Foundation
     #expect(html.contains("a &amp; b"))
 }
 
+// 服務範圍原本是三層遞進縮排（標題 text-indent:2em → 內文 2em+3em+2em → 編號項 3.8em），
+// 使用者要求內文與編號項全部對齊同一條左緣。這條鎖住「不再有遞進 padding」——
+// 沒有它，之後有人為了某個版面問題把 padding 加回來不會有任何訊號。
+@Test func serviceScopeHasNoProgressiveIndent() {
+    let model = QuotingServiceTerm.Model(
+        title: "標題",
+        term: "內文",
+        serviceItemTerms: [.init(content: "工作項目一"), .init(content: "工作項目二")]
+    )
+    let html = ServiceScope(index: 0, model: .init(title: "T", heading: "H", items: [model])).render()
+
+    #expect(!html.contains("padding-left: 2em"))
+    #expect(!html.contains("padding-left: 3em"))
+    #expect(!html.contains("padding-left: 3.8em"))
+    // 編號清單不吃預設縮排、標記排進文字流
+    #expect(html.contains("list-style-position: inside; padding-left: 0"))
+}
+
 @Test func createServiceScopeHtml(){
     let title = "Quotation Service Scope"
     let content = "This is a description of the Service Scope."
@@ -94,7 +112,7 @@ import Foundation
     let expectedContent = ServiceContentHTMLRenderer.scopedStyleBlock
         + "<div class=\"rich-serviceContent\"><p>ItemContent</p>\n</div>"
     #expect(serviceScope.render() == """
-<div style="break-inside: avoid-page;"><div style="font-size: 1.1em;">一、Quotation Service Scope</div><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column; padding-left: 2em;"><div style="display: flex; padding-left: 3em; text-indent: 2em;">\(expectedContent)</div></div></div>
+<div style="break-inside: avoid-page;"><div style="font-size: 1.1em;">一、Quotation Service Scope</div><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column;"><div style="display: flex;">\(expectedContent)</div></div></div>
 """)
 }
 
