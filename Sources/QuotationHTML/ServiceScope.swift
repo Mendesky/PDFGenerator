@@ -51,15 +51,22 @@ public struct ServiceScope: Component {
                                 }
                                 .environmentValue(.ordered, key: .listStyle)
                                 // `<ol>` 自身仍會吃瀏覽器／weasyprint 預設的 padding-left（約 40px），
-                                // 不關掉的話編號會比內文右一截。`inside` 讓「1.」排進文字流，與內文同左緣。
+                                // 不關掉的話編號會比內文右一截，所以 padding 要自己指定。
+                                //
+                                // **`outside` 而非 `inside`**：`inside` 把標記排進文字流，於是折行會回到
+                                // 標記的左緣、跟「1.」對齊，長項目讀起來像下一個項目的開頭。`outside` 讓標記
+                                // 落在 padding 區、文字自成一欄，折行自然縮在項目內（hanging indent）。
+                                //
+                                // `0.8em` = 標記欄寬。標記在該欄內靠右貼齊文字左緣，所以這個值同時決定
+                                // 「1.」的左緣落在哪：0.8em 讓它對齊上方內文的第一個字（實測標楷體 16px）。
+                                // 位數變多（「10.」）時標記往左長，文字欄不動 —— 這正是 `outside` 的好處，
+                                // 全部項目的文字左緣一致。
                                 //
                                 // **margin 不歸零**：先前一併寫了 `margin: 0`，那超出「對齊」的需要——
                                 // 它拿掉的是 `<ol>` 預設的上下 margin，也就是「內文與第一個編號項之間」
                                 // 那道間距，結果整段看起來比原本更擠。行距本身沒動過（1.5em，
                                 // 設在 Quotation.swift 的根容器），變窄的是區塊間距。
-                                .style("list-style-position: inside; padding-left: 0;")
-                                // 編號與內文共用同一條左緣：外層用同一個 `bodyIndent`，清單自身不再吃
-                                // 瀏覽器預設的 padding（約 40px），標記 `inside` 排進文字流。
+                                .style("list-style-position: outside; padding-left: 0.8em;")
                             }.style("display: flex; padding-left: \(Self.bodyIndent);")
                         }
                     }.style("display: flex; flex-direction: column;  break-inside: avoid-page; ")
