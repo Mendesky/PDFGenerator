@@ -78,6 +78,13 @@ enum ServiceContentHTMLRenderer {
     .rich-serviceContent ul,
     .rich-serviceContent ol { list-style-position: inside; padding-left: 0; text-indent: 0; }
     .rich-serviceContent li { text-indent: 0; }
+    /* `swift-markdown` 的 HTMLFormatter 一律把 list item 內容包成 `<p>`（不分 tight/loose）。
+       `<p>` 是 block，而 `list-style-position: inside` 的標記是行內的 —— 標記會自己佔一個行框、
+       內容從下一行開始，實際 PDF 就是「•」與文字分成兩行。改成 inline 讓標記與首段同行。
+       （前端沒有這個症狀：markdown-it 對 tight list 不包 `<p>`。）
+       同 li 內的第二段以後仍要自己成段，否則多段會黏成一行。 */
+    .rich-serviceContent li > p { display: inline; }
+    .rich-serviceContent li > p + p { display: block; margin-top: 0.5em; }
     </style>
     """
 }

@@ -84,6 +84,18 @@ import Foundation
 // `<ol>` 的上下 margin 不得歸零：它就是「內文與第一個編號項之間」那道間距。
 // 為了讓編號與內文同左緣只需要關掉 padding-left，一併寫 margin: 0 會讓整段比原本更擠
 // （行距本身是 Quotation.swift 根容器的 1.5em，與這裡無關）。
+// 清單標記不得與內容分行。`swift-markdown` 把 li 內容包成 `<p>`（block），
+// 而 `list-style-position: inside` 的標記是行內的 → 標記自己佔一行、文字掉到下一行。
+// 實際 PDF 出現過這個症狀；沒有這條就只能靠印出來才發現。
+@Test func serviceContentListMarkerStaysOnTheSameLineAsItsText() {
+    let html = ServiceContentHTMLRenderer.render(markdown: "- 內容內容內容")
+
+    // 渲染結果確實是 <li><p>…（這是症狀的來源）
+    #expect(html.contains("<li><p>內容內容內容</p>"))
+    // 故必須把 li 內第一段轉成 inline
+    #expect(html.contains(".rich-serviceContent li > p { display: inline; }"))
+}
+
 @Test func serviceScopeKeepsListBlockSpacing() {
     let model = QuotingServiceTerm.Model(
         title: "標題", term: "內文", serviceItemTerms: [.init(content: "工作項目")]
