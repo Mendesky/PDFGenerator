@@ -79,8 +79,8 @@ import Foundation
 }
 
 // 服務範圍原本是三層遞進縮排（標題 text-indent:2em → 內文 2em+3em+2em → 編號項 3.8em），
-// 使用者要求內文與編號項全部對齊同一條左緣。這條鎖住「不再有遞進 padding」——
-// 沒有它，之後有人為了某個版面問題把 padding 加回來不會有任何訊號。
+// 一層比一層右。要求是內文與編號項**共用同一層縮排**（仍縮在標題底下，不是貼齊容器左緣）。
+// 這條鎖住「兩者深度相同」——分開寫就會重演遞進縮排，而版面問題不會有測試訊號。
 @Test func serviceScopeHasNoProgressiveIndent() {
     let model = QuotingServiceTerm.Model(
         title: "標題",
@@ -89,10 +89,14 @@ import Foundation
     )
     let html = ServiceScope(index: 0, model: .init(title: "T", heading: "H", items: [model])).render()
 
+    // 舊的三個不同深度都不該再出現
     #expect(!html.contains("padding-left: 2em"))
     #expect(!html.contains("padding-left: 3em"))
     #expect(!html.contains("padding-left: 3.8em"))
-    // 編號清單不吃預設縮排、標記排進文字流
+    // 內文與編號項共用同一個深度：出現兩次（各一個外層容器）
+    let indentOccurrences = html.components(separatedBy: "padding-left: \(ServiceScope.bodyIndent)").count - 1
+    #expect(indentOccurrences == 2)
+    // 編號清單不吃預設縮排、標記排進文字流（否則編號會比內文右一截）
     #expect(html.contains("list-style-position: inside; padding-left: 0"))
 }
 
@@ -112,7 +116,7 @@ import Foundation
     let expectedContent = ServiceContentHTMLRenderer.scopedStyleBlock
         + "<div class=\"rich-serviceContent\"><p>ItemContent</p>\n</div>"
     #expect(serviceScope.render() == """
-<div style="break-inside: avoid-page;"><div style="font-size: 1.1em;">一、Quotation Service Scope</div><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column;"><div style="display: flex;">\(expectedContent)</div></div></div>
+<div style="break-inside: avoid-page;"><div style="font-size: 1.1em;">一、Quotation Service Scope</div><p style="text-indent: 2em;">This is a description of the Service Scope.</p></div><div style="display: flex; flex-direction: column;  break-inside: avoid-page; "><div style="display: flex; text-indent: 2em;">（一）ItemTitle</div><div style="display: flex; flex-direction: column; padding-left: \(ServiceScope.bodyIndent);"><div style="display: flex;">\(expectedContent)</div></div></div>
 """)
 }
 

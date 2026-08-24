@@ -31,13 +31,13 @@ public struct ServiceScope: Component {
                                 // 見 ServiceContentHTMLRenderer。原本是 `Div(term)`：Plot 會 escape，
                                 // 但完全不處理 `\n`，多行內容在 PDF 會連成一行。
                                 //
-                                // **無縮排**：原本是 `padding-left: 3em; text-indent: 2em`，疊上外層的 2em
-                                // 之後內文比標題深了三層，編號項又是另一個深度 —— 三層遞進縮排。使用者要求
-                                // 內文與編號項全部對齊同一條左緣（首行縮排由資料本身的全形空格表達，不由 CSS 加）。
+                                // 縮排只有一層：內文與編號項**共用** `Self.bodyIndent`，都縮在標題底下。
+                                // 原本是外層 2em ＋ 自身 3em ＋ text-indent 2em，而編號項另外 3.8em ——
+                                // 三個不同深度，一層比一層右。首行縮排由資料本身的全形空格表達，不由 CSS 加。
                                 Div(html: ServiceContentHTMLRenderer.render(markdown: term))
                                     .style("display: flex;")
                             }
-                        }.style("display: flex; flex-direction: column;")
+                        }.style("display: flex; flex-direction: column; padding-left: \(Self.bodyIndent);")
                         if let serviceItemTerms = item.serviceItemTerms{
                             Div{
                                 List{
@@ -53,9 +53,9 @@ public struct ServiceScope: Component {
                                 // `<ol>` 自身仍會吃瀏覽器／weasyprint 預設的 padding-left（約 40px），
                                 // 不關掉的話編號會比內文右一截。`inside` 讓「1.」排進文字流，與內文同左緣。
                                 .style("list-style-position: inside; padding-left: 0; margin: 0;")
-                                // 編號與內文共用同一條左緣：標記排進文字流（`inside`）、清單自身不再吃
-                                // 瀏覽器預設的 padding。原本外層還有 `padding-left: 3.8em`，是三層縮排的最後一層。
-                            }.style("display: flex;")
+                                // 編號與內文共用同一條左緣：外層用同一個 `bodyIndent`，清單自身不再吃
+                                // 瀏覽器預設的 padding（約 40px），標記 `inside` 排進文字流。
+                            }.style("display: flex; padding-left: \(Self.bodyIndent);")
                         }
                     }.style("display: flex; flex-direction: column;  break-inside: avoid-page; ")
                 }
@@ -63,6 +63,12 @@ public struct ServiceScope: Component {
         }
     }
     
+    /// 內文與編號項共用的縮排深度（相對於區塊左緣）。
+    ///
+    /// 兩者**必須用同一個值**——它們在版面上是同一層；分開寫就是先前「一層比一層右」的來源。
+    /// 標題（`（一）…`）自己用 `text-indent: 2em`，比這層淺一階。
+    static let bodyIndent = "4em"
+
     public init(title: String, heading: String, items: [QuotingServiceTerm]?) {
         self.index = -1
         self.title = title
