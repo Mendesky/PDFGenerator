@@ -143,7 +143,7 @@ public struct ClassicFormPage2: Component {
         return out
     }
 
-    /// 組內留言：單一 thread 佔一列，無需編號/引文，跨欄③④⑤（同 .full 的 colspan 邏輯）。
+    /// 組內留言：單一 thread 佔一列，無需編號/引文，跨欄②③④⑤（同 .full 的 colspan 邏輯）。
     private func groupThreadCellGroups(_ thread: AnnotationThread?) -> [Component] {
         guard let thread else { return [] }
         return [TableCell {
@@ -151,12 +151,19 @@ public struct ClassicFormPage2: Component {
         }.class("annotationCell").attribute(named: "colspan", value: "4")]
     }
 
-    /// 標註留言：編號徽章（未定位時純文字不加框）＋標註者/時間＋引文＋留言串，跨欄③④⑤。
+    /// 標註留言：編號徽章（未定位時純文字不加框）＋標註者/時間＋引文＋留言串，跨欄②③④⑤。
     private func annotationHighlightCellGroups(_ item: AnnotationHighlight?) -> [Component] {
         guard let item else { return [] }
+        let badge: Component
+        switch item.position {
+        case .positioned(let label):
+            badge = Span(label).class("annotationBadge")
+        case .unpositioned:
+            badge = Span("位置無法定位").class("annotationUnresolved")
+        }
         return [TableCell {
             Div {
-                Span(item.numberLabel).class(item.isPositioned ? "annotationBadge" : "annotationUnresolved")
+                badge
                 Span("\(item.authorName) · \(item.annotatedAt)").class("annotationMeta")
             }.class("annotationHead")
             Div(item.quotedText).class("annotationQuote")
@@ -304,18 +311,22 @@ extension ClassicFormPage2 {
         }
     }
 
-    /// 標註留言：單一 highlight 的展示資料。isPositioned=false 時 numberLabel 顯示為說明文字
-    /// （如「位置無法定位」）、不加方框徽章；quotedText 一律顯示原始 anchor.exact，即使未定位。
+    /// 標註留言：單一 highlight 的展示資料。`.unpositioned` 時不加方框徽章、顯示「位置無法定位」
+    /// （字串由本層擁有，呼叫端不需要傳入這段文案）；quotedText 一律顯示原始 anchor.exact，即使未定位。
     public struct AnnotationHighlight {
-        public let numberLabel: String
-        public let isPositioned: Bool
+        /// 用 enum 取代原本 numberLabel/isPositioned 兩個各自可設的欄位——後者允許
+        /// ("1", isPositioned: false) 這種矛盾組合，enum 讓這種狀態直接無法表示。
+        public enum Position {
+            case positioned(label: String)
+            case unpositioned
+        }
+        public let position: Position
         public let authorName: String
         public let annotatedAt: String
         public let quotedText: String
         public let messages: [AnnotationMessage]
-        public init(numberLabel: String, isPositioned: Bool, authorName: String, annotatedAt: String, quotedText: String, messages: [AnnotationMessage]) {
-            self.numberLabel = numberLabel
-            self.isPositioned = isPositioned
+        public init(position: Position, authorName: String, annotatedAt: String, quotedText: String, messages: [AnnotationMessage]) {
+            self.position = position
             self.authorName = authorName
             self.annotatedAt = annotatedAt
             self.quotedText = quotedText

@@ -515,11 +515,11 @@ import Foundation
         ]
     )
     let html = doc.render()
-    #expect(html.contains("組內留言"))
+    #expect(html.contains("vlabelChar\">組<"))
     #expect(html.contains("林志豪"))
     #expect(html.contains("2026/08/11 17:05"))
     #expect(html.contains("這份訪談表整體資料齊全"))
-    #expect(html.contains("annotationReply"))
+    #expect(html.contains("class=\"annotationMsg annotationReply\""))
     // 使用者輸入內容須被 escape，不可原樣注入（防呆：含 < 的內容不應破壞結構）
     let index = html.range(of: "林志豪")!.lowerBound
     #expect(html.distance(from: html.startIndex, to: index) > 0)
@@ -542,8 +542,7 @@ import Foundation
         page2Sections: [
             .init(label: "標註留言", rows: [
                 .annotationHighlight(.init(
-                    numberLabel: "1",
-                    isPositioned: true,
+                    position: .positioned(label: "1"),
                     authorName: "陳雅婷",
                     annotatedAt: "2026/08/12 10:15",
                     quotedText: "公司設立年度已逾十年",
@@ -556,14 +555,14 @@ import Foundation
         ]
     )
     let html = doc.render()
-    #expect(html.contains("標註留言"))
+    #expect(html.contains("vlabelChar\">標<"))
     // 用帶引號的 class 屬性比對，避免與 ClassicStylesheet 內 ".annotationBadge {...}" 選擇器文字誤撞
     // （<style> 區塊整份嵌在 render() 輸出內，裸字串比對永遠會命中，測不出實際渲染結果）。
     #expect(html.contains("class=\"annotationBadge\""))
     #expect(html.contains(">1<"))
     #expect(html.contains("陳雅婷 · 2026/08/12 10:15"))
     #expect(html.contains("公司設立年度已逾十年"))
-    #expect(html.contains("annotationReply"))
+    #expect(html.contains("class=\"annotationMsg annotationReply\""))
 }
 
 @Test func classicPage2RendersUnpositionedAnnotationWithoutBadge() {
@@ -572,8 +571,7 @@ import Foundation
         page2Sections: [
             .init(label: "標註留言", rows: [
                 .annotationHighlight(.init(
-                    numberLabel: "位置無法定位",
-                    isPositioned: false,
+                    position: .unpositioned,
                     authorName: "陳雅婷",
                     annotatedAt: "2026/08/09 09:10",
                     quotedText: "客戶目前設有三個營業據點",
@@ -589,4 +587,29 @@ import Foundation
     // 這裡改比對實際會出現在 HTML 元素上的帶引號 class 屬性字串。
     #expect(!html.contains("class=\"annotationBadge\""))
     #expect(html.contains("無留言"))
+}
+
+@Test func classicPage2EscapesUserGeneratedAnnotationContent() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "標註留言", rows: [
+                .annotationHighlight(.init(
+                    position: .positioned(label: "1"),
+                    authorName: "<script>alert(1)</script>",
+                    annotatedAt: "2026/08/12 10:15",
+                    quotedText: "a < b & c",
+                    messages: [
+                        .init(authorName: "測試", postedAt: "2026/08/12 10:16", content: "<b>bold</b> & more", isReply: false),
+                    ]
+                ))
+            ])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("&lt;script&gt;alert(1)&lt;/script&gt;"))
+    #expect(!html.contains("<script>alert(1)</script>"))
+    #expect(html.contains("a &lt; b &amp; c"))
+    #expect(html.contains("&lt;b&gt;bold&lt;/b&gt; &amp; more"))
+    #expect(!html.contains("<b>bold</b>"))
 }

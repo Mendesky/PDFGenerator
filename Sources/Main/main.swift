@@ -401,7 +401,7 @@ let classic = ClassicHandoverDocument(
         ]),
         .init(label: "標註留言", rows: [
             .annotationHighlight(.init(
-                numberLabel: "1", isPositioned: true, authorName: "陳雅婷", annotatedAt: "2026/08/12 10:15",
+                position: .positioned(label: "1"), authorName: "陳雅婷", annotatedAt: "2026/08/12 10:15",
                 quotedText: "公司設立年度已逾十年",
                 messages: [
                     .init(authorName: "陳雅婷", postedAt: "2026/08/12 10:16", content: "此段需跟客戶確認最新登記資料是否有異動。", isReply: false),
@@ -409,11 +409,11 @@ let classic = ClassicHandoverDocument(
                 ]
             )),
             .annotationHighlight(.init(
-                numberLabel: "2", isPositioned: true, authorName: "王小明", annotatedAt: "2026/08/10 09:00",
+                position: .positioned(label: "2"), authorName: "王小明", annotatedAt: "2026/08/10 09:00",
                 quotedText: "毛利率略有下滑", messages: []
             )),
             .annotationHighlight(.init(
-                numberLabel: "位置無法定位", isPositioned: false, authorName: "陳雅婷", annotatedAt: "2026/08/09 09:10",
+                position: .unpositioned, authorName: "陳雅婷", annotatedAt: "2026/08/09 09:10",
                 quotedText: "客戶目前設有三個營業據點",
                 messages: [
                     .init(authorName: "陳雅婷", postedAt: "2026/08/15 08:52", content: "此標記對應的原文已被修改，目前系統無法定位，請確認是否仍需保留此則留言。", isReply: false),

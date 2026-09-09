@@ -92,9 +92,9 @@ enum ClassicStylesheet {
     .classic .ckbox { margin-right: 12px; white-space: nowrap; font-size: 1.08rem; }
 
     /* 標註留言 / 組內留言 附錄（第 2 頁尾部，同 classicForm2 框線與欄寬邏輯） */
-    .classic .classicForm2 .annotationCell { vertical-align: top; }
+    .classic .classicForm2 .annotationCell { vertical-align: top; border: 1px solid #000; padding: 3px 8px; font-size: 1.08rem; word-break: break-all; }
     .classic .classicForm2 .annotationHead { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
-    .classic .classicForm2 .annotationBadge { display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border: 1.2px solid #000; font-weight: 700; font-size: 0.95rem; }
+    .classic .classicForm2 .annotationBadge { display: inline-flex; align-items: center; justify-content: center; min-width: 18px; height: 18px; padding: 0 3px; box-sizing: border-box; border: 1.2px solid #000; font-weight: 700; font-size: 0.95rem; }
     .classic .classicForm2 .annotationUnresolved { color: #555; font-size: 0.95rem; }
     .classic .classicForm2 .annotationMeta { color: #333; font-size: 0.95rem; }
     .classic .classicForm2 .annotationQuote { margin: 2px 0 6px 0; font-style: italic; }
