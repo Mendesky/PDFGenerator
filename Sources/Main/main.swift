@@ -392,7 +392,35 @@ let classic = ClassicHandoverDocument(
             .field("統購開始期別", "115 年 09 月"),
             // 各式發票張數併為一列
             .pairs([("二聯式", "-"), ("二聯式加副聯", "1 本"), ("三聯式", "-"), ("三聯式加副聯", "1 本")])
-        ])
+        ]),
+        .init(label: "組內留言", rows: [
+            .groupThread(.init(messages: [
+                .init(authorName: "林志豪", postedAt: "2026/08/11 17:05", content: "這份訪談表整體資料齊全，建議下週提交複核。", isReply: false),
+                .init(authorName: "陳雅婷", postedAt: "2026/08/11 17:40", content: "收到，我這邊會再補一份財務報表附件。", isReply: true),
+            ])),
+        ]),
+        .init(label: "標註留言", rows: [
+            .annotationHighlight(.init(
+                position: .positioned(label: "1"), authorName: "陳雅婷", annotatedAt: "2026/08/12 10:15",
+                quotedText: "公司設立年度已逾十年",
+                messages: [
+                    .init(authorName: "陳雅婷", postedAt: "2026/08/12 10:16", content: "此段需跟客戶確認最新登記資料是否有異動。", isReply: false),
+                    .init(authorName: "林志豪", postedAt: "2026/08/12 14:02", content: "已致電確認，登記地址與股權結構均無變更。", isReply: true),
+                ]
+            )),
+            .annotationHighlight(.init(
+                position: .positioned(label: "2"), authorName: "王小明", annotatedAt: "2026/08/10 09:00",
+                quotedText: "毛利率略有下滑", messages: []
+            )),
+            .annotationHighlight(.init(
+                position: .unpositioned, authorName: "陳雅婷", annotatedAt: "2026/08/09 09:10",
+                quotedText: "客戶目前設有三個營業據點",
+                messages: [
+                    .init(authorName: "陳雅婷", postedAt: "2026/08/15 08:52", content: "此標記對應的原文已被修改，目前系統無法定位，請確認是否仍需保留此則留言。", isReply: false),
+                    .init(authorName: "林志豪", postedAt: "2026/08/15 09:30", content: "要保留，留言內容對後續複核仍有參考價值。", isReply: true),
+                ]
+            )),
+        ]),
     ],
     externalURL: "http://www.google.com",
     internalURL: "http://www.google.com",

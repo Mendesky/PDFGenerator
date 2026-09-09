@@ -545,3 +545,135 @@ import Foundation
     #expect(html.contains("密碼：-"))
     #expect(!html.contains("●"))
 }
+
+@Test func markdownRenderPassesThroughInlineSupTag() {
+    // highlight 編號上標插入點在 markdown 原文字串裡，須確認 swift-markdown 不會把 <sup> 轉義成 &lt;sup&gt;
+    let markdown = "毛利率略有下滑<sup>[2]</sup>，惟仍在可控範圍。"
+    let html = MarkdownHTML.render(markdown)
+    #expect(html.contains("<sup>[2]</sup>"))
+    #expect(!html.contains("&lt;sup&gt;"))
+}
+
+@Test func classicFormPage2MarkdownRowPreservesInlineSupTag() {
+    // 同一件事，走實際會用到的路徑（.markdown row → ClassicFormPage2 渲染），不只測 MarkdownHTML 本身
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "訪談紀錄", rows: [.markdown("客戶營運現況", "毛利率略有下滑<sup>[2]</sup>，惟仍在可控範圍。")]),
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("<sup>[2]</sup>"))
+}
+
+@Test func classicPage2RendersGroupThreadWithReplyIndent() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "組內留言", rows: [
+                .groupThread(.init(messages: [
+                    .init(authorName: "林志豪", postedAt: "2026/08/11 17:05", content: "這份訪談表整體資料齊全，建議下週提交複核。", isReply: false),
+                    .init(authorName: "陳雅婷", postedAt: "2026/08/11 17:40", content: "收到，我這邊會再補一份財務報表附件。", isReply: true),
+                ]))
+            ])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("vlabelChar\">組<"))
+    #expect(html.contains("林志豪"))
+    #expect(html.contains("2026/08/11 17:05"))
+    #expect(html.contains("這份訪談表整體資料齊全"))
+    #expect(html.contains("class=\"annotationMsg annotationReply\""))
+    // 使用者輸入內容須被 escape，不可原樣注入（防呆：含 < 的內容不應破壞結構）
+    let index = html.range(of: "林志豪")!.lowerBound
+    #expect(html.distance(from: html.startIndex, to: index) > 0)
+}
+
+@Test func classicPage2RendersGroupThreadEmptyMessagesAsNoComment() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "組內留言", rows: [.groupThread(.init(messages: []))])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("無留言"))
+}
+
+@Test func classicPage2RendersAnnotationHighlightWithBadgeAndQuote() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "標註留言", rows: [
+                .annotationHighlight(.init(
+                    position: .positioned(label: "1"),
+                    authorName: "陳雅婷",
+                    annotatedAt: "2026/08/12 10:15",
+                    quotedText: "公司設立年度已逾十年",
+                    messages: [
+                        .init(authorName: "陳雅婷", postedAt: "2026/08/12 10:16", content: "此段需跟客戶確認最新登記資料是否有異動。", isReply: false),
+                        .init(authorName: "林志豪", postedAt: "2026/08/12 14:02", content: "已致電確認，登記地址與股權結構均無變更。", isReply: true),
+                    ]
+                ))
+            ])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("vlabelChar\">標<"))
+    // 用帶引號的 class 屬性比對，避免與 ClassicStylesheet 內 ".annotationBadge {...}" 選擇器文字誤撞
+    // （<style> 區塊整份嵌在 render() 輸出內，裸字串比對永遠會命中，測不出實際渲染結果）。
+    #expect(html.contains("class=\"annotationBadge\""))
+    #expect(html.contains(">1<"))
+    #expect(html.contains("陳雅婷 · 2026/08/12 10:15"))
+    #expect(html.contains("公司設立年度已逾十年"))
+    #expect(html.contains("class=\"annotationMsg annotationReply\""))
+}
+
+@Test func classicPage2RendersUnpositionedAnnotationWithoutBadge() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "標註留言", rows: [
+                .annotationHighlight(.init(
+                    position: .unpositioned,
+                    authorName: "陳雅婷",
+                    annotatedAt: "2026/08/09 09:10",
+                    quotedText: "客戶目前設有三個營業據點",
+                    messages: []
+                ))
+            ])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("位置無法定位"))
+    #expect(html.contains("class=\"annotationUnresolved\""))
+    // 見上一測試的註解：裸字串 "annotationBadge" 必命中內嵌的 <style> 選擇器文字，
+    // 這裡改比對實際會出現在 HTML 元素上的帶引號 class 屬性字串。
+    #expect(!html.contains("class=\"annotationBadge\""))
+    #expect(html.contains("無留言"))
+}
+
+@Test func classicPage2EscapesUserGeneratedAnnotationContent() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "標註留言", rows: [
+                .annotationHighlight(.init(
+                    position: .positioned(label: "1"),
+                    authorName: "<script>alert(1)</script>",
+                    annotatedAt: "2026/08/12 10:15",
+                    quotedText: "a < b & c",
+                    messages: [
+                        .init(authorName: "測試", postedAt: "2026/08/12 10:16", content: "<b>bold</b> & more", isReply: false),
+                    ]
+                ))
+            ])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("&lt;script&gt;alert(1)&lt;/script&gt;"))
+    #expect(!html.contains("<script>alert(1)</script>"))
+    #expect(html.contains("a &lt; b &amp; c"))
+    #expect(html.contains("&lt;b&gt;bold&lt;/b&gt; &amp; more"))
+    #expect(!html.contains("<b>bold</b>"))
+}
