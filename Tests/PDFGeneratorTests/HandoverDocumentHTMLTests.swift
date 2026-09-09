@@ -535,3 +535,58 @@ import Foundation
     let html = doc.render()
     #expect(html.contains("無留言"))
 }
+
+@Test func classicPage2RendersAnnotationHighlightWithBadgeAndQuote() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "標註留言", rows: [
+                .annotationHighlight(.init(
+                    numberLabel: "1",
+                    isPositioned: true,
+                    authorName: "陳雅婷",
+                    annotatedAt: "2026/08/12 10:15",
+                    quotedText: "公司設立年度已逾十年",
+                    messages: [
+                        .init(authorName: "陳雅婷", postedAt: "2026/08/12 10:16", content: "此段需跟客戶確認最新登記資料是否有異動。", isReply: false),
+                        .init(authorName: "林志豪", postedAt: "2026/08/12 14:02", content: "已致電確認，登記地址與股權結構均無變更。", isReply: true),
+                    ]
+                ))
+            ])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("標註留言"))
+    // 用帶引號的 class 屬性比對，避免與 ClassicStylesheet 內 ".annotationBadge {...}" 選擇器文字誤撞
+    // （<style> 區塊整份嵌在 render() 輸出內，裸字串比對永遠會命中，測不出實際渲染結果）。
+    #expect(html.contains("class=\"annotationBadge\""))
+    #expect(html.contains(">1<"))
+    #expect(html.contains("陳雅婷 · 2026/08/12 10:15"))
+    #expect(html.contains("公司設立年度已逾十年"))
+    #expect(html.contains("annotationReply"))
+}
+
+@Test func classicPage2RendersUnpositionedAnnotationWithoutBadge() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "標註留言", rows: [
+                .annotationHighlight(.init(
+                    numberLabel: "位置無法定位",
+                    isPositioned: false,
+                    authorName: "陳雅婷",
+                    annotatedAt: "2026/08/09 09:10",
+                    quotedText: "客戶目前設有三個營業據點",
+                    messages: []
+                ))
+            ])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("位置無法定位"))
+    #expect(html.contains("class=\"annotationUnresolved\""))
+    // 見上一測試的註解：裸字串 "annotationBadge" 必命中內嵌的 <style> 選擇器文字，
+    // 這裡改比對實際會出現在 HTML 元素上的帶引號 class 屬性字串。
+    #expect(!html.contains("class=\"annotationBadge\""))
+    #expect(html.contains("無留言"))
+}

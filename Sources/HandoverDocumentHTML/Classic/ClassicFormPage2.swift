@@ -108,6 +108,8 @@ public struct ClassicFormPage2: Component {
             return quotingCellGroups(row.quoting)
         case .groupThread:
             return groupThreadCellGroups(row.groupThread)
+        case .annotationHighlight:
+            return annotationHighlightCellGroups(row.annotationHighlight)
         }
     }
 
@@ -146,6 +148,19 @@ public struct ClassicFormPage2: Component {
         guard let thread else { return [] }
         return [TableCell {
             annotationThreadBody(thread.messages)
+        }.class("annotationCell").attribute(named: "colspan", value: "4")]
+    }
+
+    /// 標註留言：編號徽章（未定位時純文字不加框）＋標註者/時間＋引文＋留言串，跨欄③④⑤。
+    private func annotationHighlightCellGroups(_ item: AnnotationHighlight?) -> [Component] {
+        guard let item else { return [] }
+        return [TableCell {
+            Div {
+                Span(item.numberLabel).class(item.isPositioned ? "annotationBadge" : "annotationUnresolved")
+                Span("\(item.authorName) · \(item.annotatedAt)").class("annotationMeta")
+            }.class("annotationHead")
+            Div(item.quotedText).class("annotationQuote")
+            annotationThreadBody(item.messages)
         }.class("annotationCell").attribute(named: "colspan", value: "4")]
     }
 
@@ -194,41 +209,46 @@ extension ClassicFormPage2 {
     }
 
     public struct Row {
-        enum Kind { case field, markdown, heading, full, pairs, quoting, groupThread }
+        enum Kind { case field, markdown, heading, full, pairs, quoting, groupThread, annotationHighlight }
         let kind: Kind
         let label: String?
         let value: String
         let pairs: [(String, String)]
         let quoting: QuotingGroup?
         let groupThread: AnnotationThread?
+        let annotationHighlight: AnnotationHighlight?
 
         /// label｜value 一般欄位
         public static func field(_ label: String, _ value: String) -> Row {
-            Row(kind: .field, label: label, value: value, pairs: [], quoting: nil, groupThread: nil)
+            Row(kind: .field, label: label, value: value, pairs: [], quoting: nil, groupThread: nil, annotationHighlight: nil)
         }
         /// label｜value，value 以 markdown 渲染（訪談紀錄等富文字欄位）
         public static func markdown(_ label: String, _ value: String) -> Row {
-            Row(kind: .markdown, label: label, value: value, pairs: [], quoting: nil, groupThread: nil)
+            Row(kind: .markdown, label: label, value: value, pairs: [], quoting: nil, groupThread: nil, annotationHighlight: nil)
         }
         /// 粗體跨欄小標（如報價的 bundle 名）
         public static func heading(_ text: String) -> Row {
-            Row(kind: .heading, label: nil, value: text, pairs: [], quoting: nil, groupThread: nil)
+            Row(kind: .heading, label: nil, value: text, pairs: [], quoting: nil, groupThread: nil, annotationHighlight: nil)
         }
         /// 跨欄整段文字
         public static func full(_ value: String) -> Row {
-            Row(kind: .full, label: nil, value: value, pairs: [], quoting: nil, groupThread: nil)
+            Row(kind: .full, label: nil, value: value, pairs: [], quoting: nil, groupThread: nil, annotationHighlight: nil)
         }
         /// 一列多組 label｜value
         public static func pairs(_ pairs: [(String, String)]) -> Row {
-            Row(kind: .pairs, label: nil, value: "", pairs: pairs, quoting: nil, groupThread: nil)
+            Row(kind: .pairs, label: nil, value: "", pairs: pairs, quoting: nil, groupThread: nil, annotationHighlight: nil)
         }
         /// 報價群組：label＝「組合項目」(多項) 或「服務項目」(單項)；total＝最右側總價（rowspan 跨整組）。
         public static func quoting(_ group: QuotingGroup) -> Row {
-            Row(kind: .quoting, label: nil, value: "", pairs: [], quoting: group, groupThread: nil)
+            Row(kind: .quoting, label: nil, value: "", pairs: [], quoting: group, groupThread: nil, annotationHighlight: nil)
         }
         /// 組內留言：單一 thread（root + 回覆，皆用 AnnotationMessage，isReply 標示是否為回覆）
         public static func groupThread(_ thread: AnnotationThread) -> Row {
-            Row(kind: .groupThread, label: nil, value: "", pairs: [], quoting: nil, groupThread: thread)
+            Row(kind: .groupThread, label: nil, value: "", pairs: [], quoting: nil, groupThread: thread, annotationHighlight: nil)
+        }
+        /// 標註留言：單一 highlight 一則（編號/標註者/標註時間 + 引用原文 + 留言串）
+        public static func annotationHighlight(_ highlight: AnnotationHighlight) -> Row {
+            Row(kind: .annotationHighlight, label: nil, value: "", pairs: [], quoting: nil, groupThread: nil, annotationHighlight: highlight)
         }
     }
 
@@ -280,6 +300,25 @@ extension ClassicFormPage2 {
     public struct AnnotationThread {
         public let messages: [AnnotationMessage]
         public init(messages: [AnnotationMessage]) {
+            self.messages = messages
+        }
+    }
+
+    /// 標註留言：單一 highlight 的展示資料。isPositioned=false 時 numberLabel 顯示為說明文字
+    /// （如「位置無法定位」）、不加方框徽章；quotedText 一律顯示原始 anchor.exact，即使未定位。
+    public struct AnnotationHighlight {
+        public let numberLabel: String
+        public let isPositioned: Bool
+        public let authorName: String
+        public let annotatedAt: String
+        public let quotedText: String
+        public let messages: [AnnotationMessage]
+        public init(numberLabel: String, isPositioned: Bool, authorName: String, annotatedAt: String, quotedText: String, messages: [AnnotationMessage]) {
+            self.numberLabel = numberLabel
+            self.isPositioned = isPositioned
+            self.authorName = authorName
+            self.annotatedAt = annotatedAt
+            self.quotedText = quotedText
             self.messages = messages
         }
     }
