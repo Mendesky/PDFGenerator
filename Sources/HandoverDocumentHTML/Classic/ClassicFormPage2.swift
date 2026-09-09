@@ -106,6 +106,8 @@ public struct ClassicFormPage2: Component {
             }.class("fieldValue").attribute(named: "colspan", value: "4")]
         case .quoting:
             return quotingCellGroups(row.quoting)
+        case .groupThread:
+            return groupThreadCellGroups(row.groupThread)
         }
     }
 
@@ -139,6 +141,31 @@ public struct ClassicFormPage2: Component {
         return out
     }
 
+    /// 組內留言：單一 thread 佔一列，無需編號/引文，跨欄③④⑤（同 .full 的 colspan 邏輯）。
+    private func groupThreadCellGroups(_ thread: AnnotationThread?) -> [Component] {
+        guard let thread else { return [] }
+        return [TableCell {
+            annotationThreadBody(thread.messages)
+        }.class("annotationCell").attribute(named: "colspan", value: "4")]
+    }
+
+    /// 留言列表共用渲染：無留言 → 「無留言」；有留言依序渲染，isReply 往內縮排一階。
+    /// 內容一律用 Plot 的 escape 建構子（Div("plain string")），不用 html: 原樣注入——
+    /// 留言內容是使用者輸入，不可信任其不含破壞版面的字元。
+    private func annotationThreadBody(_ messages: [AnnotationMessage]) -> Component {
+        guard !messages.isEmpty else {
+            return Div("無留言").class("annotationEmpty")
+        }
+        return ComponentGroup {
+            for msg in messages {
+                Div {
+                    Div("\(msg.authorName) · \(msg.postedAt)").class("annotationMsgMeta")
+                    Div(msg.content).class("annotationMsgBody")
+                }.class(msg.isReply ? "annotationMsg annotationReply" : "annotationMsg")
+            }
+        }
+    }
+
     /// 值可含 \n，逐行以 <br> 斷開。label 亦沿用：label 欄寬固定（classicForm2 為 110px）且
     /// CJK 可任意斷行，長標籤會落在不自然的位置（如「二代健保補充保」/「費」）。斷在哪屬領域
     /// 語意，由呼叫端在字串中以 \n 指定；不含 \n 時渲染結果與先前完全相同。
@@ -167,36 +194,41 @@ extension ClassicFormPage2 {
     }
 
     public struct Row {
-        enum Kind { case field, markdown, heading, full, pairs, quoting }
+        enum Kind { case field, markdown, heading, full, pairs, quoting, groupThread }
         let kind: Kind
         let label: String?
         let value: String
         let pairs: [(String, String)]
         let quoting: QuotingGroup?
+        let groupThread: AnnotationThread?
 
         /// label｜value 一般欄位
         public static func field(_ label: String, _ value: String) -> Row {
-            Row(kind: .field, label: label, value: value, pairs: [], quoting: nil)
+            Row(kind: .field, label: label, value: value, pairs: [], quoting: nil, groupThread: nil)
         }
         /// label｜value，value 以 markdown 渲染（訪談紀錄等富文字欄位）
         public static func markdown(_ label: String, _ value: String) -> Row {
-            Row(kind: .markdown, label: label, value: value, pairs: [], quoting: nil)
+            Row(kind: .markdown, label: label, value: value, pairs: [], quoting: nil, groupThread: nil)
         }
         /// 粗體跨欄小標（如報價的 bundle 名）
         public static func heading(_ text: String) -> Row {
-            Row(kind: .heading, label: nil, value: text, pairs: [], quoting: nil)
+            Row(kind: .heading, label: nil, value: text, pairs: [], quoting: nil, groupThread: nil)
         }
         /// 跨欄整段文字
         public static func full(_ value: String) -> Row {
-            Row(kind: .full, label: nil, value: value, pairs: [], quoting: nil)
+            Row(kind: .full, label: nil, value: value, pairs: [], quoting: nil, groupThread: nil)
         }
         /// 一列多組 label｜value
         public static func pairs(_ pairs: [(String, String)]) -> Row {
-            Row(kind: .pairs, label: nil, value: "", pairs: pairs, quoting: nil)
+            Row(kind: .pairs, label: nil, value: "", pairs: pairs, quoting: nil, groupThread: nil)
         }
         /// 報價群組：label＝「組合項目」(多項) 或「服務項目」(單項)；total＝最右側總價（rowspan 跨整組）。
         public static func quoting(_ group: QuotingGroup) -> Row {
-            Row(kind: .quoting, label: nil, value: "", pairs: [], quoting: group)
+            Row(kind: .quoting, label: nil, value: "", pairs: [], quoting: group, groupThread: nil)
+        }
+        /// 組內留言：單一 thread（root + 回覆，皆用 AnnotationMessage，isReply 標示是否為回覆）
+        public static func groupThread(_ thread: AnnotationThread) -> Row {
+            Row(kind: .groupThread, label: nil, value: "", pairs: [], quoting: nil, groupThread: thread)
         }
     }
 
@@ -226,6 +258,29 @@ extension ClassicFormPage2 {
             self.name = name
             self.amount = amount
             self.configs = configs
+        }
+    }
+
+    /// 留言（標註留言的留言串、或組內留言的 thread 訊息）。isReply=true 時往內縮排一階。
+    /// postedAt 是呼叫端已格式化好的顯示字串（如 "2026/08/12 10:15"），本層不做時區/格式轉換。
+    public struct AnnotationMessage {
+        public let authorName: String
+        public let postedAt: String
+        public let content: String
+        public let isReply: Bool
+        public init(authorName: String, postedAt: String, content: String, isReply: Bool) {
+            self.authorName = authorName
+            self.postedAt = postedAt
+            self.content = content
+            self.isReply = isReply
+        }
+    }
+
+    /// 組內留言：一個獨立 thread（root + 回覆，皆為 AnnotationMessage，isReply 標示層級）。
+    public struct AnnotationThread {
+        public let messages: [AnnotationMessage]
+        public init(messages: [AnnotationMessage]) {
+            self.messages = messages
         }
     }
 }

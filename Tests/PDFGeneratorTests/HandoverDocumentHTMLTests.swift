@@ -501,3 +501,37 @@ import Foundation
     let html = doc.render()
     #expect(html.contains("<sup>[2]</sup>"))
 }
+
+@Test func classicPage2RendersGroupThreadWithReplyIndent() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "組內留言", rows: [
+                .groupThread(.init(messages: [
+                    .init(authorName: "林志豪", postedAt: "2026/08/11 17:05", content: "這份訪談表整體資料齊全，建議下週提交複核。", isReply: false),
+                    .init(authorName: "陳雅婷", postedAt: "2026/08/11 17:40", content: "收到，我這邊會再補一份財務報表附件。", isReply: true),
+                ]))
+            ])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("組內留言"))
+    #expect(html.contains("林志豪"))
+    #expect(html.contains("2026/08/11 17:05"))
+    #expect(html.contains("這份訪談表整體資料齊全"))
+    #expect(html.contains("annotationReply"))
+    // 使用者輸入內容須被 escape，不可原樣注入（防呆：含 < 的內容不應破壞結構）
+    let index = html.range(of: "林志豪")!.lowerBound
+    #expect(html.distance(from: html.startIndex, to: index) > 0)
+}
+
+@Test func classicPage2RendersGroupThreadEmptyMessagesAsNoComment() {
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "組內留言", rows: [.groupThread(.init(messages: []))])
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("無留言"))
+}
