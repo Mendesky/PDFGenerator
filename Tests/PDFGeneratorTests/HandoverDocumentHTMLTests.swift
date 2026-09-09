@@ -481,3 +481,23 @@ import Foundation
     #expect(html.contains("帳號"))
     #expect(html.contains("發票號碼起訖"))
 }
+
+@Test func markdownRenderPassesThroughInlineSupTag() {
+    // highlight 編號上標插入點在 markdown 原文字串裡，須確認 swift-markdown 不會把 <sup> 轉義成 &lt;sup&gt;
+    let markdown = "毛利率略有下滑<sup>[2]</sup>，惟仍在可控範圍。"
+    let html = MarkdownHTML.render(markdown)
+    #expect(html.contains("<sup>[2]</sup>"))
+    #expect(!html.contains("&lt;sup&gt;"))
+}
+
+@Test func classicFormPage2MarkdownRowPreservesInlineSupTag() {
+    // 同一件事，走實際會用到的路徑（.markdown row → ClassicFormPage2 渲染），不只測 MarkdownHTML 本身
+    let doc = ClassicHandoverDocument(
+        page1: .init(companyName: "範例股份有限公司"),
+        page2Sections: [
+            .init(label: "訪談紀錄", rows: [.markdown("客戶營運現況", "毛利率略有下滑<sup>[2]</sup>，惟仍在可控範圍。")]),
+        ]
+    )
+    let html = doc.render()
+    #expect(html.contains("<sup>[2]</sup>"))
+}
