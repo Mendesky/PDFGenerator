@@ -539,6 +539,14 @@ func replyFormPaymentBlockSingleCaseBehaviorUnchanged() {
     """)
 }
 
+@Test func agreementTermsClosingRendersAfterProvisionsUnnumbered(){
+    let agreementTerms = ContractSection(title: "其它約定事項", heading: "", provisions: [
+        .init(term: "第一條。"),
+        .init(term: "第二條。"),
+    ], closing: "有關本報價單所生之相關爭議，均應以中華民國法令為準據法。")
+    #expect(agreementTerms.render() == "<div style=\"break-inside: avoid-page; \"><div style=\"font-size: 1.1em; margin-top: 1em;\">其它約定事項</div><p style=\"display: flex; text-indent: 2em;\"></p><div style=\"display: flex; flex-direction: column; padding-left: 5em; break-inside: avoid-page;\"><div style=\"display: flex; text-indent: -3em;\">（一）第一條。</div></div><div style=\"display: flex; flex-direction: column; padding-left: 5em; break-inside: avoid-page;\"><div style=\"display: flex; text-indent: -3em;\">（二）第二條。</div></div><div style=\"padding-left: 5em; margin-top: 1.5em;\">有關本報價單所生之相關爭議，均應以中華民國法令為準據法。</div></div>")
+}
+
 @Test func createAgreementTerms(){
     let agreementTerms = ContractSection(title: "其它約定事項", heading: "", provisions: [
         .init(term: "上開服務公費自本函發出日有效期間為三個月，倘　貴公司簽署回函時點已逾本函發出日三個月以上，本事務所保有修改本服務委任書之權利。"),

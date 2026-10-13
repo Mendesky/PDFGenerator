@@ -117,7 +117,7 @@ public struct AuditQuotation: Renderable {
             if let agreementTerms {
                 ContractSection.init(index: agreementTermsIndex, title: agreementTerms.title, heading: agreementTerms.heading, provisions: agreementTerms.terms.map{
                     .init(term: $0)
-                })
+                }, closing: agreementTerms.closing)
             }
             Page.break
             ReplyForm(receiver: replyFormReceiver, sender: sender, quotationNo: no, model: replyForm)

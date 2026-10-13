@@ -150,7 +150,7 @@ let agreementTerms = AgreementTerms.Model(title: "其它約定事項", heading: 
     "上開服務公費自本函發出日有效期間為三個月，倘　貴公司簽署回函時點已逾本函發出日三個月以上，本事務所保有修改本服務委任書之權利。",
     "在本報價單所載之工作服務期間，任何一方可提前三個月要求終止服務或終止雙方之委任關係，惟 貴公司仍應支付本事務所已完成工作之服務費用。貴公司同意於雙方之委任關係終止後15日內，不經本事務所催告即應對本事務所清償所有 貴公司應付之費用。",
     "貴公司或 貴公司之代理人或使用人所提供之文件將暫存於本事務所處，本事務所將依本事務所當時之正常文件管理方式保管之。本事務所得於每年度終了或特定服務完成後，返還本事務所為 貴公司所留存之文件。"
-])
+], closing: "有關本報價單所生之相關爭議，均應以中華民國法令為準據法。")
 
 let quotation = AuditQuotation(no: quotationNo, receiver: receiver, replyFormReceiver: receiver, sender: .kd, purpose: purpose, payments: payments, serviceScope: scope, letterHeader: lettetHeader, assistance: assistance, notes: notes, replyForm: replyForm, contractHeader: contractHeader, rightsAndObligations: rightsAndObligations, agreementTerms: agreementTerms, fontSize: 20)
 let html = quotation.render()
