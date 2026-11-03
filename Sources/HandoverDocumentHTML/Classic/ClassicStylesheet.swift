@@ -58,6 +58,8 @@ enum ClassicStylesheet {
     .classic .blockCell { padding: 0; vertical-align: top; }
     /* 第 2 頁：label 欄固定窄寬、長標籤換行（避免整欄被「代辦年度CTP申報」撐寬） */
     .classic .classicForm2 .fieldLabel { width: 110px; white-space: normal; word-break: normal; }
+    /* 第 2 頁內容格上下置中：只有一列的區塊（例：憑證）會被直書標籤撐高，靠上對齊時值會貼在上緣、跟置中的欄位標籤錯開 */
+    .classic .classicForm2 .fieldValue { vertical-align: middle; }
     .classic .classicForm2 .rowHeading { background: #fafafa; font-weight: 700; }
     /* 報價群組：服務名 / 每項金額(右) / 設定 / 總價(置中、跨整組) */
     .classic .serviceName, .classic .serviceConfig { word-break: break-all; padding: 3px 8px; font-size: 1.08rem; vertical-align: top; }
