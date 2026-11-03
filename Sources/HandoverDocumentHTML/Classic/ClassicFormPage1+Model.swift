@@ -42,6 +42,7 @@ extension ClassicFormPage1 {
         public var communicationAddress: String?
         public var products: String?
         public var source: String?
+        public var sourceDetail: String?     // 來源的細節說明（選填；有值才另起一行縮排印出）
         public var designatedCpa: String?
 
         // 選項（label + 是否勾選）
@@ -118,6 +119,7 @@ extension ClassicFormPage1 {
             communicationAddress: String? = nil,
             products: String? = nil,
             source: String? = nil,
+            sourceDetail: String? = nil,
             designatedCpa: String? = nil,
             industryChoices: [(label: String, checked: Bool)] = [],
             costAnalysisChoices: [(label: String, checked: Bool)] = [],
@@ -157,6 +159,7 @@ extension ClassicFormPage1 {
             self.communicationAddress = communicationAddress
             self.products = products
             self.source = source
+            self.sourceDetail = sourceDetail
             self.designatedCpa = designatedCpa
             self.industryChoices = industryChoices
             self.costAnalysisChoices = costAnalysisChoices

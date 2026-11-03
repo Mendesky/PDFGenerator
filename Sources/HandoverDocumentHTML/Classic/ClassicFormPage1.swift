@@ -53,10 +53,29 @@ public struct ClassicFormPage1: Component {
             [labelCell("登記地址"), valueCell(joinAddress(model.registeredPostcode, model.registeredAddress), colspan: 5)],
             [labelCell("通訊地址"), valueCell(joinAddress(model.communicationPostcode, model.communicationAddress), colspan: 5)],
             [labelCell("營業項目及產品"), valueCell(model.products, colspan: 5)],
-            [labelCell("來　源"), valueCell(model.source, colspan: 5)],
+            [labelCell("來　源"), cell(sourceBlock, class: "fieldValue", colspan: 5)],
             [labelCell("指定簽證之會計師"), valueCell(model.designatedCpa, colspan: 5)],
             [labelCell("聯絡人"), cell(contactsBlock, class: "fieldValue", colspan: 5)],
         ]
+    }
+
+    // 來源：第一行「來源（介紹人）」；細節說明有值時另起一行縮排（同聯絡人的聯絡方式），可含 \n 逐行 <br>。
+    private var sourceBlock: Component {
+        let detailLines = (model.sourceDetail ?? "").split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
+        return Div {
+            Div(Text(model.source ?? "")).class("sourceLine")
+            if let detail = model.sourceDetail, !detail.isEmpty {
+                Div {
+                    for (index, line) in detailLines.enumerated() {
+                        if index < detailLines.count - 1 {
+                            Text(line).addLineBreak()
+                        } else {
+                            Text(line)
+                        }
+                    }
+                }.class("sourceDetail")
+            }
+        }.class("sourceBlock")
     }
 
     // 聯絡人（可多位）：每位一列，含稱謂與市話/手機/Email

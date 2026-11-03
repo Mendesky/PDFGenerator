@@ -80,6 +80,10 @@ enum ClassicStylesheet {
     .classic .serviceBlock { line-height: 1.85; }
     .classic .invoiceLine { padding-top: 3px; }
 
+    /* 來源（來源一行；細節說明有值時縮排另起一行，縮排同聯絡人的聯絡方式） */
+    .classic .sourceLine { padding-bottom: 1px; }
+    .classic .sourceDetail { padding-left: 1.6em; color: #222; }
+
     /* 聯絡人（可多位，姓名一行、各聯絡方式各自縮排一行） */
     .classic .contactBlock { display: flex; flex-direction: column; gap: 6px; }
     .classic .contactLine { font-size: 1.08rem; }
