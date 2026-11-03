@@ -472,6 +472,21 @@ import Foundation
     #expect(!html.contains("整帳費"))
 }
 
+@Test func classicFormPage1LabelsBookkeepingFeeByCaller() {
+    // 記帳那格的名稱依帳別由呼叫端傳入（原固定「記帳費」，2026-11-03 改）
+    let html = ClassicFormPage1(model: .init(companyName: "範例股份有限公司", bookkeepingFeeLabel: "帳務整理費", bookkeepingFee: "4,000 元/月(14個月)")).render()
+
+    #expect(html.contains("帳務整理費"))
+    #expect(!html.contains("記帳費"))
+}
+
+@Test func classicFormPage1BookkeepingFeeLabelDefaultsToTaxFiling() {
+    let html = ClassicFormPage1(model: .init(companyName: "範例股份有限公司")).render()
+
+    #expect(html.contains("稅務申報費"))
+    #expect(!html.contains("記帳費"))
+}
+
 // MARK: 備註區的電子發票整合服務平台
 //
 // 印在「發票明細」勾選列下方，一行帶出帳號 / 密碼狀態 / 字軌起訖。

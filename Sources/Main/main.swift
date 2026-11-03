@@ -331,7 +331,7 @@ let classicPage1 = ClassicFormPage1.Model(
     costAnalysisChoices: [("要", false), ("依法", true)],
     filingChoices: [("簽證", false), ("所得額", false), ("查帳", false), ("書審", true)],
     serviceChoices: [
-        ("稅簽", true), ("財簽", false), ("記帳(稅)", true), ("記帳(管)", false),
+        ("稅簽", true), ("財簽", false), ("稅務申報", true), ("帳務整理", false),
         ("年度CTP", true), ("整理", false), ("工商", false), ("出納", true), ("薪資人力", false)
     ],
     invoiceChoices: [

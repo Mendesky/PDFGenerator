@@ -149,7 +149,7 @@ public struct ClassicFormPage1: Component {
 
     private var feeRows: [[Component]] {
         [
-            [labelCell("記帳費"), valueCell(model.bookkeepingFee, colspan: 2),
+            [labelCell(model.bookkeepingFeeLabel), valueCell(model.bookkeepingFee, colspan: 2),
              labelCell("整理費"), valueCell(model.tidyingFee, colspan: 2)],
             [labelCell("年度CTP"), valueCell(model.ctpFee, colspan: 2),
              labelCell("稅簽/年"), valueCell(model.taxAuditFee, colspan: 2)],

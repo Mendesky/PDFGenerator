@@ -59,6 +59,7 @@ extension ClassicFormPage1 {
         public var relatedBusinessSummary: String?
 
         // 費用摘要
+        public var bookkeepingFeeLabel: String  // 記帳那格的名稱，依帳別由呼叫端決定（例：稅務申報費／帳務整理費）
         public var bookkeepingFee: String?
         public var tidyingFee: String?
         public var ctpFee: String?
@@ -130,6 +131,7 @@ extension ClassicFormPage1 {
             previousFirmChangeReason: String? = nil,
             clientNotesSummary: String? = nil,
             relatedBusinessSummary: String? = nil,
+            bookkeepingFeeLabel: String = "稅務申報費",
             bookkeepingFee: String? = nil,
             tidyingFee: String? = nil,
             ctpFee: String? = nil,
@@ -170,6 +172,7 @@ extension ClassicFormPage1 {
             self.previousFirmChangeReason = previousFirmChangeReason
             self.clientNotesSummary = clientNotesSummary
             self.relatedBusinessSummary = relatedBusinessSummary
+            self.bookkeepingFeeLabel = bookkeepingFeeLabel
             self.bookkeepingFee = bookkeepingFee
             self.tidyingFee = tidyingFee
             self.ctpFee = ctpFee
