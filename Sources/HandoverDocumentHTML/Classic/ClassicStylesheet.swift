@@ -96,6 +96,8 @@ enum ClassicStylesheet {
 
     /* 勾選 ■/□ */
     .classic .ckbox { margin-right: 12px; white-space: nowrap; font-size: 1.08rem; }
+    /* 服務列：記帳兩格改名「稅務申報」「帳務整理(康達)」後變長，間距收窄讓九項維持一行（第 1 頁要壓在一頁，多一行就得縮客戶狀況） */
+    .classic .serviceBlock .ckbox { margin-right: 7px; }
 
     /* 標註留言 / 組內留言 附錄（第 2 頁尾部，同 classicForm2 框線與欄寬邏輯） */
     .classic .classicForm2 .annotationCell { vertical-align: top; border: 1px solid #000; padding: 3px 8px; font-size: 1.08rem; word-break: break-all; }
