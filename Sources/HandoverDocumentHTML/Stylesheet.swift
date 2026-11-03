@@ -94,6 +94,7 @@ enum Stylesheet {
     .handover .maintenanceInfo .unit { display: flex; flex-direction: column; gap: 4px; }
     .handover .maintenanceInfo .title p { color: #939393; font-size: 10pt; }
     .handover .maintenanceInfo .source .bold { font-weight: 600; font-size: 11pt; }
+    .handover .maintenanceInfo .sourceDetail { font-size: 11pt; line-height: 1.4; }
     .handover .maintenanceInfo .staffContainer { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
     .handover .maintenanceInfo .staff { white-space: nowrap; }
     .handover .maintenanceInfo .staff .info { display: inline; }
