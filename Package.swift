@@ -58,7 +58,7 @@ let package = Package(
             ]),
         .testTarget(
             name: "PDFGeneratorTests",
-            dependencies: ["QuotationHTML", "HandoverDocumentHTML"]
+            dependencies: ["QuotationHTML", "HandoverDocumentHTML", "PDFGenerator"]
         ),
         .target(
             name: "PDFGenerator",

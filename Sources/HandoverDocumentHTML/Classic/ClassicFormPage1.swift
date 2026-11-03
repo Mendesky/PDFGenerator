@@ -30,6 +30,7 @@ public struct ClassicFormPage1: Component {
                 flatSection(label: "費用", rows: feeRows)
                 flatSection(label: "備註", rows: [[fullCell(remarkBlock)]])
             }.class("classicForm")
+            .fitSinglePageContainer()   // 第 1 頁表單要整份落在一頁（放不下時縮客戶狀況，見 ShrinkableText）
         }
     }
 
@@ -136,6 +137,7 @@ public struct ClassicFormPage1: Component {
                     }
                 }
             }.class("clientNotesBody")
+            .shrinkable(model.clientNotesShrinkable)
         }
     }
 

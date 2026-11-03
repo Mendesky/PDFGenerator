@@ -56,6 +56,7 @@ extension ClassicFormPage1 {
         public var previousFirmServices: String?
         public var previousFirmChangeReason: String?
         public var clientNotesSummary: String?
+        public var clientNotesShrinkable: ShrinkableText?  // 第 1 頁放不下時可再縮短的客戶狀況（nil ＝ 不縮）
         public var relatedBusinessSummary: String?
 
         // 費用摘要
@@ -130,6 +131,7 @@ extension ClassicFormPage1 {
             previousFirmServices: String? = nil,
             previousFirmChangeReason: String? = nil,
             clientNotesSummary: String? = nil,
+            clientNotesShrinkable: ShrinkableText? = nil,
             relatedBusinessSummary: String? = nil,
             bookkeepingFeeLabel: String = "稅務申報費",
             bookkeepingFee: String? = nil,
@@ -171,6 +173,7 @@ extension ClassicFormPage1 {
             self.previousFirmServices = previousFirmServices
             self.previousFirmChangeReason = previousFirmChangeReason
             self.clientNotesSummary = clientNotesSummary
+            self.clientNotesShrinkable = clientNotesShrinkable
             self.relatedBusinessSummary = relatedBusinessSummary
             self.bookkeepingFeeLabel = bookkeepingFeeLabel
             self.bookkeepingFee = bookkeepingFee

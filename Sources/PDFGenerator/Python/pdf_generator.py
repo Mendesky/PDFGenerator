@@ -3,6 +3,17 @@ from weasyprint.text.fonts import FontConfiguration
 import click
 from typing import *
 import uuid
+import base64
+import html as html_lib
+import re
+import sys
+
+# 「這一塊要擠在一頁內」的約定，標記由 HandoverDocumentHTML 產生（見 ShrinkableText.swift）。
+FIT_CONTAINER_ATTRIBUTE = 'data-fit-single-page'
+FIT_TEXT_ELEMENT = re.compile(
+    r'<(?P<tag>[A-Za-z][A-Za-z0-9]*)\b(?P<attrs>[^>]*\bdata-fit-text="[^"]*"[^>]*)>(?P<inner>.*?)</(?P=tag)>',
+    re.S,
+)
 
 class PdfGenerator:
     """
@@ -135,17 +146,69 @@ class PdfGenerator:
         stylesheets = [CSS(string=content_print_layout)]
         stylesheets += list(map(lambda stylesheet: CSS(string=stylesheet, font_config=font_config), self.stylesheets))
         
-        html = HTML(
-            string=self.main_html,
-            base_url=self.base_url,
-        )
-        main_doc = html.render(stylesheets=stylesheets, font_config=font_config)
+        main_doc = self._render_main(self.main_html, stylesheets, font_config)
+        main_doc = self._fit_single_page(main_doc, stylesheets, font_config)
 
         if self.header_html or self.footer_html:
             self._apply_overlay_on_main(main_doc, header_body, footer_body)
         pdf = main_doc.write_pdf()
 
         return pdf
+
+    def _render_main(self, main_html, stylesheets, font_config):
+        return HTML(string=main_html, base_url=self.base_url).render(stylesheets=stylesheets, font_config=font_config)
+
+    def _fit_single_page(self, main_doc, stylesheets, font_config):
+        """
+        帶 `data-fit-single-page` 的容器排到第 2 頁以後時，縮短帶 `data-fit-text` 的那段文字，直到容器落在第 1 頁。
+
+        找「原文前 n 字＋suffix」放得下的最大 n（二分搜尋，每次重新排版）；一個字都放不下印 fallback；
+        fallback 也放不下就維持原內容（接受超過一頁）。結果寫到 stderr，PDFGenerator.swift 會記進 log。
+        """
+        match = FIT_TEXT_ELEMENT.search(self.main_html)
+        if match is None or not self._overflows_first_page(main_doc):
+            return main_doc
+
+        attrs = match.group('attrs')
+        text = self._decoded_attribute(attrs, 'data-fit-text')
+        suffix = self._decoded_attribute(attrs, 'data-fit-suffix')
+        fallback = self._decoded_attribute(attrs, 'data-fit-fallback')
+
+        def render_with(content):
+            inner = html_lib.escape(content, quote=False).replace('\n', '<br/>')
+            fitted_html = self.main_html[:match.start('inner')] + inner + self.main_html[match.end('inner'):]
+            return self._render_main(fitted_html, stylesheets, font_config)
+
+        best = render_with(fallback)
+        if self._overflows_first_page(best):
+            print('fit-single-page: shrunk to fallback but still more than one page; keeping original content', file=sys.stderr)
+            return main_doc
+
+        kept, low, high = 0, 1, len(text) - 1
+        while low <= high:
+            middle = (low + high) // 2
+            doc = render_with(text[:middle].rstrip() + suffix)
+            if self._overflows_first_page(doc):
+                high = middle - 1
+            else:
+                best, kept, low = doc, middle, middle + 1
+        print(f'fit-single-page: kept {kept} of {len(text)} characters', file=sys.stderr)
+        return best
+
+    @staticmethod
+    def _decoded_attribute(attrs, name):
+        found = re.search(r'\b%s="([^"]*)"' % re.escape(name), attrs)
+        return base64.b64decode(found.group(1)).decode('utf-8') if found else ''
+
+    @staticmethod
+    def _overflows_first_page(doc):
+        """容器被排到第 2 頁以後時，後面的頁面會出現同一個元素的延續框。"""
+        for page in doc.pages[1:]:
+            for box in page._page_box.descendants():
+                element = getattr(box, 'element', None)
+                if element is not None and element.get(FIT_CONTAINER_ATTRIBUTE) is not None:
+                    return True
+        return False
 
     @staticmethod
     def get_element(boxes, element):
