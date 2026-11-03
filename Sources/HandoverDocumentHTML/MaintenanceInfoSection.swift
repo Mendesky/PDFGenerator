@@ -11,6 +11,7 @@ import Plot
 public struct MaintenanceInfoSection: Component {
     let familiarPersons: [Staff]
     let source: String
+    let sourceDetail: String?   // 來源的細節說明（選填；有值才在來源下一行印出，可含 \n）
     let interviewers: [Staff]
 
     public var body: any Component {
@@ -19,6 +20,18 @@ public struct MaintenanceInfoSection: Component {
             Div {
                 Div(Paragraph("客戶來源")).class("title")
                 Div(Paragraph(source).class("bold")).class("source")
+                if let sourceDetail, !sourceDetail.isEmpty {
+                    Div {
+                        let lines = sourceDetail.split(separator: "\n", omittingEmptySubsequences: false).map(String.init)
+                        for (index, line) in lines.enumerated() {
+                            if index < lines.count - 1 {
+                                Text(line).addLineBreak()
+                            } else {
+                                Text(line)
+                            }
+                        }
+                    }.class("sourceDetail")
+                }
             }.class("unit")
             staffUnit(title: "訪談人", staffs: interviewers)
         }.class("maintenanceInfo")
@@ -41,9 +54,10 @@ public struct MaintenanceInfoSection: Component {
         }.class("unit")
     }
 
-    public init(familiarPersons: [Staff], source: String, interviewers: [Staff]) {
+    public init(familiarPersons: [Staff], source: String, sourceDetail: String? = nil, interviewers: [Staff]) {
         self.familiarPersons = familiarPersons
         self.source = source
+        self.sourceDetail = sourceDetail
         self.interviewers = interviewers
     }
 }

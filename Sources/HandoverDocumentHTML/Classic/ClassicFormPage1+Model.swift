@@ -42,6 +42,7 @@ extension ClassicFormPage1 {
         public var communicationAddress: String?
         public var products: String?
         public var source: String?
+        public var sourceDetail: String?     // 來源的細節說明（選填；有值才另起一行縮排印出）
         public var designatedCpa: String?
 
         // 選項（label + 是否勾選）
@@ -55,9 +56,11 @@ extension ClassicFormPage1 {
         public var previousFirmServices: String?
         public var previousFirmChangeReason: String?
         public var clientNotesSummary: String?
+        public var clientNotesShrinkable: ShrinkableText?  // 第 1 頁放不下時可再縮短的客戶狀況（nil ＝ 不縮）
         public var relatedBusinessSummary: String?
 
         // 費用摘要
+        public var bookkeepingFeeLabel: String  // 記帳那格的名稱，依帳別由呼叫端決定（例：稅務申報費／帳務整理費）
         public var bookkeepingFee: String?
         public var tidyingFee: String?
         public var ctpFee: String?
@@ -118,6 +121,7 @@ extension ClassicFormPage1 {
             communicationAddress: String? = nil,
             products: String? = nil,
             source: String? = nil,
+            sourceDetail: String? = nil,
             designatedCpa: String? = nil,
             industryChoices: [(label: String, checked: Bool)] = [],
             costAnalysisChoices: [(label: String, checked: Bool)] = [],
@@ -127,7 +131,9 @@ extension ClassicFormPage1 {
             previousFirmServices: String? = nil,
             previousFirmChangeReason: String? = nil,
             clientNotesSummary: String? = nil,
+            clientNotesShrinkable: ShrinkableText? = nil,
             relatedBusinessSummary: String? = nil,
+            bookkeepingFeeLabel: String = "稅務申報費",
             bookkeepingFee: String? = nil,
             tidyingFee: String? = nil,
             ctpFee: String? = nil,
@@ -157,6 +163,7 @@ extension ClassicFormPage1 {
             self.communicationAddress = communicationAddress
             self.products = products
             self.source = source
+            self.sourceDetail = sourceDetail
             self.designatedCpa = designatedCpa
             self.industryChoices = industryChoices
             self.costAnalysisChoices = costAnalysisChoices
@@ -166,7 +173,9 @@ extension ClassicFormPage1 {
             self.previousFirmServices = previousFirmServices
             self.previousFirmChangeReason = previousFirmChangeReason
             self.clientNotesSummary = clientNotesSummary
+            self.clientNotesShrinkable = clientNotesShrinkable
             self.relatedBusinessSummary = relatedBusinessSummary
+            self.bookkeepingFeeLabel = bookkeepingFeeLabel
             self.bookkeepingFee = bookkeepingFee
             self.tidyingFee = tidyingFee
             self.ctpFee = ctpFee

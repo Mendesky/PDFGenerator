@@ -324,14 +324,15 @@ let classicPage1 = ClassicFormPage1.Model(
     communicationPostcode: nil,
     communicationAddress: nil,
     products: "範例產品",
-    source: "客戶介紹（範例）",
+    source: "員工介紹（陳ＯＯ）",
+    sourceDetail: "範例細節說明",
     designatedCpa: "無",
     industryChoices: [("買賣", true), ("製造", false), ("營建", false), ("其它", false)],
     costAnalysisChoices: [("要", false), ("依法", true)],
     filingChoices: [("簽證", false), ("所得額", false), ("查帳", false), ("書審", true)],
     serviceChoices: [
-        ("稅簽", true), ("財簽", false), ("記帳(稅)", true), ("記帳(管)", false),
-        ("年度CTP", true), ("整帳", false), ("工商", false), ("出納", true), ("薪資人力", false)
+        ("稅簽", true), ("財簽", false), ("稅務申報", true), ("帳務整理", false),
+        ("年度CTP", true), ("整理", false), ("工商", false), ("出納", true), ("薪資人力", false)
     ],
     invoiceChoices: [
         ("電子發票", false), ("二聯(副)", true), ("三聯(副)", true),

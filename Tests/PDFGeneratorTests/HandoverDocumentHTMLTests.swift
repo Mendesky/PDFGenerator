@@ -425,6 +425,68 @@ import Foundation
     #expect(html.contains("<br"))
 }
 
+// MARK: 來源（第一行來源；細節說明有值時縮排另起一行）
+
+@Test func classicFormPage1RendersSourceDetailOnIndentedNextLine() {
+    let page = ClassicFormPage1(model: .init(
+        companyName: "範例股份有限公司",
+        source: "員工介紹（王小明）",
+        sourceDetail: "原本是王小明的大學同學"
+    ))
+    let html = page.render()
+
+    #expect(html.contains("員工介紹（王小明）"))
+    #expect(html.contains("sourceDetail"))   // 縮排那一行
+    guard let lineIndex = html.range(of: "員工介紹（王小明）")?.lowerBound,
+          let detailIndex = html.range(of: "原本是王小明的大學同學")?.lowerBound else {
+        Issue.record("來源與細節說明都應存在")
+        return
+    }
+    #expect(lineIndex < detailIndex)
+}
+
+@Test func classicFormPage1OmitsSourceDetailLineWhenAbsent() {
+    let page = ClassicFormPage1(model: .init(companyName: "範例股份有限公司", source: "客戶介紹（陳大文）"))
+    let html = page.render()
+
+    #expect(html.contains("客戶介紹（陳大文）"))
+    #expect(!html.contains("class=\"sourceDetail\""))
+}
+
+@Test func classicFormPage1BreaksMultiLineSourceDetail() {
+    let page = ClassicFormPage1(model: .init(companyName: "範例股份有限公司", source: "其他", sourceDetail: "第一行\n第二行"))
+    let html = page.render()
+
+    #expect(html.contains("第一行"))
+    #expect(html.contains("第二行"))
+    #expect(html.contains("第一行<br/>") || html.contains("第一行<br>"))
+}
+
+// MARK: 費用
+
+@Test func classicFormPage1LabelsTidyingFeeAsArrangementFee() {
+    // 「整帳費」已改名「整理費」（2026-11-03）
+    let html = ClassicFormPage1(model: .init(companyName: "範例股份有限公司", tidyingFee: "優惠免收")).render()
+
+    #expect(html.contains("整理費"))
+    #expect(!html.contains("整帳費"))
+}
+
+@Test func classicFormPage1LabelsBookkeepingFeeByCaller() {
+    // 記帳那格的名稱依帳別由呼叫端傳入（原固定「記帳費」，2026-11-03 改）
+    let html = ClassicFormPage1(model: .init(companyName: "範例股份有限公司", bookkeepingFeeLabel: "帳務整理費", bookkeepingFee: "4,000 元/月(14個月)")).render()
+
+    #expect(html.contains("帳務整理費"))
+    #expect(!html.contains("記帳費"))
+}
+
+@Test func classicFormPage1BookkeepingFeeLabelDefaultsToTaxFiling() {
+    let html = ClassicFormPage1(model: .init(companyName: "範例股份有限公司")).render()
+
+    #expect(html.contains("稅務申報費"))
+    #expect(!html.contains("記帳費"))
+}
+
 // MARK: 備註區的電子發票整合服務平台
 //
 // 印在「發票明細」勾選列下方，一行帶出帳號 / 密碼狀態 / 字軌起訖。

@@ -9,12 +9,19 @@
 import Plot
 
 public struct EvidenceInfoSection: Component {
+    let deliveryMethod: String?   // 憑證收發需求（nil 不印；沒填由呼叫端傳「-」）
     let purchaseArrangementType: String
     let purchaseStartDate: String?
     let counts: [Count]
 
     public var body: any Component {
         Div {
+            if let deliveryMethod {
+                Div {
+                    Paragraph("憑證收發需求").class("grey60")
+                    Paragraph(deliveryMethod).class("text")
+                }.class("gap8")
+            }
             Div {
                 Paragraph("統購需求").class("grey60")
                 Paragraph(purchaseArrangementType).class("text")
@@ -39,7 +46,8 @@ public struct EvidenceInfoSection: Component {
         }.class("evidenceInfo")
     }
 
-    public init(purchaseArrangementType: String, purchaseStartDate: String? = nil, counts: [Count] = []) {
+    public init(deliveryMethod: String? = nil, purchaseArrangementType: String, purchaseStartDate: String? = nil, counts: [Count] = []) {
+        self.deliveryMethod = deliveryMethod
         self.purchaseArrangementType = purchaseArrangementType
         self.purchaseStartDate = purchaseStartDate
         self.counts = counts

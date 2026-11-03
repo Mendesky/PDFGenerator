@@ -58,6 +58,8 @@ enum ClassicStylesheet {
     .classic .blockCell { padding: 0; vertical-align: top; }
     /* 第 2 頁：label 欄固定窄寬、長標籤換行（避免整欄被「代辦年度CTP申報」撐寬） */
     .classic .classicForm2 .fieldLabel { width: 110px; white-space: normal; word-break: normal; }
+    /* 第 2 頁內容格上下置中：只有一列的區塊（例：憑證）會被直書標籤撐高，靠上對齊時值會貼在上緣、跟置中的欄位標籤錯開 */
+    .classic .classicForm2 .fieldValue { vertical-align: middle; }
     .classic .classicForm2 .rowHeading { background: #fafafa; font-weight: 700; }
     /* 報價群組：服務名 / 每項金額(右) / 設定 / 總價(置中、跨整組) */
     .classic .serviceName, .classic .serviceConfig { word-break: break-all; padding: 3px 8px; font-size: 1.08rem; vertical-align: top; }
@@ -80,6 +82,10 @@ enum ClassicStylesheet {
     .classic .serviceBlock { line-height: 1.85; }
     .classic .invoiceLine { padding-top: 3px; }
 
+    /* 來源（來源一行；細節說明有值時縮排另起一行，縮排同聯絡人的聯絡方式） */
+    .classic .sourceLine { padding-bottom: 1px; }
+    .classic .sourceDetail { padding-left: 1.6em; color: #222; }
+
     /* 聯絡人（可多位，姓名一行、各聯絡方式各自縮排一行） */
     .classic .contactBlock { display: flex; flex-direction: column; gap: 6px; }
     .classic .contactLine { font-size: 1.08rem; }
@@ -90,6 +96,8 @@ enum ClassicStylesheet {
 
     /* 勾選 ■/□ */
     .classic .ckbox { margin-right: 12px; white-space: nowrap; font-size: 1.08rem; }
+    /* 服務列：記帳兩格改名「稅務申報」「帳務整理(康達)」後變長，間距收窄讓九項維持一行（第 1 頁要壓在一頁，多一行就得縮客戶狀況） */
+    .classic .serviceBlock .ckbox { margin-right: 7px; }
 
     /* 標註留言 / 組內留言 附錄（第 2 頁尾部，同 classicForm2 框線與欄寬邏輯） */
     .classic .classicForm2 .annotationCell { vertical-align: top; border: 1px solid #000; padding: 3px 8px; font-size: 1.08rem; word-break: break-all; }
