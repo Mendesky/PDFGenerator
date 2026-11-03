@@ -462,6 +462,16 @@ import Foundation
     #expect(html.contains("第一行<br/>") || html.contains("第一行<br>"))
 }
 
+// MARK: 費用
+
+@Test func classicFormPage1LabelsTidyingFeeAsArrangementFee() {
+    // 「整帳費」已改名「整理費」（2026-11-03）
+    let html = ClassicFormPage1(model: .init(companyName: "範例股份有限公司", tidyingFee: "優惠免收")).render()
+
+    #expect(html.contains("整理費"))
+    #expect(!html.contains("整帳費"))
+}
+
 // MARK: 備註區的電子發票整合服務平台
 //
 // 印在「發票明細」勾選列下方，一行帶出帳號 / 密碼狀態 / 字軌起訖。
