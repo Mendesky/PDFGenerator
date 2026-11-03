@@ -14,7 +14,9 @@ jobs:
     name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        # 固定 24.04：ubuntu-latest 2026-10 起是 26.04，libxml2 升級後沒有 libxml2.so.2，
+        # setup-swift 裝的 Swift 6.0（ubuntu2404 版）啟動就失敗。正式機 Docker（swift:6.2.4-slim）也是 24.04。
+        os: [ubuntu-24.04]
         swift: ["6.0"]
         python: ["3.10"]
     runs-on: ${{ matrix.os }}
