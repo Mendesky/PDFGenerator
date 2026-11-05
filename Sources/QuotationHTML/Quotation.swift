@@ -96,19 +96,22 @@ public struct AuditQuotation: Renderable {
                 component
             }
             
+            // 外層表格須明定 width: 100%：table 預設依內容收縮，若不指定，酬金表（內層 width: 100%）
+            // 只會跟著最寬的內容撐開 —— 有夠長的補充說明或註記時剛好滿版，沒有或很短時就縮成一小塊。
+            // 編號欄以 width: 1% + nowrap 收到最窄，剩餘寬度全給酬金欄。
             Table{
                 let chineseNumber = components.count.representToChineseString(offset: 1)
                 TableRow{
                     TableCell{
                         Paragraph("\(chineseNumber)、").style("font-size: 1.1em;")
-                    }.style("vertical-align: top;")
+                    }.style("vertical-align: top; width: 1%; white-space: nowrap;")
                     TableCell(PaymentBlock(payments: payments))
                 }.style("break-inside: avoid-page;")
                 TableRow{
                     TableCell()
                     TableCell(Note(models: notes))
                 }
-            }
+            }.style("width: 100%;")
             if let rightsAndObligations{
                 ContractSection.init(index: rightsAndObligationsIndex, title: rightsAndObligations.title, heading: rightsAndObligations.heading, provisions: rightsAndObligations.terms.map{
                     .init(term: $0)
