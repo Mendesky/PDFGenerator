@@ -327,7 +327,7 @@ let classicPage1 = ClassicFormPage1.Model(
     source: "員工介紹（陳ＯＯ）",
     sourceDetail: "範例細節說明",
     designatedCpa: "無",
-    industryChoices: [("買賣", true), ("製造", false), ("營建", false), ("其它", false)],
+    industryChoices: [("買賣", true), ("製造及其它", false), ("營建", false), ("專營投資", false)],
     costAnalysisChoices: [("要", false), ("依法", true)],
     filingChoices: [("簽證", false), ("所得額", false), ("查帳", false), ("書審", true)],
     serviceChoices: [
