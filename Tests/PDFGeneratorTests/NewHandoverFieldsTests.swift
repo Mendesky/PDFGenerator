@@ -35,6 +35,17 @@ import Testing
     #expect(deliveryIndex < purchaseIndex)
 }
 
+// 專營投資業不問統購（OC ADR 2026-11-investment-only-skips-business-tax-fields）：
+// 呼叫端傳 nil → 統購整段不印，憑證收發需求照印。
+@Test func evidenceInfoOmitsPurchaseWhenArrangementIsNil() {
+    let html = EvidenceInfoSection(deliveryMethod: "由事務所派人收件", purchaseArrangementType: nil).render()
+
+    #expect(html.contains("憑證收發需求"))
+    #expect(html.contains("由事務所派人收件"))
+    #expect(!html.contains("統購需求"))
+    #expect(!html.contains("統購開始期別"))
+}
+
 @Test func evidenceInfoOmitsDeliveryMethodWhenNil() {
     let html = EvidenceInfoSection(purchaseArrangementType: "客戶自行購買").render()
 
