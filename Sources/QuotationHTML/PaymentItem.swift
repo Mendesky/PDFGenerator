@@ -36,9 +36,11 @@ public struct PaymentItem: Component{
                     }
                 }
             }
+            // 金額格收到最窄（width: 1% ＋ nowrap），剩餘寬度全給名稱格。
+            // 不指定時，正式環境的 WeasyPrint 61.x 把名稱格與金額格約對半分，名稱稍長就被擠到換行。
             TableCell{
                 Text(fee)
-            }.style("text-align: right; vertical-align: top; white-space: nowrap; padding-right: 0.5em;")
+            }.style("text-align: right; vertical-align: top; white-space: nowrap; width: 1%; padding-right: 0.5em;")
         }
     }
 
