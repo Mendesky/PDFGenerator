@@ -185,7 +185,10 @@ public struct ClassicFormPage1: Component {
                     }
                 }
             }
-            Paragraph("開始服務時間：\(model.serviceStartDate ?? "")")
+            // 沒有開始服務時間（沒買記帳）時整行不印，理由同上
+            if let serviceStartDate = model.serviceStartDate {
+                Paragraph("開始服務時間：\(serviceStartDate)")
+            }
         }.class("remarkBlock")
     }
 
