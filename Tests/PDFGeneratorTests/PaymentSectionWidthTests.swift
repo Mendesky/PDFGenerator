@@ -43,6 +43,21 @@ struct PaymentSectionWidthTests {
         #expect(numberCellStyle.contains("white-space: nowrap"))
     }
 
+    /// 酬金表每一列是「編號｜項目名稱｜金額」三格，只有編號格有寬度。名稱格與金額格都不指定時，
+    /// 正式環境的 WeasyPrint（Ubuntu 24.04 套件，61.x）把剩餘寬度約對半分：金額格佔半張表，
+    /// 名稱稍長就被擠到換行（例：「稅務申報服務(116年1月開始)(無營」／「收)」）。
+    /// 金額格收到最窄（`width: 1%` ＋ 不換行），剩餘寬度全給名稱格。
+    @Test("酬金項目的金額格收到最窄，寬度留給項目名稱")
+    func feeCellShrinksToContent() throws {
+        let fee = "1,500 元/月"
+        let html = PaymentItem(names: ["稅務申報服務(116年1月開始)(無營收)"], fee: fee).render()
+
+        let feeStart = try #require(html.range(of: fee))
+        let feeCellStyle = try #require(styleDeclarations(ofLast: "<td", in: html[..<feeStart.lowerBound]))
+        #expect(feeCellStyle.contains("width: 1%"))
+        #expect(feeCellStyle.contains("white-space: nowrap"))
+    }
+
     /// 取 `text` 中最後一個 `tagPrefix` 開頭標籤的 style 宣告（以 `;` 切開、去頭尾空白）。
     /// 找不到標籤回 `nil`；標籤沒有 style 屬性回空集合。
     private func styleDeclarations(ofLast tagPrefix: String, in text: Substring) -> Set<String>? {
